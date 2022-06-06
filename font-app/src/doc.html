@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+ 
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300&display=swap" rel="stylesheet">
+ 
+	<style type="text/css">
+		body{
+			font-family: 'Mitr', sans-serif;
+		}
+	</style>
+
+</head>
+<body>
+    
+    
+    <h1>Create PDF invoice file</h1>
+    <button onclick="generatePDF()"> generatePDF</button>
+
+    <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
+<script>
+    function generatePDF() {
+        var pdfObject = jsPDFInvoiceTemplate.default(props);
+        console.log("Object created:", pdfObject );
+    }
+    var props = {
+    outputType: jsPDFInvoiceTemplate.OutputType.Save,
+    returnJsPDFDocObject: true,
+    fileName: "Invoice 2021",
+    orientationLandscape: false,
+    compress: true,
+    logo: {
+        src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/logo.png",
+        width: 53.33, //aspect ratio = width/height
+        height: 26.66,
+        margin: {
+            top: 0, //negative or positive num, from the current position
+            left: 0 //negative or positive num, from the current position
+        }
+    },
+    business: {
+        name: "ERP",
+        address: "สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง ถนนฉลองกรุง เขตลาดกระบัง กรุงเทพ 10520",
+        phone: "0 2329 8000",
+        email: "pr.kmitl@kmitl.ac.th",
+        website: "https://www.kmitl.ac.th/th",
+    },
+    contact: {
+        label: "ใบสำคัญ",
+        name: "ชื่อลูกค้า",
+        phone: "เบอร์โทร",
+        email: "E-mail ลูกค้า",
+    },
+    invoice: {
+        label: "เลขที่ใบสำคัญ : ",
+        num: 000,
+        invDate: "วันที่ออกใบสำคัญ: 01/01/2021 18:12",
+        invGenDate: "วันที่อนุมัติ: 02/02/2021 10:17",
+        headerBorder: false,
+        tableBodyBorder: false,
+        header: [
+          {
+            title: "ลำดับ", 
+            style: { 
+              width: 10 
+            } 
+          }, 
+          { 
+            title: "ชื่อสินค้า",
+            style: {
+              width: 30
+            } 
+          }, 
+          { 
+            title: "รายละเอียด",
+            style: {
+              width: 80
+            } 
+          }, 
+          { title: "จำนวน"},
+          { title: "หน่วย"},
+          { title: "ราคาต่อหน่วย"},
+          { title: "ราคารวม"}
+        ],
+        table: Array.from(Array(10), (item, index)=>([
+            index + 1,
+            "ชื่อสินค้า ",
+            "รายละเอียดสินค้า ",
+            200.5,
+            4.5,
+            "m2",
+            400.5
+        ])),
+        invTotalLabel: "ยอดรวม:",
+        invTotal: "1000 ",
+        invCurrency: "บาท",
+        row1: {
+            col1: 'VAT:',
+            col2: '7',
+            col3: '%',
+            style: {
+                fontSize: 10 //optional, default 12
+            }
+        },
+        row2: {
+            col1: 'ยอดรวมสุทธิ:',
+            col2: '930',
+            col3: 'บาท',
+            style: {
+                fontSize: 10 //optional, default 12
+            }
+        },
+        invDescLabel: "โน็ตใบสำคัญ",
+        invDesc: "เนื้อหาที่โน๊ต",
+    },
+    footer: {
+        text: "ใบสำคัญนี้ถูกสร้างโดยบลาๆๆๆ เพื่อวัตถุประสงค์บลาๆ",
+    },
+    pageEnable: true,
+    pageLabel: "Page ",
+};
+</script>
+</body>
+</html>

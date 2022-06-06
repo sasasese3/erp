@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.5/pdfmake.min.js"></script>
+  <script src="./vfs_fonts.js"></script>
+  <script>
+    pdfMake.fonts = {
+      THSarabun: {
+        normal: "THSarabunNew.ttf",
+        bold: "THSarabunNew-Bold.ttf",
+        italics: "THSarabunNew-Italic.ttf",
+        bolditalics: "THSarabunNew-BoldItalic.ttf",
+      },
+    };
+
+    var docDefinition = {
+      content: [
+        {
+          layout: "lightHorizontalLines", // optional
+          table: {
+            // headers are automatically repeated if the table spans over multiple pages
+            // you can declare how many rows should be treated as headers
+            headerRows: 1,
+            widths: ["*", 'auto', 100, "*"],
+
+            body: [
+              ["เสร็จ", "แล้ว", "ไอ้", "เด็กเหี้ย"],
+              ["Value 1", "Value 2", "Value 3", "Value 4"],
+              [{ text: "Bold value", bold: true }, "Val 2", "Val 3", "Val 4"],
+            ],
+          },
+        },
+      ],
+      defaultStyle: {
+        font: "THSarabun",
+        fontSize: 12,
+      },
+    };
+
+    function generatePDF() {
+      pdfMake.createPdf(docDefinition).open();
+    }
+  </script>
+  <body>
+    <button onclick="generatePDF()">generatePDF</button>
+  </body>
+</html>

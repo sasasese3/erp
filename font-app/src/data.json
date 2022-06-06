@@ -1,0 +1,32 @@
+[
+    {
+      "id": 1,
+      "name": "Niagara Falls",
+      "tours": [
+        {
+          "id": 1,
+          "name": "ใบสำคัญซื้อ",
+          "description": "ระบบที่ใช้ควบคุมการจ่ายเงินที่มีเอกสารประกอบ โดยนำทั้งหมดมาตรวจสอบ และเก็บข้อมูล จดบันทึก ไว้เป็นหลักฐาน โดยกระบวนการทั้งหมด จะต้องมีการเซ็นอนุมัติจ่ายเงิน และจัดเก็บไว้ในทะเบียนใบสำคัญจ่ายอย่างครบถ้วน",
+          "image": "https://tcproduction.blob.core.windows.net/media/%7B240f8b72-1159-4fd3-a150-0a837f50ba4a%7D.2573758641_297d6d19fa_o.jpg"
+        },
+        {
+          "id": 2,
+          "name": "ใบสำคัญขาย",
+          "description": "เอกสารที่ใช้เป็นหลักฐานในการจ่ายเงิน จัดทำโดยพนักงานในแผนกบัญแล้วส่งไปให้ผู้มีหน้าที่ตรวจสอบ ก่อนที่ผู้มีอำนาจจ่ายเงินจะลงนามอนุมัติการจ่ายเงิน",
+          "image": "https://d2ru2mvuh5wx24.cloudfront.net/avtivity_bootstrap/1241/flight_of_angels_3__1920x864.jpg"
+        },
+        {
+          "id": 3,
+          "name": "ใบสำคัญรับสินค้า",
+          "description": "ใช้บันทึกรายการซื้อผลิตผล/สินค้าจากสมาชิก ซึ่งไม่มีใบเสร็จรับเงินหรือใบกำกับสินค้าออกให้แก่สหกรณ์ไม่ว่าจะเป็นการซื้อเงินสดหรือเงินเชื่อ",
+          "image": "https://www.niagarafallsstatepark.com/~/media/parks/niagara-falls/attractions-and-tours/illumination/niagarafalls-illumination-header-desktop.jpg?h=500&w=1500&la=en&hash=123E6D5F1744FBCC74EC36570E77872608D24891g"
+        },
+        {
+          "id": 4,
+          "name": "เรียกดูใบสำคัญ",
+          "description": "เรียกดูใบสำคัญที่กำลังดำเนินการอยู่ และยังสามารถนำกลับมาแก้ไขได้หลังจากยื่นไปแล้วจนกว่าจะถึงระยะเวลาที่จะทำการเซ็นอนุมัติ",
+          "image": "https://tcproduction.blob.core.windows.net/media/%7B240f8b72-1159-4fd3-a150-0a837f50ba4a%7D.2573758641_297d6d19fa_o.jpg"
+        }
+      ]
+    }
+  ]
