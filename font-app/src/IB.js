@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TableMenu from "./components/Table"
 import { Link } from '@mui/material';
+import MenuData from "./MenuData";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -14,11 +16,46 @@ import { Link } from '@mui/material';
 function IB() {
 
   const [productTable, setProductTable] = React.useState([]);
+  const navigate = useNavigate();
 
-  const handleClickAddButton = ()=>{
-    setProductTable([...productTable,{}])
+  const format_ib_detail = (productTable)=>{
+    const ib_detail = productTable.reduce((prev,cur)=>{
+      prev.IB_DETAIL += `${cur.id},`
+      prev.IB_AMOUNTPRODUCT += `${cur.user_amount},`
+      return prev
+    },{IB_DETAIL:'',IB_AMOUNTPRODUCT:''})
+    ib_detail.IB_DETAIL = ib_detail.IB_DETAIL.slice(0,-1)
+    ib_detail.IB_AMOUNTPRODUCT = ib_detail.IB_AMOUNTPRODUCT.slice(0,-1)
+    return ib_detail
   }
 
+  const handleSummitButton = ()=>{
+    const po_detail = format_ib_detail(productTable)
+    if (productTable.length >= 5){
+      navigate('/Inspector')
+    }
+  }
+
+
+  const handleClickAddButton = ()=>{
+    setProductTable([...productTable,{...MenuData['โต๊ะ'],user_amount:0}])
+  }
+
+  const handleAmountChange = (event,index)=>{
+    event.preventDefault()
+    const new_product = [...productTable]
+    new_product[index].user_amount = event.target.value
+    setProductTable(new_product);
+  }
+
+  const handleProductChange = (event,index)=> {
+    event.preventDefault()
+    const category = event.target.value
+    const result = MenuData[category]
+    const new_product = [...productTable]
+    new_product[index] = {...result,user_amount:new_product[index].user_amount}
+    setProductTable(new_product);
+  }
 
   return (
   <div className="IB">
@@ -40,37 +77,18 @@ function IB() {
         <Box sx={{ flexGrow: 1 }}  >
             
         <Grid container spacing={2}>
-             <Grid item xs={4} >
+             <Grid item xs={6} >
              
-                <TextField
-                    
-                  name="IB_DATE"
-                  
-                  required
-                  id="IB_DATE"
-                  label="วันที่จัดทำ"
-                  
-                />
-              </Grid>
-              <Grid item xs={4} >
-                <TextField
-                  name="IB_DATE"
-                  
-                  required
-                  id="IB_DATE"
-                  label="เดือนที่จัดทำ"
-                  
-                />
-              </Grid>
-             <Grid item xs={4} >
-                <TextField
-                  name="IB_DATE"
-                  
-                  required
-                  id="IB_DATE"
-                  label="ปีที่จัดทำ"
-                  
-                />
+             <TextField
+        id="IB_DATE"
+        label="วันที่จัดทำ"
+        type="IB_DATE"
+        defaultValue="2017-05-24"
+        sx={{ width: 220 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+          />
               </Grid>
               <Grid item xs={6} >
                 <TextField
@@ -123,8 +141,7 @@ function IB() {
 
               <Grid item xs ={12}>
               {productTable.map((data,index) =>{
-                console.log(index)
-                return <TableMenu key={index} no={index} data={data}/>
+                return <TableMenu key={index} index={index} data={data} handleAmountChange={handleAmountChange} handleProductChange={handleProductChange}/>
               })}
               <Button onClick={handleClickAddButton}> Click to add product</Button>
               </Grid>

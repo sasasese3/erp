@@ -7,15 +7,53 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { Link } from '@mui/material';
 import TableMenu from "./components/Table"
+import MenuData from "./MenuData";
+import { useNavigate } from "react-router-dom";
 
 
 
 function RV() {
 
   const [productTable, setProductTable] = React.useState([]);
+  const navigate = useNavigate();
+
+  const format_rv_detail = (productTable)=>{
+    const rv_detail = productTable.reduce((prev,cur)=>{
+      prev.RV_DETAIL += `${cur.id},`
+      prev.RV_AMOUNTPRODUCT += `${cur.user_amount},`
+      return prev
+    },{RV_DETAIL:'',RV_AMOUNTPRODUCT:''})
+    rv_detail.RV_DETAIL = rv_detail.RV_DETAIL.slice(0,-1)
+    rv_detail.RV_AMOUNTPRODUCT = rv_detail.RV_AMOUNTPRODUCT.slice(0,-1)
+    return rv_detail
+  }
+
+  const handleSummitButton = ()=>{
+    const rv_detail = format_rv_detail(productTable)
+    if (productTable.length >= 5){
+      navigate('/Inspector')
+    }
+  }
+
 
   const handleClickAddButton = ()=>{
-    setProductTable([...productTable,{}])
+    setProductTable([...productTable,{...MenuData['โต๊ะ'],user_amount:0}])
+  }
+
+  const handleAmountChange = (event,index)=>{
+    event.preventDefault()
+    const new_product = [...productTable]
+    new_product[index].user_amount = event.target.value
+    setProductTable(new_product);
+  }
+
+  const handleProductChange = (event,index)=> {
+    event.preventDefault()
+    const category = event.target.value
+    const result = MenuData[category]
+    const new_product = [...productTable]
+    new_product[index] = {...result,user_amount:new_product[index].user_amount}
+    setProductTable(new_product);
   }
 
   return (
@@ -131,8 +169,7 @@ function RV() {
               
               <Grid item xs ={12}>
               {productTable.map((data,index) =>{
-                console.log(index)
-                return <TableMenu key={index} no={index} data={data}/>
+                return <TableMenu key={index} index={index} data={data} handleAmountChange={handleAmountChange} handleProductChange={handleProductChange}/>
               })}
               <Button onClick={handleClickAddButton}> Click to add product</Button>
               </Grid>
@@ -152,8 +189,9 @@ function RV() {
 
                 </Grid>
                 <Grid item xs={6}>
-                <Link href="/Inspector">
-                <Button 
+                
+                <Button
+                onClick={handleSummitButton} 
                 type="submid"
                 fullWidth
                 variant="contained"
@@ -161,7 +199,7 @@ function RV() {
                 >
               บันทึกเอกสาร
                 </Button>
-                </Link>
+                
                 </Grid>
              
         </Grid>

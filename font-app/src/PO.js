@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
+
 function PO() {
 
   const [productTable, setProductTable] = React.useState([]);
@@ -78,37 +79,19 @@ function PO() {
         <Box sx={{ flexGrow: 1 }}  >
             
         <Grid container spacing={2}>
-             <Grid item xs={4} >
+             <Grid item xs={6} >
              
-                <TextField
-                    
-                  name="PO_DATE"
-                  
-                  required
-                  id="PO_DATE"
-                  label="วันที่จัดทำ"
-                  
-                />
-              </Grid>
-              <Grid item xs={4} >
-                <TextField
-                  name="PO_DATE"
-                  
-                  required
-                  id="PO_DATE"
-                  label="เดือนที่จัดทำ"
-                  
-                />
-              </Grid>
-             <Grid item xs={4} >
-                <TextField
-                  name="PO_DATE"
-                  
-                  required
-                  id="PO_DATE"
-                  label="ปีที่จัดทำ"
-                  
-                />
+             <TextField
+        id="PO_DATE"
+        label="วันที่จัดทำ"
+        type="PO_DATE"
+        defaultValue="2017-05-24"
+        sx={{ width: 220 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+          />
+
               </Grid>
                 <Grid item xs={6} >
                 <TextField
@@ -157,6 +140,9 @@ function PO() {
                   id="PO_PRICETOTAL"
                   label="จำนวนเงิน"
                   name="PO_PRICETOTAL"
+                  onInput = {(e) =>{
+                    e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,12)
+                }}
                   
                 />
               </Grid>

@@ -10,6 +10,7 @@ import { Link } from '@mui/material';
 
 
 
+
 function AP3() {
   return (
   <div className="AP3">
@@ -31,38 +32,20 @@ function AP3() {
         <Box sx={{ flexGrow: 1 }}  >
             
         <Grid container spacing={2}>
-        <Grid item xs={4} >
+        <Grid item xs={6} >
              
-             <TextField
-                 
-               name="AP3_DATE"
-               
-               required
-               id="AP3_DATE"
-               label="วันที่จัดทำ"
-               
-             />
+        <TextField
+        id="AP3_DATE"
+        label="วันที่จัดทำ"
+        type="AP3_DATE"
+        defaultValue="2017-05-24"
+        sx={{ width: 220 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+          />
             </Grid>
-                <Grid item xs={4} >
-             <TextField
-               name="AP3_DATE"
-               
-               required
-               id="AP3_DATE"
-               label="เดือนที่จัดทำ"
-               
-             />
-                </Grid>
-                <Grid item xs={4} >
-             <TextField
-               name="AP3_DATE"
-               
-               required
-               id="AP3_DATE"
-               label="ปีที่จัดทำ"
-               
-             />
-                </Grid>
+                
                 <Grid item xs={12} >
                 <TextField
                   name="AP3_ID"
@@ -89,7 +72,7 @@ function AP3() {
                   fullWidth
                   id="EMPLOYEE_ID_CREATOR"
                   label="ชื่อบัญชี"
-                  name="accountName"
+                  name="EMPLOYEE_ID_CREATOR"
                   
                 />
               </Grid>
@@ -112,7 +95,6 @@ function AP3() {
                   
                 />
               </Grid>
-
 
               <Grid item xs={6}>
               <Link href="/App">

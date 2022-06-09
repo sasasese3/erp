@@ -12,8 +12,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
 
 
 function Copyright(props) {
@@ -212,109 +210,16 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                    <FormControl>
-                        <FormLabel>วัน/เดือน/ปี เกิด</FormLabel>
-                        <select>
-                            <option value="1-">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
-                            <option value="29">29</option>
-                            <option value="30">30</option>
-                            <option value="31">31</option>
-                        </select>
-                        <select>
-                            <option value="01-">มกราคม</option>
-                            <option value="02">กุมภาพันธ์</option>
-                            <option value="03">มีนาคม</option>
-                            <option value="04">เมษายน</option>
-                            <option value="05">พฤษภาคม</option>
-                            <option value="06">มิถุนายน</option>
-                            <option value="07">กรกฏาคม</option>
-                            <option value="08">สิงหาคม</option>
-                            <option value="09">กันยายน</option>
-                            <option value="10">ตุลาคม</option>
-                            <option value="11">พฤศจิกายน</option>
-                            <option value="12">ธันวาคม</option>
-                        </select>
-                        <select>
-                            <option value="2022">2022</option>
-                            <option value="y1">2564</option>
-                            <option value="y2">2563</option>
-                            <option value="y3">2562</option>
-                            <option value="y4">2561</option>
-                            <option value="y5">2560</option>
-                            <option value="y6">2559</option>
-                            <option value="y7">2558</option>
-                            <option value="y8">2557</option>
-                            <option value="y9">2556</option>
-                            <option value="y10">2555</option>
-                            <option value="y11">2554</option>
-                            <option value="y12">2553</option>
-                            <option value="y13">2552</option>
-                            <option value="y14">2551</option>
-                            <option value="y15">2550</option>
-                            <option value="y16">2549</option>
-                            <option value="y17">2548</option>
-                            <option value="y18">2547</option>
-                            <option value="y19">2546</option>
-                            <option value="y20">2545</option>
-                            <option value="y21">2544</option>
-                            <option value="y22">2543</option>
-                            <option value="y23">2542</option>
-                            <option value="y24">2541</option>
-                            <option value="y25">2540</option>
-                            <option value="y26">2539</option>
-                            <option value="y27">2538</option>
-                            <option value="y28">2537</option>
-                            <option value="y30">2536</option>
-                            <option value="y31">2535</option>
-                            <option value="y32">2534</option>
-                            <option value="y33">2533</option>
-                            <option value="y34">2532</option>
-                            <option value="y35">2531</option>
-                            <option value="y36">2530</option>
-                            <option value="y37">2529</option>
-                            <option value="y38">2528</option>
-                            <option value="y39">2527</option>
-                            <option value="y40">2526</option>
-                            <option value="y41">2525</option>
-                            <option value="y42">2524</option>
-                            <option value="y43">2523</option>
-                            <option value="y44">2522</option>
-                            <option value="y45">2521</option>
-                            <option value="y46">2520</option>
-                            <option value="y47">2519</option>
-                            <option value="y48">2518</option>
-                            <option value="y49">2517</option>
-                            <option value="y50">2516</option>
-
-                        </select>
-                    </FormControl>
+                <TextField
+                  id="BIRTHDATE"
+                  label="วัน/เดือน/ปีเกิด"
+                  type="BIRTHDATE"
+                  defaultValue="2017-05-24"
+                  sx={{ width: 220 }}
+                  InputLabelProps={{
+                  shrink: true,
+                }}
+                />
                     
                 </Grid>
               <Grid item xs={12}>

@@ -7,18 +7,57 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { Link } from '@mui/material';
 import TableMenu from "./components/Table"
+import MenuData from "./MenuData";
+import { useNavigate } from "react-router-dom";
 
 
 
 function PV() {
 
   const [productTable, setProductTable] = React.useState([]);
+  const navigate = useNavigate();
+
+  const format_pv_detail = (productTable)=>{
+    const pv_detail = productTable.reduce((prev,cur)=>{
+      prev.PV_DETAIL += `${cur.id},`
+      prev.PV_AMOUNTPRODUCT += `${cur.user_amount},`
+      return prev
+    },{PV_DETAIL:'',PV_AMOUNTPRODUCT:''})
+    pv_detail.PV_DETAIL = pv_detail.PV_DETAIL.slice(0,-1)
+    pv_detail.PV_AMOUNTPRODUCT = pv_detail.PV_AMOUNTPRODUCT.slice(0,-1)
+    return pv_detail
+  }
+
+  const handleSummitButton = ()=>{
+    const pv_detail = format_pv_detail(productTable)
+    if (productTable.length >= 5){
+      navigate('/Inspector')
+    }
+  }
+
 
   const handleClickAddButton = ()=>{
-    setProductTable([...productTable,{}])
+    setProductTable([...productTable,{...MenuData['โต๊ะ'],user_amount:0}])
+  }
+
+  const handleAmountChange = (event,index)=>{
+    event.preventDefault()
+    const new_product = [...productTable]
+    new_product[index].user_amount = event.target.value
+    setProductTable(new_product);
+  }
+
+  const handleProductChange = (event,index)=> {
+    event.preventDefault()
+    const category = event.target.value
+    const result = MenuData[category]
+    const new_product = [...productTable]
+    new_product[index] = {...result,user_amount:new_product[index].user_amount}
+    setProductTable(new_product);
   }
 
   return (
+
   <div className="PV">
     <SearchAppBar />
     
@@ -38,37 +77,19 @@ function PV() {
         <Box sx={{ flexGrow: 1 }}  >
             
         <Grid container spacing={2}>
-             <Grid item xs={4} >
+             <Grid item xs={6} >
              
-                <TextField
-                    
-                  name="PV_DATE"
-                  
-                  required
-                  id="PV_DATE"
-                  label="วันที่จัดทำ"
-                  
-                />
-              </Grid>
-              <Grid item xs={4} >
-                <TextField
-                  name="PV_DATE"
-                  
-                  required
-                  id="PV_DATE"
-                  label="เดือนที่จัดทำ"
-                  
-                />
-              </Grid>
-             <Grid item xs={4} >
-                <TextField
-                  name="PV_DATE"
-                  
-                  required
-                  id="PV_DATE"
-                  label="ปีที่จัดทำ"
-                  
-                />
+             <TextField
+        id="PV_DATE"
+        label="วันที่จัดทำ"
+        type="PV_DATE"
+        defaultValue="2017-05-24"
+        sx={{ width: 220 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+          />
+
               </Grid>
                 <Grid item xs={6} >
                 <TextField
@@ -130,11 +151,23 @@ function PV() {
                   
                 />
               </Grid>
+              <Grid item xs={6} >
+                <TextField
+                  required
+                  value={productTable.reduce((prev,cur)=>{return prev + (parseInt(cur.user_amount) * parseInt(cur.peramount))},0)}
+                  id="PV_PRICETOTAL"
+                  label="จำนวนเงิน"
+                  name="PV_PRICETOTAL"
+                  onInput = {(e) =>{
+                    e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,12)
+                }}
+                  
+                />
+              </Grid>
               
               <Grid item xs ={12}>
               {productTable.map((data,index) =>{
-                console.log(index)
-                return <TableMenu key={index} no={index} data={data}/>
+                return <TableMenu key={index} index={index} data={data} handleAmountChange={handleAmountChange} handleProductChange={handleProductChange}/>
               })}
               <Button onClick={handleClickAddButton}> Click to add product</Button>
               </Grid>
@@ -155,8 +188,9 @@ function PV() {
 
                 </Grid>
                 <Grid item xs={6}>
-                <Link href="/Inspector">
+                
                 <Button 
+                onClick={handleSummitButton}
                 type="submid"
                 fullWidth
                 variant="contained"
@@ -164,7 +198,7 @@ function PV() {
                 >
               บันทึกเอกสาร
                 </Button>
-                </Link>
+                
                 </Grid>
              
         </Grid>
