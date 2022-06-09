@@ -83,14 +83,14 @@ function PO() {
              
              <TextField
         id="PO_DATE"
-        label="วันที่จัดทำ"
-        type="PO_DATE"
+        label="Birthday"
+        type="date"
         defaultValue="2017-05-24"
         sx={{ width: 220 }}
         InputLabelProps={{
           shrink: true,
         }}
-          />
+      />
 
               </Grid>
                 <Grid item xs={6} >

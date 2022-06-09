@@ -30,7 +30,7 @@ function IB() {
   }
 
   const handleSummitButton = ()=>{
-    const po_detail = format_ib_detail(productTable)
+    const ib_detail = format_ib_detail(productTable)
     if (productTable.length >= 5){
       navigate('/Inspector')
     }
@@ -82,7 +82,7 @@ function IB() {
              <TextField
         id="IB_DATE"
         label="วันที่จัดทำ"
-        type="IB_DATE"
+        type="date"
         defaultValue="2017-05-24"
         sx={{ width: 220 }}
         InputLabelProps={{

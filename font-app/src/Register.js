@@ -213,7 +213,7 @@ export default function SignUp() {
                 <TextField
                   id="BIRTHDATE"
                   label="วัน/เดือน/ปีเกิด"
-                  type="BIRTHDATE"
+                  type="date"
                   defaultValue="2017-05-24"
                   sx={{ width: 220 }}
                   InputLabelProps={{

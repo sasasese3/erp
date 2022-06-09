@@ -76,37 +76,18 @@ function RV() {
         <Box sx={{ flexGrow: 1 }}  >
             
         <Grid container spacing={2}>
-             <Grid item xs={4} >
+             <Grid item xs={6} >
              
-                <TextField
-                    
-                  name="RV_DATE"
-                  
-                  required
-                  id="RV_DATE"
-                  label="วันที่จัดทำ"
-                  
-                />
-              </Grid>
-              <Grid item xs={4} >
-                <TextField
-                  name="RV_DATE"
-                  
-                  required
-                  id="RV_DATE"
-                  label="เดือนที่จัดทำ"
-                  
-                />
-              </Grid>
-             <Grid item xs={4} >
-                <TextField
-                  name="RV_DATE"
-                  
-                  required
-                  id="RV_DATE"
-                  label="ปีที่จัดทำ"
-                  
-                />
+             <TextField
+        id="RV_DATE"
+        label="วันที่จัดทำ"
+        type="date"
+        defaultValue="2017-05-24"
+        sx={{ width: 220 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+          />
               </Grid>
                 <Grid item xs={6} >
                 <TextField
@@ -138,7 +119,7 @@ function RV() {
                   
                 />
               </Grid>
-              <Grid item xs={6} >
+              <Grid item xs={12} >
                 <TextField
                   required
                   fullWidth

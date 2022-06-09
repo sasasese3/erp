@@ -37,7 +37,7 @@ function AP3() {
         <TextField
         id="AP3_DATE"
         label="วันที่จัดทำ"
-        type="AP3_DATE"
+        type="date"
         defaultValue="2017-05-24"
         sx={{ width: 220 }}
         InputLabelProps={{

@@ -82,7 +82,7 @@ function PV() {
              <TextField
         id="PV_DATE"
         label="วันที่จัดทำ"
-        type="PV_DATE"
+        type="date"
         defaultValue="2017-05-24"
         sx={{ width: 220 }}
         InputLabelProps={{
