@@ -53,8 +53,8 @@ export default function SignInSide() {
       .then(data => {
         if (data.status === "ok") {
           localStorage.setItem("token", data.token);
-          //alert("login sucess");
-          window.location = "/Album";
+          alert("login sucess");
+          window.location = "/App";
         } else {
           alert("login failed");
         }

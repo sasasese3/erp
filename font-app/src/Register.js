@@ -41,9 +41,9 @@ export default function SignUp() {
         EMPLOYEE_LNAME:data.get("EMPLOYEE_LNAME"),
         DEPARTMENT:data.get("DEPARTMENT"),
         POSITION:data.get("POSITION"),
-        //BIRTHDATE:("23-08-1999"),
-        //AGE:data.get("AGE"),
-        //ADDRESS:data.get("ADDRESS"),
+        BIRTHDATE:data.get("BIRTHDATE"),
+        AGE:data.get("AGE"),
+        ADDRESS:data.get("ADDRESS"),
         PHONE_NUM:data.get("PHONE_NUM"),
         EMAIL:data.get("EMAIL"),
         USERNAME:data.get("USERNAME"),
@@ -124,7 +124,7 @@ export default function SignUp() {
                   name="EMPLOYEE_FNAME"
                   required
                   fullWidth
-                  id="firstName"
+                  id="EMPLOYEE_FNAME"
                   label="ชื่อ"
                   autoFocus
                 />
@@ -133,7 +133,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
+                  id="EMPLOYEE_LNAME"
                   label="นามสกุล"
                   name="EMPLOYEE_LNAME"
                   autoComplete="family-name"
@@ -189,6 +189,16 @@ export default function SignUp() {
                   autoComplete="contract"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="AGE"
+                  label="อายุ"
+                  name="AGE"
+                  autoComplete="contract"
+                />
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
@@ -214,7 +224,8 @@ export default function SignUp() {
                   id="BIRTHDATE"
                   label="วัน/เดือน/ปีเกิด"
                   type="date"
-                  defaultValue="2017-05-24"
+                  name="BIRTHDATE"
+                  defaultValue="2022-05-24"
                   sx={{ width: 220 }}
                   InputLabelProps={{
                   shrink: true,
