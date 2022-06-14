@@ -1,36 +1,35 @@
-var express = require("express");
-var cors = require("cors");
-var app = express();
-var bodyParser = require("body-parser");
-var jsonParser = bodyParser.json();
+const express = require("express");
+const cors = require("cors");
+const multer = require("multer");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
-const { hash } = require("bcrypt");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+
+const app = express();
 const saltRounds = 10;
-var nodemailer = require("nodemailer");
-//Token
-var jwt = require("jsonwebtoken");
+
+//User Type
 const Typeadmin = "admin";
 const Typeuser = "user";
 const Typeinspector = "inspector";
 //uplode
-const multer = require("multer");
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 //use express static folder
 app.use(
   express.static(__dirname + "./Signature")
 );
-
 //create the connection to database
 const connectDB = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Teerapat230842",
-  database: "erp_systems",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  port: 3306,
+  password: process.env.MYSQL_ROOT_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 });
 
 //cherkDBconnect
@@ -86,8 +85,8 @@ const SignatureAP3 = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./Signature/AP3");
   },
-  filename: (req, file, cb) => { 
-    cb(null,"file-"+"-"+file.originalname.split(".")[0]+ new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+"-Time-"+new Date().getHours()+"-"+new Date().getMinutes()+"." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
+  filename: (req, file, cb) => {
+    cb(null, "file-" + "-" + file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
   },
 });
 const uploadAP3 = multer({ storage: SignatureAP3 });
@@ -97,7 +96,7 @@ const SignaturePO = multer.diskStorage({
     cb(null, "./Signature/PO");
   },
   filename: (req, file, cb) => {
-    cb(null,"file-"+"-"+file.originalname.split(".")[0]+ new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+"-Time-"+new Date().getHours()+"-"+new Date().getMinutes()+"." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
+    cb(null, "file-" + "-" + file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
   },
 });
 const uploadPO = multer({ storage: SignaturePO });
@@ -107,7 +106,7 @@ const SignaturePV = multer.diskStorage({
     cb(null, "./Signature/PV");
   },
   filename: (req, file, cb) => {
-    cb(null,"file-"+"-"+file.originalname.split(".")[0]+ new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+"-Time-"+new Date().getHours()+"-"+new Date().getMinutes()+"." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
+    cb(null, "file-" + "-" + file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
   },
 });
 const uploadPV = multer({ storage: SignaturePV });
@@ -117,14 +116,14 @@ const SignatureRV = multer.diskStorage({
     cb(null, "./Signature/RV");
   },
   filename: (req, file, cb) => {
-    cb(null,"file-"+"-"+file.originalname.split(".")[0]+ new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+"-Time-"+new Date().getHours()+"-"+new Date().getMinutes()+"." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
+    cb(null, "file-" + "-" + file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
   },
 });
 const uploadRV = multer({ storage: SignatureRV });
 
 //Admin //แก้ไข status ของ Employee
 //เรียกดูรายชื่อพนักงานทั้งหมด
-app.post("/SelectEmployeeforAdmin", jsonParser, function (req, res) {
+app.post("/SelectEmployeeforAdmin", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  employee", [], function (err, EmployeeData) {
     if (err) {
@@ -135,9 +134,9 @@ app.post("/SelectEmployeeforAdmin", jsonParser, function (req, res) {
   });
 });
 //แก้ไข STATUS พนักงาน
-app.post("/UpdateEmployeeforAdmin", jsonParser, function (req, res) {
+app.post("/UpdateEmployeeforAdmin", function (req, res) {
   // Store hash in your password DB.
-  connectDB.query("UPDATE employee SET STATUS = ? where EMPLOYEE_ID = ? ", [req.body.STATUS,req.body.EMPLOYEE_ID], function (err, EmployeeData) {
+  connectDB.query("UPDATE employee SET STATUS = ? where EMPLOYEE_ID = ? ", [req.body.STATUS, req.body.EMPLOYEE_ID], function (err, EmployeeData) {
     if (err) {
       res.json({ status: "error", message: err });
       return;
@@ -149,7 +148,7 @@ app.post("/UpdateEmployeeforAdmin", jsonParser, function (req, res) {
 
 //Employee
 //สมัครสมาชิก
-app.post("/register", jsonParser, function (req, res) {
+app.post("/register", function (req, res) {
   bcrypt.hash(req.body.PASSWORD, saltRounds, function (err, hash) {
     // Store hash in your password DB.
     connectDB.query(
@@ -182,7 +181,7 @@ app.post("/register", jsonParser, function (req, res) {
 });
 
 //แก้ไขโปรไฟล์Employee(update)
-app.post("/updateEmployee", jsonParser, function (req, res) {
+app.post("/updateEmployee", function (req, res) {
   connectDB.query(
     "UPDATE employee SET EMPLOYEE_PERSONAL_ID = ? ,EMPLOYEE_FNAME = ? , EMPLOYEE_LNAME = ? , POSITION = ? , DEPARTMENT = ? , BIRTHDATE = ? , AGE = ? , ADDRESS = ? , PHONE_NUM = ? , EMAIL = ? , USERNAME = ?   WHERE EMPLOYEE_ID = ?",
 
@@ -213,7 +212,7 @@ app.post("/updateEmployee", jsonParser, function (req, res) {
 });
 
 //ลบข้อมูลสมาชิก(Employee) //adminจัดการ
-app.post("/DeleteEmployee/:EMPLOYEE_ID", jsonParser, function (req, res) {
+app.post("/DeleteEmployee/:EMPLOYEE_ID", function (req, res) {
   connectDB.query(
     "DELETE FROM employee WHERE EMPLOYEE_ID  = ?",
     //ส่ง EMPLOYEE_ID มากับ Path
@@ -231,7 +230,7 @@ app.post("/DeleteEmployee/:EMPLOYEE_ID", jsonParser, function (req, res) {
 });
 
 //testดึงข้อมูล
-app.post("/testDB", jsonParser, function (req, res) {
+app.post("/testDB", function (req, res) {
   connectDB.execute(
     "SELECT * FROM employee Where username=?",
     [req.body.USERNAME],
@@ -248,7 +247,7 @@ app.post("/testDB", jsonParser, function (req, res) {
 });
 
 //เข้าสู่ระบบ
-app.post("/login", jsonParser, function (req, res) {
+app.post("/login", function (req, res) {
   connectDB.query(
     "SELECT * FROM employee Where username=?",
     [req.body.USERNAME],
@@ -257,12 +256,12 @@ app.post("/login", jsonParser, function (req, res) {
       if (err) {
         res.json({ status: "error", message: err });
         return;
-      } 
+      }
 
       if (employee.length == 0) {
         res.json({ status: "error", message: "no user found" });
         return;
-      } 
+      }
 
       //ตรวจสอบว่ารหัสถูกมั้ย
       bcrypt.compare(
@@ -297,7 +296,7 @@ app.post("/login", jsonParser, function (req, res) {
               );
             }
 
-            res.json({ status: "ok", employee , token});
+            res.json({ status: "ok", employee, token });
           } else res.json({ status: "err", message: "login failed" });
         }
       );
@@ -306,7 +305,7 @@ app.post("/login", jsonParser, function (req, res) {
 });
 
 //authen การเข้าถึงว่ามีสิทธิ์เข้าถึงมั้ย
-app.post("/authenUser", jsonParser, function (req, res) {
+app.post("/authenUser", function (req, res) {
   try {
     const token = req.headers.authorization.split(" ")[1];
     var decoded = jwt.verify(token, Typeuser);
@@ -316,7 +315,7 @@ app.post("/authenUser", jsonParser, function (req, res) {
   }
 });
 
-app.post("/authenInspector", jsonParser, function (req, res) {
+app.post("/authenInspector", function (req, res) {
   try {
     const token = req.headers.authorization.split(" ")[1];
     var decoded = jwt.verify(token, Typeinspector);
@@ -326,7 +325,7 @@ app.post("/authenInspector", jsonParser, function (req, res) {
   }
 });
 
-app.post("/authenAdmin", jsonParser, function (req, res) {
+app.post("/authenAdmin", function (req, res) {
   try {
     const token = req.headers.authorization.split(" ")[1];
     var decoded = jwt.verify(token, Typeadmin);
@@ -338,7 +337,7 @@ app.post("/authenAdmin", jsonParser, function (req, res) {
 
 //Verify
 //ส่งเมลOTPเปลี่ยนรหัส
-app.post("/sendEmail", jsonParser, function (req, res) {
+app.post("/sendEmail", function (req, res) {
   var USERNAME = req.body.USERNAME;
   var PasswordOTP = String(Math.floor(Math.random() * 1000000));
   bcrypt.hash(PasswordOTP, saltRounds, function (err, hash) {
@@ -390,7 +389,7 @@ app.post("/sendEmail", jsonParser, function (req, res) {
   });
 });
 //ยืนยีนOTPเปลี่ยนรหัส
-app.post("/sendVerify", jsonParser, function (req, res) {
+app.post("/sendVerify", function (req, res) {
   //จับคู่OTP
   var USERNAME = req.body.USERNAME;
   var OTP_verify = req.body.OTP_verify;
@@ -460,7 +459,7 @@ app.post("/sendVerify", jsonParser, function (req, res) {
 //ERP Main func
 //AP3
 //CreateAP3
-app.post("/CreateAP3", jsonParser, function (req, res) {
+app.post("/CreateAP3", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "INSERT INTO erp_systems.ap3 (AP3_ID,CUSTOMER_ID,EMPLOYEE_ID_CREATOR,AP3_CREATOR,EMPLOYEE_ID_APPROVER,AP3_APPROVER,AP3_DETAIL,AP3_AMOUNTPRODUCT,AP3_DATE,AP3_STATUS) VALUES (?,? ,? ,? ,? ,? ,? ,? ,? ,? )",
@@ -484,7 +483,7 @@ app.post("/CreateAP3", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.AP3_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.AP3_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -532,7 +531,7 @@ app.post("/CreateAP3", jsonParser, function (req, res) {
 });
 
 //SelectAP3
-app.post("/SelectAP3", jsonParser, function (req, res) {
+app.post("/SelectAP3", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  ap3", [], function (err, AP3data) {
     if (err) {
@@ -544,7 +543,7 @@ app.post("/SelectAP3", jsonParser, function (req, res) {
 });
 
 //UpdateAP3
-app.post("/UpdateAP3", jsonParser, function (req, res) {
+app.post("/UpdateAP3", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "UPDATE erp_systems.ap3 SET CUSTOMER_ID =? , EMPLOYEE_ID_CREATOR =? , AP3_CREATOR = ? , EMPLOYEE_ID_APPROVER =? , AP3_APPROVER =? , AP3_DETAIL =? , AP3_AMOUNTPRODUCT =? , AP3_DATE =?  ,  AP3_STATUS =?  where AP3_ID  = ? ",
@@ -568,7 +567,7 @@ app.post("/UpdateAP3", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.AP3_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.AP3_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -616,7 +615,7 @@ app.post("/UpdateAP3", jsonParser, function (req, res) {
 });
 
 //DeleteAP3
-app.post("/DeleteAP3/:AP3_ID", jsonParser, function (req, res) {
+app.post("/DeleteAP3/:AP3_ID", function (req, res) {
   connectDB.execute(
     "DELETE FROM erp_systems.ap3 WHERE AP3_ID  = ?",
     //ส่ง EMPLOYEE_ID มากับ Path
@@ -635,7 +634,7 @@ app.post("/DeleteAP3/:AP3_ID", jsonParser, function (req, res) {
 
 //IB
 //CreateIB
-app.post("/CreateIB", jsonParser, function (req, res) {
+app.post("/CreateIB", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "INSERT INTO erp_systems.ib (IB_ID,SUPPLIER_ID,EMPLOYEE_ID_CREATOR,IB_CREATOR,IB_DETAIL,IB_AMOUNTPRODUCT,IB_DATE) VALUES (?,?,? ,? ,? ,? ,?   )",
@@ -656,7 +655,7 @@ app.post("/CreateIB", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.IB_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.IB_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -704,7 +703,7 @@ app.post("/CreateIB", jsonParser, function (req, res) {
 });
 
 //SelectIB
-app.post("/SelectIB", jsonParser, function (req, res) {
+app.post("/SelectIB", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  ib", [], function (err, IBdata) {
     if (err) {
@@ -716,7 +715,7 @@ app.post("/SelectIB", jsonParser, function (req, res) {
 });
 
 //UpdateIB
-app.post("/UpdateIB", jsonParser, function (req, res) {
+app.post("/UpdateIB", function (req, res) {
   // Store hash in your password DB.
   connectDB.execute(
     "UPDATE erp_systems.ib SET SUPPLIER_ID = ? ,EMPLOYEE_ID_CREATOR = ?, IB_CREATOR =? ,IB_DETAIL = ? ,IB_AMOUNTPRODUCT = ? ,IB_DATE = ?  where IB_ID  = ? ",
@@ -737,7 +736,7 @@ app.post("/UpdateIB", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.IB_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.IB_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -785,7 +784,7 @@ app.post("/UpdateIB", jsonParser, function (req, res) {
 });
 
 //DeleteIB
-app.post("/DeleteIB/:IB_ID", jsonParser, function (req, res) {
+app.post("/DeleteIB/:IB_ID", function (req, res) {
   connectDB.execute(
     "DELETE FROM erp_systems.ib WHERE IB_ID  = ?",
     //ส่ง EMPLOYEE_ID มากับ Path
@@ -804,7 +803,7 @@ app.post("/DeleteIB/:IB_ID", jsonParser, function (req, res) {
 
 //PO
 //CreatePO
-app.post("/CreatePO", jsonParser, function (req, res) {
+app.post("/CreatePO", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "INSERT INTO erp_systems.po (PO_ID,SUPPLIER_ID,CUSTOMER_ID,EMPLOYEE_ID_CREATOR,PO_CREATOR,EMPLOYEE_ID_APPROVER,PO_APPROVER,PO_DETAIL,PO_AMOUNTPRODUCT,PO_DATE,PO_STATUS) VALUES (? ,? ,? ,?,?,?,?,?,?,?,?)",
@@ -829,7 +828,7 @@ app.post("/CreatePO", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.PO_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.PO_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -877,7 +876,7 @@ app.post("/CreatePO", jsonParser, function (req, res) {
 });
 
 //SelectPO
-app.post("/SelectPO", jsonParser, function (req, res) {
+app.post("/SelectPO", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  po", [], function (err, POdata) {
     if (err) {
@@ -889,7 +888,7 @@ app.post("/SelectPO", jsonParser, function (req, res) {
 });
 
 //UpdatePO
-app.post("/UpdatePO", jsonParser, function (req, res) {
+app.post("/UpdatePO", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "UPDATE erp_systems.po SET SUPPLIER_ID = ? ,CUSTOMER_ID = ? ,EMPLOYEE_ID_CREATOR = ? ,PO_CREATOR = ? ,EMPLOYEE_ID_APPROVER = ? , PO_APPROVER = ? ,PO_DETAIL = ? ,PO_AMOUNTPRODUCT = ? ,PO_DATE = ? ,PO_STATUS = ?  where PO_ID  = ? ",
@@ -914,7 +913,7 @@ app.post("/UpdatePO", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.PO_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.PO_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -962,7 +961,7 @@ app.post("/UpdatePO", jsonParser, function (req, res) {
 });
 
 //DeletePO
-app.post("/DeletePO/:PO_ID", jsonParser, function (req, res) {
+app.post("/DeletePO/:PO_ID", function (req, res) {
   connectDB.execute(
     "DELETE FROM erp_systems.po WHERE PO_ID  = ?",
     //ส่ง EMPLOYEE_ID มากับ Path
@@ -981,7 +980,7 @@ app.post("/DeletePO/:PO_ID", jsonParser, function (req, res) {
 
 //PV
 //CreatePV
-app.post("/CreatePV", jsonParser, function (req, res) {
+app.post("/CreatePV", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "INSERT INTO erp_systems.pv (PV_ID,SUPPLIER_ID,CUSTOMER_ID,EMPLOYEE_ID_CREATOR,PV_CREATOR,EMPLOYEE_ID_APPROVER,PV_APPROVER,PV_DETAIL,PV_AMOUNTPRODUCT,PV_DATE,PV_STATUS) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
@@ -1006,7 +1005,7 @@ app.post("/CreatePV", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.PV_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.PV_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -1054,7 +1053,7 @@ app.post("/CreatePV", jsonParser, function (req, res) {
 });
 
 //SelectPV
-app.post("/SelectPV", jsonParser, function (req, res) {
+app.post("/SelectPV", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  pv", [], function (err, PVdata) {
     if (err) {
@@ -1066,7 +1065,7 @@ app.post("/SelectPV", jsonParser, function (req, res) {
 });
 
 //UpdatePV
-app.post("/UpdatePV", jsonParser, function (req, res) {
+app.post("/UpdatePV", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "UPDATE erp_systems.pv SET SUPPLIER_ID = ? ,CUSTOMER_ID = ? ,EMPLOYEE_ID_CREATOR = ? ,PV_CREATOR = ? ,EMPLOYEE_ID_APPROVER = ? ,PV_APPROVER = ? ,PV_DETAIL = ? ,PV_AMOUNTPRODUCT = ?, PV_DATE=? ,PV_STATUS = ?  where PV_ID  = ? ",
@@ -1091,7 +1090,7 @@ app.post("/UpdatePV", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.PV_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.PV_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -1139,7 +1138,7 @@ app.post("/UpdatePV", jsonParser, function (req, res) {
 });
 
 //DeletePV
-app.post("/DeletePV/:PV_ID", jsonParser, function (req, res) {
+app.post("/DeletePV/:PV_ID", function (req, res) {
   connectDB.execute(
     "DELETE FROM erp_systems.pv WHERE PV_ID  = ?",
     //ส่ง EMPLOYEE_ID มากับ Path
@@ -1158,7 +1157,7 @@ app.post("/DeletePV/:PV_ID", jsonParser, function (req, res) {
 
 //RV
 //CreateRV
-app.post("/CreateRV", jsonParser, function (req, res) {
+app.post("/CreateRV", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "INSERT INTO erp_systems.rv (RV_ID,CUSTOMER_ID,EMPLOYEE_ID_CREATOR,RV_CREATOR,EMPLOYEE_ID_APPROVER,RV_APPROVER,RV_DETAIL,RV_AMOUNTPRODUCT,RV_DATE,RV_STATUS) VALUES (?,?,?,?,?,?,?,?,?,?)",
@@ -1182,7 +1181,7 @@ app.post("/CreateRV", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.RV_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.RV_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -1230,7 +1229,7 @@ app.post("/CreateRV", jsonParser, function (req, res) {
 });
 
 //SelectRV
-app.post("/SelectRV", jsonParser, function (req, res) {
+app.post("/SelectRV", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  rv", [], function (err, RVdata) {
     if (err) {
@@ -1242,7 +1241,7 @@ app.post("/SelectRV", jsonParser, function (req, res) {
 });
 
 //UpdateRV
-app.post("/UpdateRV", jsonParser, function (req, res) {
+app.post("/UpdateRV", function (req, res) {
   // Store hash in your password DB.
   connectDB.query(
     "UPDATE erp_systems.rv SET CUSTOMER_ID = ? ,EMPLOYEE_ID_CREATOR = ? ,RV_CREATOR = ? ,EMPLOYEE_ID_APPROVER = ? ,RV_APPROVER = ? ,RV_DETAIL = ? ,RV_AMOUNTPRODUCT = ? ,RV_DATE = ? ,RV_STATUS = ?  where RV_ID  = ? ",
@@ -1266,7 +1265,7 @@ app.post("/UpdateRV", jsonParser, function (req, res) {
       }
       connectDB.query(
         "SELECT * FROM product WHERE PRODUCT_ID =" +
-          ConvertToDetailProductQuery(req.body.RV_DETAIL), //Detailของแต่ละใบ
+        ConvertToDetailProductQuery(req.body.RV_DETAIL), //Detailของแต่ละใบ
         function (err, DataProduct) {
           if (err) {
             res.json({ status: "error", message: err });
@@ -1314,7 +1313,7 @@ app.post("/UpdateRV", jsonParser, function (req, res) {
 });
 
 //DeleteRV
-app.post("/DeleteRV/:RV_ID", jsonParser, function (req, res) {
+app.post("/DeleteRV/:RV_ID", function (req, res) {
   connectDB.execute(
     "DELETE FROM erp_systems.rv WHERE RV_ID  = ?",
     //ส่ง EMPLOYEE_ID มากับ Path
@@ -1334,7 +1333,7 @@ app.post("/DeleteRV/:RV_ID", jsonParser, function (req, res) {
 
 //เรียกดูใบสำคัญที่ยังไม่ได้!!อนุมัติ
 //AP3
-app.post("/SelectNonApproveAP3", jsonParser, function (req, res) {
+app.post("/SelectNonApproveAP3", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  ap3 Where AP3_STATUS = 0 ", [], function (err, ap3data) {
     if (err) {
@@ -1345,7 +1344,7 @@ app.post("/SelectNonApproveAP3", jsonParser, function (req, res) {
   });
 });
 //PO
-app.post("/SelectNonApprovePO", jsonParser, function (req, res) {
+app.post("/SelectNonApprovePO", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  po Where PO_STATUS = 0 ", [], function (err, POdata) {
     if (err) {
@@ -1356,7 +1355,7 @@ app.post("/SelectNonApprovePO", jsonParser, function (req, res) {
   });
 });
 //PV
-app.post("/SelectNonApprovePV", jsonParser, function (req, res) {
+app.post("/SelectNonApprovePV", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  pv Where PV_STATUS = 0 ", [], function (err, PVdata) {
     if (err) {
@@ -1367,7 +1366,7 @@ app.post("/SelectNonApprovePV", jsonParser, function (req, res) {
   });
 });
 //RV
-app.post("/SelectNonApproveRV", jsonParser, function (req, res) {
+app.post("/SelectNonApproveRV", function (req, res) {
   // Store hash in your password DB.
   connectDB.query("SELECT * FROM  rv Where RV_STATUS = 0 ", [], function (err, RVdata) {
     if (err) {
@@ -1381,40 +1380,40 @@ app.post("/SelectNonApproveRV", jsonParser, function (req, res) {
 //อัพโหดไฟล์รูปลายเซ็นต์
 // UploadfileSignatureAP3
 app.post("/uploadAP3", uploadAP3.single("fileupload"), (req, res) => {
-  let Filename = "file-"+"-"+req.file.originalname.split(".")[0]+ new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+"-Time-"+new Date().getHours()+"-"+new Date().getMinutes()+"." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1]
-  var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/AP3/"+Filename
+  let Filename = "file-" + "-" + req.file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1];
+  var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/AP3/" + Filename;
   var insertData = "UPDATE ap3 SET AP3_PATHSIGNATURE = ? WHERE AP3_ID = ? ";
-  connectDB.query(insertData, [imgsrc,req.body.AP3_ID], (err, result) => {
+  connectDB.query(insertData, [imgsrc, req.body.AP3_ID], (err, result) => {
     if (err) throw err;
     console.log("file uploaded");
   });
 });
 // UploadfileSignaturePO
 app.post("/uploadPO", uploadPO.single("fileupload"), (req, res) => {
-  let Filename = "file-"+"-"+req.file.originalname.split(".")[0]+ new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+"-Time-"+new Date().getHours()+"-"+new Date().getMinutes()+"." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1]
-  var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PO/"+Filename
+  let Filename = "file-" + "-" + req.file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1];
+  var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PO/" + Filename;
   var insertData = "UPDATE PO SET PO_PATHSIGNATURE = ? WHERE PO_ID = ? ";
-  connectDB.query(insertData, [imgsrc,req.body.PO_ID], (err, result) => {
+  connectDB.query(insertData, [imgsrc, req.body.PO_ID], (err, result) => {
     if (err) throw err;
     console.log("file uploaded");
   });
 });
 // UploadfileSignaturePV
 app.post("/uploadPV", uploadPV.single("fileupload"), (req, res) => {
-  let Filename = "file-"+"-"+req.file.originalname.split(".")[0]+ new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+"-Time-"+new Date().getHours()+"-"+new Date().getMinutes()+"." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1]
-  var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PV/"+Filename
+  let Filename = "file-" + "-" + req.file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1];
+  var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PV/" + Filename;
   var insertData = "UPDATE pv SET PV_PATHSIGNATURE = ? WHERE PV_ID = ? ";
-  connectDB.query(insertData, [imgsrc,req.body.PV_ID], (err, result) => {
+  connectDB.query(insertData, [imgsrc, req.body.PV_ID], (err, result) => {
     if (err) throw err;
     console.log("file uploaded");
   });
 });
 // UploadfileSignatureRV
 app.post("/uploadRV", uploadRV.single("fileupload"), (req, res) => {
-  let Filename = "file-"+"-"+req.file.originalname.split(".")[0]+ new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+"-Time-"+new Date().getHours()+"-"+new Date().getMinutes()+"." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1]
-  var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PV/"+Filename
+  let Filename = "file-" + "-" + req.file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1];
+  var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PV/" + Filename;
   var insertData = "UPDATE rv SET RV_PATHSIGNATURE = ? WHERE RV_ID = ? ";
-  connectDB.query(insertData, [imgsrc,req.body.RV_ID], (err, result) => {
+  connectDB.query(insertData, [imgsrc, req.body.RV_ID], (err, result) => {
     if (err) throw err;
     console.log("file uploaded");
   });
