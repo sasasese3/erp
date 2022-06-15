@@ -22,7 +22,7 @@ router.post("/register", async function (req, res) {
     }
 });
 
-router.get("/", permit(userRoles.EMPLOYEE, userRoles.INSPECTOR, userRoles.ADMIN), async (req, res) => {
+router.get("/", permit(userRoles.ALL), async (req, res) => {
     return res.json(req.user);
 });
 

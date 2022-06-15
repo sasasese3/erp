@@ -1,4 +1,4 @@
-module.exports = (...permittedRoles) => {
+module.exports = (permittedRoles) => {
     return (req, res, next) => {
         const { user } = req;
         if (user && permittedRoles.includes(user.role)) {
