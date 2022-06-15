@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const connectDB = require('../../utils/connectDB');
 const { ConvertToArray, ConvertToDetailProductQuery } = require("../../utils/convert");
+const { uploadPV } = require("../../utils/fileUpload");
 
 //PV
 router.route('/')
@@ -187,6 +188,17 @@ router.get("/SelectNonApprovePV", function (req, res) {
             return;
         }
         res.json({ status: "ok", PVdata });
+    });
+});
+
+//อัพโหดไฟล์รูปลายเซ็นต์
+router.post("/uploadPV", uploadPV.single("fileupload"), (req, res) => {
+    let Filename = "file-" + "-" + req.file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1];
+    var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PV/" + Filename;
+    var insertData = "UPDATE pv SET PV_PATHSIGNATURE = ? WHERE PV_ID = ? ";
+    connectDB.query(insertData, [imgsrc, req.body.PV_ID], (err, result) => {
+        if (err) throw err;
+        console.log("file uploaded");
     });
 });
 

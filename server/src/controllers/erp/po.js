@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const connectDB = require('../../utils/connectDB');
 const { ConvertToArray, ConvertToDetailProductQuery } = require("../../utils/convert");
+const { uploadPO } = require("../../utils/fileUpload");
 
 //PO
 router.route('/')
@@ -187,6 +188,17 @@ router.get("/SelectNonApprovePO", function (req, res) {
             return;
         }
         res.json({ status: "ok", POdata });
+    });
+});
+
+//อัพโหดไฟล์รูปลายเซ็นต์
+router.post("/uploadPO", uploadPO.single("fileupload"), (req, res) => {
+    let Filename = "file-" + "-" + req.file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1];
+    var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PO/" + Filename;
+    var insertData = "UPDATE PO SET PO_PATHSIGNATURE = ? WHERE PO_ID = ? ";
+    connectDB.query(insertData, [imgsrc, req.body.PO_ID], (err, result) => {
+        if (err) throw err;
+        console.log("file uploaded");
     });
 });
 module.exports = router;

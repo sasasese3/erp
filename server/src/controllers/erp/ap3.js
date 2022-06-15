@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const connectDB = require('../../utils/connectDB');
 const { ConvertToArray, ConvertToDetailProductQuery } = require("../../utils/convert");
-const { route } = require("../admin");
-
+const { uploadAP3 } = require("../../utils/fileUpload");
 //AP3
 router.route('/')
     //SelectAP3
@@ -176,6 +175,7 @@ router.delete('/:AP3_ID', function (req, res) {
         }
     );
 });
+
 //เรียกดูใบสำคัญที่ยังไม่ได้!!อนุมัติ
 router.get("/SelectNonApproveAP3", function (req, res) {
     // Store hash in your password DB.
@@ -185,6 +185,17 @@ router.get("/SelectNonApproveAP3", function (req, res) {
             return;
         }
         res.json({ status: "ok", ap3data });
+    });
+});
+
+//อัพโหดไฟล์รูปลายเซ็นต์
+router.post("/uploadAP3", uploadAP3.single("fileupload"), (req, res) => {
+    let Filename = "file-" + "-" + req.file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1];
+    var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/AP3/" + Filename;
+    var insertData = "UPDATE ap3 SET AP3_PATHSIGNATURE = ? WHERE AP3_ID = ? ";
+    connectDB.query(insertData, [imgsrc, req.body.AP3_ID], (err, result) => {
+        if (err) throw err;
+        console.log("file uploaded");
     });
 });
 
