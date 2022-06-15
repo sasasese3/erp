@@ -1,10 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const multer = require("multer");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+const { uploadAP3, uploadPO, uploadPV, uploadRV } = require("./utils/fileUpload");
+const { ConvertToArray, ConvertToDetailProductQuery } = require("./utils/convert");
+const connectDB = require('./utils/connectDB');
+const router = require('./controllers/router');
 
 const app = express();
 const saltRounds = 10;
@@ -23,14 +26,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   express.static(__dirname + "./Signature")
 );
-//create the connection to database
-const connectDB = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  port: 3306,
-  password: process.env.MYSQL_ROOT_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-});
 
 //cherkDBconnect
 connectDB.connect(function (err) {
@@ -39,212 +34,9 @@ connectDB.connect(function (err) {
   }
   console.log("Connected to the MySQL server.");
 });
-//Function
-//แปลง text col Detail เป็น SQL
-function ConvertToDetailProductQuery(Data) {
-  let TextDetail = Data; //รับ Detail_Product_id;
-  const MakeArray = TextDetail.split(",");
-  let QueryTextArray = [];
-  let QueryText = " ";
-
-  for (let i = 0; i < MakeArray.length; i++) {
-    if (i === MakeArray.length - 1) {
-      let ArrayProductDetail = MakeArray[i];
-      let Query = "PRODUCT_ID=" + " " + ArrayProductDetail + " ";
-      QueryTextArray.push(Query);
-    } else if (i !== 0) {
-      let ArrayProductDetail = MakeArray[i];
-      let Query = "PRODUCT_ID=" + " " + ArrayProductDetail + " " + "OR" + " ";
-      QueryTextArray.push(Query);
-    } else {
-      let ArrayProductDetail = MakeArray[i];
-      let Query = " " + ArrayProductDetail + " " + "OR" + " ";
-      QueryTextArray.push(Query);
-    }
-  }
-  for (let i = 0; i < QueryTextArray.length; i++) {
-    QueryText += QueryTextArray[i];
-  }
-  return QueryText;
-}
-//ส่ง text from "1,2,3,4" มาแปลงเป็น Array
-function ConvertToArray(Data) {
-  let TextDetail = Data; //รับ Detail_Product_id;
-  const MakeArray = TextDetail.split(",");
-  let AnsArray = [];
-  for (let i = 0; i < MakeArray.length; i++) {
-    let getAns = MakeArray[i];
-    Number(getAns);
-    AnsArray.push(getAns);
-  }
-  return AnsArray;
-}
-//Fileupload
-//AP3
-const SignatureAP3 = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./Signature/AP3");
-  },
-  filename: (req, file, cb) => {
-    cb(null, "file-" + "-" + file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
-  },
-});
-const uploadAP3 = multer({ storage: SignatureAP3 });
-//PO
-const SignaturePO = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./Signature/PO");
-  },
-  filename: (req, file, cb) => {
-    cb(null, "file-" + "-" + file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
-  },
-});
-const uploadPO = multer({ storage: SignaturePO });
-//PV
-const SignaturePV = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./Signature/PV");
-  },
-  filename: (req, file, cb) => {
-    cb(null, "file-" + "-" + file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
-  },
-});
-const uploadPV = multer({ storage: SignaturePV });
-//RV
-const SignatureRV = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./Signature/RV");
-  },
-  filename: (req, file, cb) => {
-    cb(null, "file-" + "-" + file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + file.originalname.split(".")[file.originalname.split(".").length - 1]);
-  },
-});
-const uploadRV = multer({ storage: SignatureRV });
-
-//Admin //แก้ไข status ของ Employee
-//เรียกดูรายชื่อพนักงานทั้งหมด
-app.post("/SelectEmployeeforAdmin", function (req, res) {
-  // Store hash in your password DB.
-  connectDB.query("SELECT * FROM  employee", [], function (err, EmployeeData) {
-    if (err) {
-      res.json({ status: "error", message: err });
-      return;
-    }
-    res.json({ status: "ok", EmployeeData });
-  });
-});
-//แก้ไข STATUS พนักงาน
-app.post("/UpdateEmployeeforAdmin", function (req, res) {
-  // Store hash in your password DB.
-  connectDB.query("UPDATE employee SET STATUS = ? where EMPLOYEE_ID = ? ", [req.body.STATUS, req.body.EMPLOYEE_ID], function (err, EmployeeData) {
-    if (err) {
-      res.json({ status: "error", message: err });
-      return;
-    }
-    res.json({ status: "ok", EmployeeData });
-  });
-});
 
 
-//Employee
-//สมัครสมาชิก
-app.post("/register", function (req, res) {
-  bcrypt.hash(req.body.PASSWORD, saltRounds, function (err, hash) {
-    // Store hash in your password DB.
-    connectDB.query(
-      "INSERT INTO employee (EMPLOYEE_ID,EMPLOYEE_PERSONAL_ID,EMPLOYEE_FNAME,EMPLOYEE_LNAME,POSITION,DEPARTMENT,BIRTHDATE,AGE,ADDRESS,PHONE_NUM,EMAIL,USERNAME,PASSWORD,STATUS) VALUES (?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? )",
-      [
-        req.body.EMPLOYEE_ID,
-        req.body.EMPLOYEE_PERSONAL_ID,
-        req.body.EMPLOYEE_FNAME,
-        req.body.EMPLOYEE_LNAME,
-        req.body.POSITION,
-        req.body.DEPARTMENT,
-        req.body.BIRTHDATE,
-        req.body.AGE,
-        req.body.ADDRESS,
-        req.body.PHONE_NUM,
-        req.body.EMAIL,
-        req.body.USERNAME,
-        hash,
-        req.body.STATUS,
-      ],
-
-      function (err, results, fields) {
-        if (err) {
-          res.json({ status: "error", err });
-          return;
-        } else res.json({ status: "ok", message: "register success" });
-      }
-    );
-  });
-});
-
-//แก้ไขโปรไฟล์Employee(update)
-app.post("/updateEmployee", function (req, res) {
-  connectDB.query(
-    "UPDATE employee SET EMPLOYEE_PERSONAL_ID = ? ,EMPLOYEE_FNAME = ? , EMPLOYEE_LNAME = ? , POSITION = ? , DEPARTMENT = ? , BIRTHDATE = ? , AGE = ? , ADDRESS = ? , PHONE_NUM = ? , EMAIL = ? , USERNAME = ?   WHERE EMPLOYEE_ID = ?",
-
-    [
-      req.body.EMPLOYEE_PERSONAL_ID,
-      req.body.EMPLOYEE_FNAME,
-      req.body.EMPLOYEE_LNAME,
-      req.body.POSITION,
-      req.body.DEPARTMENT,
-      req.body.BIRTHDATE,
-      req.body.AGE,
-      req.body.ADDRESS,
-      req.body.PHONE_NUM,
-      req.body.EMAIL,
-      req.body.USERNAME,
-      req.body.EMPLOYEE_ID,
-    ],
-
-    function (err) {
-      if (err) {
-        res.json({ status: "error", message: err });
-        return;
-      } else {
-        res.json({ status: "ok", message: "Update success" });
-      }
-    }
-  );
-});
-
-//ลบข้อมูลสมาชิก(Employee) //adminจัดการ
-app.post("/DeleteEmployee/:EMPLOYEE_ID", function (req, res) {
-  connectDB.query(
-    "DELETE FROM employee WHERE EMPLOYEE_ID  = ?",
-    //ส่ง EMPLOYEE_ID มากับ Path
-    [req.params.EMPLOYEE_ID],
-
-    function (err) {
-      if (err) {
-        res.json({ status: "error", message: err });
-        return;
-      } else {
-        res.json({ status: "ok", message: "Delete success" });
-      }
-    }
-  );
-});
-
-//testดึงข้อมูล
-app.post("/testDB", function (req, res) {
-  connectDB.execute(
-    "SELECT * FROM employee Where username=?",
-    [req.body.USERNAME],
-
-    function (err, employee, fields) {
-      if (err) {
-        res.json({ status: "error", message: err });
-        return;
-      }
-
-      console.log(employee);
-    }
-  );
-});
+app.use(router);
 
 //เข้าสู่ระบบ
 app.post("/login", function (req, res) {
