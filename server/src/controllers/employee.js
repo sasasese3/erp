@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const passport = require('../utils/auth');
+const permit = require("../middlewares/authorization");
+const userRoles = require('../utils/userRoles');
 const { UniqueConstraintError } = require('sequelize');
 const { Employee } = require('../utils/sequelize');
 const nodemailer = require('nodemailer');
@@ -21,11 +22,13 @@ router.post("/register", async function (req, res) {
     }
 });
 
-router.route("/")
-    .get(async (req, res) => {
-        if (!req.user) return res.status(400).json({ msg: "no login" });
-        return res.json(req.user);
-    });
+router.get("/", permit(userRoles.EMPLOYEE, userRoles.INSPECTOR, userRoles.ADMIN), async (req, res) => {
+    return res.json(req.user);
+});
+
+router.patch("/", permit(userRoles.ADMIN), async (req, res) => {
+    return res.json("Hello");
+});
 
 //แก้ไขโปรไฟล์Employee(update)
 // router.post("/updateEmployee", function (req, res) {

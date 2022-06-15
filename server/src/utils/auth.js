@@ -27,7 +27,7 @@ passport.serializeUser((user, cb) => {
 });
 
 passport.deserializeUser(async (id, cb) => {
-    const employee = await Employee.findByPk(id);
+    const employee = await Employee.findByPk(id, { attributes: { exclude: ['password'] } });
     if (!employee) {
         cb(null, false);
     }
