@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const connectDB = require('../../utils/connectDB');
 const { ConvertToArray, ConvertToDetailProductQuery } = require("../../utils/convert");
+const { route } = require("../admin");
 
 //AP3
 router.route('/')
@@ -174,6 +175,17 @@ router.delete('/:AP3_ID', function (req, res) {
             }
         }
     );
+});
+//เรียกดูใบสำคัญที่ยังไม่ได้!!อนุมัติ
+router.get("/SelectNonApproveAP3", function (req, res) {
+    // Store hash in your password DB.
+    connectDB.query("SELECT * FROM  ap3 Where AP3_STATUS = 0 ", [], function (err, ap3data) {
+        if (err) {
+            res.json({ status: "error", message: err });
+            return;
+        }
+        res.json({ status: "ok", ap3data });
+    });
 });
 
 module.exports = router;

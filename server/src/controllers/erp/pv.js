@@ -178,4 +178,16 @@ router.delete("/:PV_ID", function (req, res) {
     );
 });
 
+//เรียกดูใบสำคัญที่ยังไม่ได้!!อนุมัติ
+router.get("/SelectNonApprovePV", function (req, res) {
+    // Store hash in your password DB.
+    connectDB.query("SELECT * FROM  pv Where PV_STATUS = 0 ", [], function (err, PVdata) {
+        if (err) {
+            res.json({ status: "error", message: err });
+            return;
+        }
+        res.json({ status: "ok", PVdata });
+    });
+});
+
 module.exports = router;

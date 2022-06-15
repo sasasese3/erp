@@ -30,52 +30,6 @@ app.use(router);
 
 //ERP Main func
 
-//เรียกดูใบสำคัญที่ยังไม่ได้!!อนุมัติ
-//AP3
-app.post("/SelectNonApproveAP3", function (req, res) {
-  // Store hash in your password DB.
-  connectDB.query("SELECT * FROM  ap3 Where AP3_STATUS = 0 ", [], function (err, ap3data) {
-    if (err) {
-      res.json({ status: "error", message: err });
-      return;
-    }
-    res.json({ status: "ok", ap3data });
-  });
-});
-//PO
-app.post("/SelectNonApprovePO", function (req, res) {
-  // Store hash in your password DB.
-  connectDB.query("SELECT * FROM  po Where PO_STATUS = 0 ", [], function (err, POdata) {
-    if (err) {
-      res.json({ status: "error", message: err });
-      return;
-    }
-    res.json({ status: "ok", POdata });
-  });
-});
-//PV
-app.post("/SelectNonApprovePV", function (req, res) {
-  // Store hash in your password DB.
-  connectDB.query("SELECT * FROM  pv Where PV_STATUS = 0 ", [], function (err, PVdata) {
-    if (err) {
-      res.json({ status: "error", message: err });
-      return;
-    }
-    res.json({ status: "ok", PVdata });
-  });
-});
-//RV
-app.post("/SelectNonApproveRV", function (req, res) {
-  // Store hash in your password DB.
-  connectDB.query("SELECT * FROM  rv Where RV_STATUS = 0 ", [], function (err, RVdata) {
-    if (err) {
-      res.json({ status: "error", message: err });
-      return;
-    }
-    res.json({ status: "ok", RVdata });
-  });
-});
-
 //อัพโหดไฟล์รูปลายเซ็นต์
 // UploadfileSignatureAP3
 app.post("/uploadAP3", uploadAP3.single("fileupload"), (req, res) => {

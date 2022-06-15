@@ -177,4 +177,16 @@ router.delete('/:PO_ID', function (req, res) {
         }
     );
 });
+
+//เรียกดูใบสำคัญที่ยังไม่ได้!!อนุมัติ
+router.get("/SelectNonApprovePO", function (req, res) {
+    // Store hash in your password DB.
+    connectDB.query("SELECT * FROM  po Where PO_STATUS = 0 ", [], function (err, POdata) {
+        if (err) {
+            res.json({ status: "error", message: err });
+            return;
+        }
+        res.json({ status: "ok", POdata });
+    });
+});
 module.exports = router;

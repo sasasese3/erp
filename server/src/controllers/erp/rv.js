@@ -177,4 +177,16 @@ router.delete("/:RV_ID", function (req, res) {
     );
 });
 
+//เรียกดูใบสำคัญที่ยังไม่ได้!!อนุมัติ
+router.get("/SelectNonApproveRV", function (req, res) {
+    // Store hash in your password DB.
+    connectDB.query("SELECT * FROM  rv Where RV_STATUS = 0 ", [], function (err, RVdata) {
+        if (err) {
+            res.json({ status: "error", message: err });
+            return;
+        }
+        res.json({ status: "ok", RVdata });
+    });
+});
+
 module.exports = router;
