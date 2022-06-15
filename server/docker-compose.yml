@@ -22,3 +22,6 @@ services:
     restart: always
     env_file:
       - ./.env
+  redis:
+    image: "redis:alpine"
+    restart: always
