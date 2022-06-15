@@ -1,6 +1,12 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const connectDB = require("../utils/connectDB");
+const jwt = require("jsonwebtoken");
+
+const Typeadmin = "admin";
+const Typeuser = "user";
+const Typeinspector = "inspector";
+
 //เข้าสู่ระบบ
 router.post("/login", function (req, res) {
     connectDB.query(

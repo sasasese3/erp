@@ -3,6 +3,8 @@ const connectDB = require('../utils/connectDB');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 
+const saltRounds = 10;
+
 //Employee
 //สมัครสมาชิก
 router.post("/register", function (req, res) {
