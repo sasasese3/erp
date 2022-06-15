@@ -36,11 +36,11 @@ app.use(
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET || 'keyboard cat',
     resave: false,
-    cookie: { maxAge: 3600, secure: false }
   })
 );
 
 app.use(passport.initialize());
+app.use(passport.session());
 
 
 sequelize.sync({ alter: { drop: false } })

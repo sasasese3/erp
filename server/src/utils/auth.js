@@ -23,16 +23,15 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
 }));
 
 passport.serializeUser((user, cb) => {
-    process.nextTick(() => {
-        const { password, ...other } = user;
-        return cb(null, { ...other });
-    });
+    return cb(null, user.id);
 });
 
-passport.deserializeUser((user, cb) => {
-    process.nextTick(() => {
-        return cb(null, user);
-    });
+passport.deserializeUser(async (id, cb) => {
+    const employee = await Employee.findByPk(id);
+    if (!employee) {
+        cb(null, false);
+    }
+    cb(null, employee);
 });
 
 module.exports = passport;

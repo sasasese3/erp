@@ -13,7 +13,7 @@ router.delete('/logout', passport.authenticate('session'), (req, res) => {
             return res.json({ msg: 'Invalid', data: err });
         }
     });
-    // req.session.cookie.maxAge = 0;
+    req.session.cookie.maxAge = 0;
     return res.json({ msg: 'Logout success' });
 
 });

@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const passport = require('../utils/auth');
 const { UniqueConstraintError } = require('sequelize');
 const { Employee } = require('../utils/sequelize');
 const nodemailer = require('nodemailer');
@@ -12,13 +13,19 @@ router.post("/register", async function (req, res) {
         res.json({ msg: "Register Success", data: other });
     } catch (error) {
         if (error instanceof UniqueConstraintError) {
-            res.json({ msg: "Email is already used" }).status(400);
+            res.status(400).json({ msg: "Email is already used" });
         }
         else {
-            res.json({ msg: "Something went wrong" }).status(400);
+            res.status(400).json({ msg: "Something went wrong" });
         }
     }
 });
+
+router.route("/")
+    .get(async (req, res) => {
+        if (!req.user) return res.status(400).json({ msg: "no login" });
+        return res.json(req.user);
+    });
 
 //แก้ไขโปรไฟล์Employee(update)
 // router.post("/updateEmployee", function (req, res) {
