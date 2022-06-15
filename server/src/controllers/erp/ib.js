@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const connectDB = require('../utils/connectDB');
+const connectDB = require('../../utils/connectDB');
 
 //IB
 router.route("/")
