@@ -40,7 +40,9 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false
         }
 
-    }, { timestamps: false, allowNull: false });
+    }, {
+        timestamps: false,
+    });
 
     Employee.beforeCreate(async (employee) => {
         employee.password = await hash(employee.password, saltRounds);

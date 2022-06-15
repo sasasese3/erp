@@ -39,16 +39,19 @@ app.use(
     cookie: { maxAge: 3600, secure: false }
   })
 );
-app.use(
-  passport.authenticate('session')
-);
 
-sequelize.sync({ alter: true })
+app.use(passport.initialize());
+
+
+sequelize.sync({ alter: { drop: false } })
   .then(console.log('Connect to MySQL server, All models were synchronized successfully.'))
   .catch((error) => console.error('Unable to sync to the models:', error));
 
-app.use(router);
+// sequelize.define("sfd", "", {
 
+// });
+
+app.use(router);
 //StartServer
 app.listen(3333, () => {
   console.log("Server Start At Port 3333");
