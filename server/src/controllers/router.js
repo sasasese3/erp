@@ -2,11 +2,11 @@ const router = require("express").Router();
 const adminRouter = require('./admin');
 const employeeRouter = require('./employee');
 const authRouter = require('./auth');
-const ap3Router = require('./ap3');
+const erpRouter = require('./erp/erp');
 
 router.use('/admin', adminRouter);
 router.use('/employee', employeeRouter);
 router.use('/auth', authRouter);
-router.use('/ap3', ap3Router);
+router.use('/erp', erpRouter);
 
 module.exports = router;
