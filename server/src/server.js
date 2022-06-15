@@ -16,7 +16,7 @@ app.use(
   express.static(__dirname + "./Signature")
 );
 
-//cherkDBconnect
+//checkDBconnect
 connectDB.connect(function (err) {
   if (err) {
     return console.error("error: " + err.message);
@@ -29,5 +29,5 @@ app.use(router);
 
 //StartServer
 app.listen(3333, () => {
-  console.log("Sever Start At Port 3333");
+  console.log("Server Start At Port 3333");
 });
