@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { body, validationResult } = require('express-validator/check');
+const { body, validationResult } = require('express-validator');
 const { UniqueConstraintError } = require('sequelize');
 const nodemailer = require('nodemailer');
 
@@ -14,7 +14,7 @@ router.post("/register", [
     body('password').notEmpty().isString(),
     body('username').notEmpty().isString(),
     body('ssn').optional().isString().default(null),
-    body('fullname').optional().isString().default(null),
+    body('firstname').optional().isString().default(null),
     body('lastname').optional().isString().default(null),
     body('position').optional().isString().default(null),
     body('department').optional().isString().default(null),

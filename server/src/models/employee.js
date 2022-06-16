@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         ssn: DataTypes.STRING(13),
-        fullname: DataTypes.STRING(128),
+        firstname: DataTypes.STRING(128),
         lastname: DataTypes.STRING(128),
         position: DataTypes.STRING(64),
         department: DataTypes.STRING(64),

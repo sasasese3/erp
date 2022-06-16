@@ -1,48 +1,65 @@
 const router = require("express").Router();
-const connectDB = require("../utils/connectDB");
+const { Op } = require('sequelize');
+const { body, validationResult } = require('express-validator');
+const userRoles = require('../utils/userRoles');
+const { Employee } = require('../utils/sequelize');
 
 //Admin
-router.route('/employee')
-    //เรียกดูรายชื่อพนักงานทั้งหมด
-    .get(function (req, res) {
-        // Store hash in your password DB.
-        connectDB.query("SELECT * FROM  employee", [], function (err, EmployeeData) {
-            if (err) {
-                res.json({ status: "error", message: err });
-                return;
-            }
-            res.json({ status: "ok", EmployeeData });
-        });
+router.get('/employee', async function (req, res) {
+    // Store hash in your password DB.
+    try {
+        const employees = await Employee.findAll({ where: { id: { [Op.ne]: req.user.id } }, attributes: ['id', 'email', 'username', 'firstname', 'lastname', 'role', 'verified'] });
+        return res.json({ msg: "Get all employee", data: employees });
+
+    } catch (error) {
+        return res.status(400).json({ msg: "Something went wrong", error: error });
     }
-    )
-    //แก้ไข status ของ Employee
-    .post(function (req, res) {
-        // Store hash in your password DB.
-        connectDB.query("UPDATE employee SET STATUS = ? where EMPLOYEE_ID = ? ", [req.body.STATUS, req.body.EMPLOYEE_ID], function (err, EmployeeData) {
-            if (err) {
-                res.json({ status: "error", message: err });
-                return;
+});
+
+router.patch('/employee', [
+    body('id').notEmpty().isInt().custom((value, { req }) => {
+        if (req.user.id == value) {
+            throw new Error("Could not change yourself role");
+        }
+    }),
+    body('role').notEmpty().isIn(userRoles.ALL)
+],
+    async function (req, res) {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
             }
-            res.json({ status: "ok", EmployeeData });
-        });
+
+            const employee = await Employee.findByPk(req.body.id);
+            if (!employee) {
+                return res.status(400).json({ msg: 'Invalid ID' });
+            }
+
+            await employee.update({ role: req.body.role });
+
+            return res.json({ msg: 'Change role success' });
+        } catch (error) {
+            return res.status(400).json({ msg: "Something went wrong", error: error });
+        }
     });
 
 //ลบข้อมูลสมาชิก(Employee)
-router.delete('/employee:/:EMPLOYEE_ID', function (req, res) {
-    connectDB.query(
-        "DELETE FROM employee WHERE EMPLOYEE_ID  = ?",
-        //ส่ง EMPLOYEE_ID มากับ Path
-        [req.params.EMPLOYEE_ID],
+// router.delete('/employee:/:EMPLOYEE_ID', function (req, res) {
+//     connectDB.query(
+//         "DELETE FROM employee WHERE EMPLOYEE_ID  = ?",
+//         //ส่ง EMPLOYEE_ID มากับ Path
+//         [req.params.EMPLOYEE_ID],
 
-        function (err) {
-            if (err) {
-                res.json({ status: "error", message: err });
-                return;
-            } else {
-                res.json({ status: "ok", message: "Delete success" });
-            }
-        }
-    );
-});
+//         function (err) {
+//             if (err) {
+//                 res.json({ status: "error", message: err });
+//                 return;
+//             } else {
+//                 res.json({ status: "ok", message: "Delete success" });
+//             }
+//         }
+//     );
+// });
 
 module.exports = router;
