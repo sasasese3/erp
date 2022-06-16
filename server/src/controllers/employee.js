@@ -3,27 +3,47 @@ const permit = require("../middlewares/authorization");
 const userRoles = require('../utils/userRoles');
 const { UniqueConstraintError } = require('sequelize');
 const { Employee } = require('../utils/sequelize');
+const { body, validationResult } = require('express-validator/check');
 const nodemailer = require('nodemailer');
 
 //Employee
 //สมัครสมาชิก
-router.post("/register", async function (req, res) {
-    try {
-        const employee = await Employee.create({ ...req.body });
-        const { password, ...other } = employee.toJSON();
-        res.json({ msg: "Register Success", data: other });
-    } catch (error) {
-        if (error instanceof UniqueConstraintError) {
-            res.status(400).json({ msg: "Email is already used" });
-        }
-        else {
-            res.status(400).json({ msg: "Something went wrong" });
+router.post("/register", [
+    body('email').notEmpty().withMessage('Email not empty').isEmail(),
+    body('password').notEmpty().isString(),
+    body('username').notEmpty().isString(),
+    body('ssn').optional().isString().default(null),
+    body('fullname').optional().isString().default(null),
+    body('lastname').optional().isString().default(null),
+    body('position').optional().isString().default(null),
+    body('department').optional().isString().default(null),
+    body('birthdate').optional().isISO8601().default(null),
+    body('address').optional().isString().default(null),
+    body('phone_no').optional().isString().default(null),
+],
+    async function (req, res) {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
+            }
+
+            const employee = await Employee.create({ ...req.body });
+            const { password, ...other } = employee.toJSON();
+
+            return res.json({ msg: "Register Success", data: other });
+        } catch (error) {
+            if (error instanceof UniqueConstraintError) {
+                return res.status(409).json({ msg: "E-mail is already used" });
+            }
+
+            return res.status(400).json({ msg: "Something went wrong", error: error });
         }
     }
-});
+);
 
 router.get("/", permit(userRoles.ALL), async (req, res) => {
-    return res.json(req.user);
+    return res.json({ msg: 'Get current user', data: req.user });
 });
 
 router.patch("/", permit(userRoles.ADMIN), async (req, res) => {

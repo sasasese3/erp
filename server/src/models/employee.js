@@ -21,7 +21,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        username: DataTypes.STRING(128),
+        username: {
+            type: DataTypes.STRING(128),
+            allowNull: false,
+        },
         ssn: DataTypes.STRING(13),
         fullname: DataTypes.STRING(128),
         lastname: DataTypes.STRING(128),
@@ -32,8 +35,8 @@ module.exports = (sequelize, DataTypes) => {
         phone_no: DataTypes.STRING(10),
         role: {
             type: DataTypes.ENUM,
-            values: [userRoles.EMPLOYEE, userRoles.INSPECTOR, userRoles.ADMIN],
-            defaultValue: userRoles.EMPLOYEE
+            values: userRoles.ALL,
+            defaultValue: userRoles.EMPLOYEE[0]
         },
         verified: {
             type: DataTypes.BOOLEAN,
