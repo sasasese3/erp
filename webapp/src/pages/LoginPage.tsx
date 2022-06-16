@@ -2,21 +2,58 @@ import {
   Avatar,
   Box,
   Button,
+  chakra,
   Flex,
   FormControl,
   Heading,
   Input,
+  InputGroup,
+  InputLeftElement,
   Link,
   VStack,
 } from "@chakra-ui/react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  FormEventHandler,
+  useState,
+} from "react";
+import { FaUserAlt, FaLock } from "react-icons/fa";
 import axios from "axios";
-import React from "react";
+
+type LoginPayload = {
+  email: string;
+  password: string;
+};
 
 function LoginPage() {
-  const handleSummit = (event: React.FormEvent) => {
+  const CFaUserAlt = chakra(FaUserAlt);
+  const CFaLock = chakra(FaLock);
+
+  const [loginPayload, setLoginPayload] = useState<LoginPayload>({
+    email: "",
+    password: "",
+  });
+
+  const handleSummit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Hello World");
+    console.log(loginPayload);
   };
+
+  const handleChange = (name: string, value: string) => {
+    const { email, password } = loginPayload;
+    switch (name) {
+      case "email":
+        const newEmail = value;
+        setLoginPayload({ email: newEmail, password });
+        break;
+      case "password":
+        const newPassword = value;
+        setLoginPayload({ email, password: newPassword });
+        break;
+    }
+  };
+
   return (
     <Flex
       direction="column"
@@ -27,8 +64,8 @@ function LoginPage() {
       align="center"
     >
       <VStack spacing={4}>
-        <Avatar background="teal.400"></Avatar>
-        <Heading color="teal.400">ERP System</Heading>
+        <Avatar background="telegram.400"></Avatar>
+        <Heading color="telegram.400">ERP System</Heading>
         <Box minW={{ base: "90%", md: "468px" }} borderRadius="md">
           <form onSubmit={handleSummit}>
             <VStack
@@ -39,16 +76,44 @@ function LoginPage() {
               borderRadius="md"
             >
               <FormControl>
-                <Input type="email" placeholder="Email address"></Input>
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<CFaUserAlt color="gray.300" />}
+                  />
+
+                  <Input
+                    type="email"
+                    placeholder="Email address"
+                    value={loginPayload.email}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      handleChange("email", event.target.value)
+                    }
+                  />
+                </InputGroup>
               </FormControl>
               <FormControl>
-                <Input type="password" placeholder="Password"></Input>
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<CFaLock color="gray.300" />}
+                  />
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={loginPayload.password}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      handleChange("password", event.target.value)
+                    }
+                  ></Input>
+                </InputGroup>
               </FormControl>
               <FormControl>
                 <Button
+                  disabled={!(loginPayload.email && loginPayload.password)}
                   type="submit"
                   variant="solid"
-                  colorScheme="teal"
+                  colorScheme="telegram"
                   width="full"
                 >
                   Login
