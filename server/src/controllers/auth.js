@@ -1,22 +1,31 @@
 const router = require('express').Router();
-const bcrypt = require('bcrypt');
 const passport = require('../utils/auth');
+const { body, validationResult } = require('express-validator/check');
 
 //เข้าสู่ระบบ
-router.post("/login", passport.authenticate('local'), (req, res) => {
-    return res.json(req.user);
-});
+router.post("/login", [
+    body('email').notEmpty().withMessage('Email not empty').isEmail(),
+    body('password').notEmpty().isString(),
+],
+    passport.authenticate('local'),
+    function (req, res) {
+        return res.json(req.user);
+    }
+);
 
-router.delete('/logout', passport.authenticate('session'), (req, res) => {
-    req.logOut((err) => {
-        if (err) {
-            return res.json({ msg: 'Invalid', data: err });
-        }
-    });
-    req.session.cookie.maxAge = 0;
-    return res.json({ msg: 'Logout success' });
+router.delete('/logout',
+    passport.authenticate('session'),
+    function (req, res) {
+        req.logOut((err) => {
+            if (err) {
+                return res.json({ msg: 'Invalid', data: err });
+            }
+        });
+        req.session.cookie.maxAge = 0;
+        return res.json({ msg: 'Logout success' });
 
-});
+    }
+);
 // router.post("/login", function (req, res) {
 //     connectDB.query(
 //         "SELECT * FROM employee Where username=?",

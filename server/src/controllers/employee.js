@@ -42,11 +42,11 @@ router.post("/register", [
     }
 );
 
-router.get("/", permit(userRoles.ALL), async (req, res) => {
+router.get("/", permit(userRoles.ALL), async function (req, res) {
     return res.json({ msg: 'Get current user', data: req.user });
 });
 
-router.patch("/", permit(userRoles.ADMIN), async (req, res) => {
+router.patch("/", permit(userRoles.ADMIN), async function (req, res) {
     return res.json("Hello");
 });
 
