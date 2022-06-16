@@ -1,10 +1,11 @@
 const router = require('express').Router();
+const { body, validationResult } = require('express-validator/check');
+const { UniqueConstraintError } = require('sequelize');
+const nodemailer = require('nodemailer');
+
 const permit = require("../middlewares/authorization");
 const userRoles = require('../utils/userRoles');
-const { UniqueConstraintError } = require('sequelize');
 const { Employee } = require('../utils/sequelize');
-const { body, validationResult } = require('express-validator/check');
-const nodemailer = require('nodemailer');
 
 //Employee
 //สมัครสมาชิก

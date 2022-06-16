@@ -1,20 +1,18 @@
 const router = require('express').Router();
+const permit = require("../middlewares/authorization");
+const userRoles = require('../utils/userRoles');
 const passport = require('../utils/auth');
-const { body, validationResult } = require('express-validator/check');
 
 //เข้าสู่ระบบ
-router.post("/login", [
-    body('email').notEmpty().withMessage('Email not empty').isEmail(),
-    body('password').notEmpty().isString(),
-],
+router.post("/login",
     passport.authenticate('local'),
     function (req, res) {
-        return res.json(req.user);
+        return res.json({ msg: "Login success", data: req.user });
     }
 );
 
 router.delete('/logout',
-    passport.authenticate('session'),
+    permit(userRoles.ALL),
     function (req, res) {
         req.logOut((err) => {
             if (err) {
