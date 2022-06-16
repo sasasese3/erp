@@ -18,9 +18,10 @@ router.get('/employee', async function (req, res) {
 
 router.patch('/employee', [
     body('id').notEmpty().isInt().custom((value, { req }) => {
-        if (req.user.id == value) {
+        if (req.user.id === value) {
             throw new Error("Could not change yourself role");
         }
+        return true;
     }),
     body('role').notEmpty().isIn(userRoles.ALL)
 ],
