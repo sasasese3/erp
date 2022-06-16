@@ -5,7 +5,7 @@ import RequireAuth from "./templates/RequireAuth";
 import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
 import InspectorPage from "./pages/InspectorPage";
-import ROLES from "./utils/roles";
+import { ROLES } from "./utils/roles";
 
 function App() {
   return (
