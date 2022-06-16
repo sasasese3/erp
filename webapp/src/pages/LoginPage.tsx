@@ -12,14 +12,9 @@ import {
   Link,
   VStack,
 } from "@chakra-ui/react";
-import React, {
-  ChangeEvent,
-  FormEvent,
-  FormEventHandler,
-  useState,
-} from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 type LoginPayload = {
   email: string;
@@ -35,9 +30,24 @@ function LoginPage() {
     password: "",
   });
 
-  const handleSummit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(loginPayload);
+  const userRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    userRef.current!.focus();
+  }, []);
+
+  const handleSummit = async (event: FormEvent<HTMLFormElement>) => {
+    try {
+      event.preventDefault();
+      const response = await axios.post("/auth/login", loginPayload);
+      console.log(response.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error.message);
+      } else {
+        console.log(error);
+      }
+    }
   };
 
   const handleChange = (name: string, value: string) => {
@@ -84,6 +94,7 @@ function LoginPage() {
 
                   <Input
                     type="email"
+                    ref={userRef}
                     placeholder="Email address"
                     value={loginPayload.email}
                     onChange={(event: ChangeEvent<HTMLInputElement>) =>
