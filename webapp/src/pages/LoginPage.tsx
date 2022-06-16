@@ -15,15 +15,38 @@ import {
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import axios, { AxiosError } from "axios";
+import useAuth from "../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BasePathByRole } from "../utils/roles";
 
 type LoginPayload = {
   email: string;
   password: string;
 };
 
+type LocationState = {
+  from: {
+    pathname: string;
+  };
+};
+type LoginResponse = {
+  msg: string;
+  data: {
+    id: number;
+    email: string;
+    firstname: string;
+    lastname: string;
+    role: string;
+  };
+};
+
 function LoginPage() {
   const CFaUserAlt = chakra(FaUserAlt);
   const CFaLock = chakra(FaLock);
+
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [loginPayload, setLoginPayload] = useState<LoginPayload>({
     email: "",
@@ -39,8 +62,17 @@ function LoginPage() {
   const handleSummit = async (event: FormEvent<HTMLFormElement>) => {
     try {
       event.preventDefault();
-      const response = await axios.post("/auth/login", loginPayload);
-      console.log(response.data);
+      const response = await axios.post<LoginResponse>(
+        "/auth/login",
+        loginPayload
+      );
+      const { data } = response.data;
+      const { id, email, firstname, lastname, role } = data;
+      setAuth?.({ id, email, firstname, lastname, role });
+      const { from } =
+        (location.state as LocationState) ||
+        BasePathByRole[role as keyof typeof BasePathByRole];
+      navigate(from, { replace: true });
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(error.message);

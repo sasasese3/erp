@@ -13,7 +13,9 @@ function RequireAuth({ allowedRoles }: Props) {
     <Outlet />
   ) : auth?.role ? (
     <Navigate
-      to={BasePathByRole[auth.role as keyof typeof BasePathByRole]}
+      to={
+        BasePathByRole[auth.role as keyof typeof BasePathByRole].from.pathname
+      }
       state={{ from: location }}
       replace
     />
