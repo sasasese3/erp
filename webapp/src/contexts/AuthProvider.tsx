@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: Props) => {
     email: "xxx",
     firstname: "xxx",
     lastname: "xxx",
-    role: ROLES.ADMIN,
+    role: ROLES.INSPECTOR,
   });
 
   return (

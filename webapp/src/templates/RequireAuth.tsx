@@ -12,7 +12,11 @@ function RequireAuth({ allowedRoles }: Props) {
   return auth?.role && allowedRoles.includes(auth?.role) ? (
     <Outlet />
   ) : auth?.role ? (
-    <Navigate to="/home" state={{ from: location }} replace />
+    <Navigate
+      to={BasePathByRole[auth.role as keyof typeof BasePathByRole]}
+      state={{ from: location }}
+      replace
+    />
   ) : (
     <Navigate to="/" state={{ from: location }} replace />
   );

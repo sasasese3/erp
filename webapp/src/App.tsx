@@ -16,13 +16,7 @@ function App() {
         <Route path="register" element={<LoginPage />}></Route>
 
         {/* protected routes */}
-        <Route
-          element={
-            <RequireAuth
-              allowedRoles={[ROLES.EMPLOYEE, ROLES.INSPECTOR, ROLES.ADMIN]}
-            />
-          }
-        >
+        <Route element={<RequireAuth allowedRoles={[ROLES.EMPLOYEE]} />}>
           <Route path="home" element={<HomePage />}></Route>
         </Route>
 
