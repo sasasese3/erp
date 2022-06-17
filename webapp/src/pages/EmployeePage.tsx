@@ -50,7 +50,7 @@ const cardData = [
 
 function EmployeePage() {
   return (
-    <Container maxW={"container.lg"} minH="calc(100vh - 60px)" py={5}>
+    <>
       <Heading>ใบสำคัญ</Heading>
       <Grid
         templateColumns="repeat(2,1fr)"
@@ -84,7 +84,7 @@ function EmployeePage() {
           </GridItem>
         ))}
       </Grid>
-    </Container>
+    </>
   );
 }
 

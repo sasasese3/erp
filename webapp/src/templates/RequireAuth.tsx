@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import useAuth from "../hooks/useAuth";
+import LayoutWithNav from "../pages/templates/LayoutWithNav";
 import LoadingPage from "../pages/LoadingPage";
 import { BasePathByRole } from "../utils/roles";
 
@@ -36,8 +37,10 @@ function RequireAuth({ allowedRoles }: Props) {
     </>
   ) : auth?.role && allowedRoles.includes(auth?.role) ? (
     <Flex direction={"column"} flex={1}>
-      <NavBar></NavBar>
-      <Outlet />
+      <NavBar />
+      <LayoutWithNav>
+        <Outlet />
+      </LayoutWithNav>
     </Flex>
   ) : auth?.role ? (
     <Navigate

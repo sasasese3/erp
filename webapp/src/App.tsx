@@ -6,7 +6,6 @@ import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
 import InspectorPage from "./pages/InspectorPage";
 import { ROLES } from "./utils/roles";
-import NavBar from "./components/NavBar";
 import EmployeePage from "./pages/EmployeePage";
 import LandingBuyPage from "./pages/LandingBuyPage";
 import POPage from "./pages/POPage";
