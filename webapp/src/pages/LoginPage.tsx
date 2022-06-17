@@ -10,7 +10,6 @@ import {
   InputGroup,
   InputLeftElement,
   Link,
-  useDisclosure,
   useToast,
   UseToastOptions,
   VStack,
@@ -96,7 +95,10 @@ function LoginPage() {
           });
         }
       } else {
-        console.log(error);
+        toast({
+          title: "Something went wrong.",
+          ...toastProps,
+        });
       }
     }
   };
@@ -131,7 +133,7 @@ function LoginPage() {
             <VStack
               spacing={4}
               background="whiteAlpha.900"
-              p={"1rem"}
+              p={4}
               boxShadow="md"
               borderRadius="md"
             >
