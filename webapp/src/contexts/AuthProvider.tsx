@@ -1,5 +1,4 @@
 import { createContext, useState } from "react";
-import { ROLES } from "../utils/roles";
 
 type Auth = {
   id?: number;

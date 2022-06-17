@@ -22,7 +22,7 @@ function App() {
       <Route path="/" element={<LayoutPage />}>
         {/* public routes */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<LoginPage />} />
 
         {/* protected routes */}
@@ -45,7 +45,7 @@ function App() {
         <Route element={<RequireAuth allowedRoles={[ROLES.ADMIN]} />}>
           <Route path="admin" element={<AdminPage />} />
         </Route>
-        <Route path="*" element={<Navigate to={"/"} />}></Route>
+        <Route path="*" element={<Navigate to="/" />}></Route>
       </Route>
     </Routes>
   );

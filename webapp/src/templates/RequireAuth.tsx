@@ -1,4 +1,4 @@
-import { Flex, Skeleton } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -23,20 +23,17 @@ function RequireAuth({ allowedRoles }: Props) {
         const response = await axios.get("/employee");
         const { data } = response.data;
         setAuth?.(data);
-        setTimeout(() => setShow(true), 500);
+        setTimeout(() => setShow(true), 0.5 * 1000);
       } catch (error) {
-        setTimeout(() => setShow(true), 500);
+        setTimeout(() => setShow(true), 0.5 * 1000);
       }
     };
     fetchData();
   }, []);
-
   return !show ? (
-    <>
-      <LoadingPage></LoadingPage>
-    </>
+    <LoadingPage />
   ) : auth?.role && allowedRoles.includes(auth?.role) ? (
-    <Flex direction={"column"} flex={1}>
+    <Flex direction="column">
       <NavBar />
       <LayoutWithNav>
         <Outlet />
