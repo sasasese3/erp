@@ -1,15 +1,5 @@
-import {
-  AspectRatio,
-  Center,
-  Container,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  Image,
-  Link,
-} from "@chakra-ui/react";
-import { Link as ReactLink } from "react-router-dom";
+import { Grid, Heading } from "@chakra-ui/react";
+import CardComponent from "../components/CardComponent";
 
 const cardData = [
   {
@@ -55,33 +45,11 @@ function EmployeePage() {
       <Grid
         templateColumns="repeat(2,1fr)"
         templateRows="repeat(2,1fr)"
-        h="1fr"
-        gap={4}
-        pt={2}
+        gap={5}
+        pt={5}
       >
         {cardData.map((card) => (
-          <GridItem
-            bg="whiteAlpha.900"
-            p={4}
-            borderRadius={10}
-            _hover={{ boxShadow: "5px 5px 10px gray" }}
-          >
-            <Link
-              as={ReactLink}
-              to={card.link}
-              _hover={{ textDecoration: "none" }}
-            >
-              <Flex direction="column" gap={2}>
-                <Center>
-                  <AspectRatio ratio={16 / 9} width="100%">
-                    <Image src={card.image} borderRadius={10}></Image>
-                  </AspectRatio>
-                </Center>
-                <Heading size={"md"}>{card.name}</Heading>
-                <p> {card.description}</p>
-              </Flex>
-            </Link>
-          </GridItem>
+          <CardComponent {...card}></CardComponent>
         ))}
       </Grid>
     </>

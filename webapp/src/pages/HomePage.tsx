@@ -14,7 +14,7 @@ function HomePage() {
   return (
     <>
       <Container minH="100vh" maxW="container.lg">
-        <Flex direction="column" height="100%" gap={4}>
+        <Flex direction="column" height="100%" gap={4} justifyContent="center">
           <Center>
             <AspectRatio ratio={16 / 9} width="80%">
               <Image src="http://www.fmsconsult.com/images/5.jpg"></Image>

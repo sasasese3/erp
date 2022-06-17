@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import useAuth from "../hooks/useAuth";
-import LayoutWithNav from "../pages/templates/LayoutWithNav";
+import LayoutWithNav from "../components/LayoutWithNav";
 import LoadingPage from "../pages/LoadingPage";
 import { BasePathByRole } from "../utils/roles";
 
