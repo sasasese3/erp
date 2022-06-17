@@ -1,8 +1,10 @@
+import { Skeleton } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import useAuth from "../hooks/useAuth";
+import LoadingPage from "../pages/LoadingPage";
 import { BasePathByRole } from "../utils/roles";
 
 type Props = {
@@ -20,7 +22,7 @@ function RequireAuth({ allowedRoles }: Props) {
         const response = await axios.get("/employee");
         const { data } = response.data;
         setAuth?.(data);
-        setShow(true);
+        setTimeout(() => setShow(true), 500);
       } catch (error) {
         setShow(true);
       }
@@ -29,7 +31,9 @@ function RequireAuth({ allowedRoles }: Props) {
   }, []);
 
   return !show ? (
-    <div> Loading</div>
+    <>
+      <LoadingPage></LoadingPage>
+    </>
   ) : auth?.role && allowedRoles.includes(auth?.role) ? (
     <>
       <NavBar></NavBar>
