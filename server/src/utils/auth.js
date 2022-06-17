@@ -7,7 +7,8 @@ const { Employee } = require('../utils/sequelize');
 
 passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, cb) => {
     const employee = await Employee.findOne({
-        where: { email: email }
+        where: { email: email },
+        attributes: ['id', 'email', 'username', 'firstname', 'lastname', 'password', 'role']
     });
 
     if (!employee) {
@@ -27,7 +28,7 @@ passport.serializeUser((user, cb) => {
 });
 
 passport.deserializeUser(async (id, cb) => {
-    const employee = await Employee.findByPk(id, { attributes: { exclude: ['password'] } });
+    const employee = await Employee.findByPk(id, { attributes: ['id', 'email', 'username', 'firstname', 'lastname', 'role'] });
     if (!employee) {
         cb(null, false);
     }
