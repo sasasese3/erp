@@ -24,7 +24,6 @@ function LoadingPage() {
       alignItems="center"
       justify="center"
       background="rgba(0,0,0,0.5)"
-      zIndex={9999}
     >
       <CImSpinner size="30%" animation={animation}></CImSpinner>
     </Flex>

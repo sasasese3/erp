@@ -24,7 +24,7 @@ function RequireAuth({ allowedRoles }: Props) {
         setAuth?.(data);
         setTimeout(() => setShow(true), 500);
       } catch (error) {
-        setShow(true);
+        setTimeout(() => setShow(true), 500);
       }
     };
     fetchData();
