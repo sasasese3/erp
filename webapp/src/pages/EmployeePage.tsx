@@ -1,0 +1,91 @@
+import {
+  AspectRatio,
+  Center,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Image,
+  Link,
+} from "@chakra-ui/react";
+import { Link as ReactLink } from "react-router-dom";
+
+const cardData = [
+  {
+    id: 1,
+    name: "ใบสำคัญซื้อ",
+    description:
+      "ระบบที่ใช้ควบคุมการจ่ายเงินที่มีเอกสารประกอบ โดยนำทั้งหมดมาตรวจสอบ และเก็บข้อมูล จดบันทึก ไว้เป็นหลักฐาน โดยกระบวนการทั้งหมด จะต้องมีการเซ็นอนุมัติจ่ายเงิน และจัดเก็บไว้ในทะเบียนใบสำคัญจ่ายอย่างครบถ้วน",
+    image: "https://inwfile.com/s-cu/tl5xvh.png",
+    link: "/buy",
+  },
+  {
+    id: 2,
+    name: "ใบสำคัญขาย",
+    description:
+      "เอกสารที่ใช้เป็นหลักฐานในการจ่ายเงิน จัดทำโดยพนักงานในแผนกบัญแล้วส่งไปให้ผู้มีหน้าที่ตรวจสอบ ก่อนที่ผู้มีอำนาจจ่ายเงินจะลงนามอนุมัติการจ่ายเงิน",
+    image:
+      "https://s.isanook.com/ca/0/rp/r/w728/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL2NhLzAvdWQvMjc4LzEzOTE0MjUvaXN0b2NrLTg1ODUwODAwOC5qcGc=.jpg",
+    link: "/sell",
+  },
+  {
+    id: 3,
+    name: "ใบสำคัญรับสินค้า",
+    description:
+      "ใช้บันทึกรายการซื้อผลิตผล/สินค้าจากสมาชิก ซึ่งไม่มีใบเสร็จรับเงินหรือใบกำกับสินค้าออกให้แก่สหกรณ์ไม่ว่าจะเป็นการซื้อเงินสดหรือเงินเชื่อ",
+    image:
+      "https://image.ezymar.com/article/20190901/12/2035d300-4877-42bb-abe5-e7ac32480409.jpg",
+    link: "/ib",
+  },
+  {
+    id: 4,
+    name: "เรียกดูใบสำคัญ",
+    description:
+      "เรียกดูใบสำคัญที่กำลังดำเนินการอยู่ และยังสามารถนำกลับมาแก้ไขได้หลังจากยื่นไปแล้วจนกว่าจะถึงระยะเวลาที่จะทำการเซ็นอนุมัติ",
+    image: "https://mpics.mgronline.com/pics/Images/559000013114301.JPEG",
+    link: "/history",
+  },
+];
+
+function EmployeePage() {
+  return (
+    <Container maxW={"container.lg"} minH="calc(100vh - 60px)" py={5}>
+      <Heading>ใบสำคัญ</Heading>
+      <Grid
+        templateColumns="repeat(2,1fr)"
+        templateRows="repeat(2,1fr)"
+        h="1fr"
+        gap={4}
+        pt={2}
+      >
+        {cardData.map((card) => (
+          <GridItem
+            bg="whiteAlpha.900"
+            p={4}
+            borderRadius={10}
+            _hover={{ boxShadow: "5px 5px 10px gray" }}
+          >
+            <Link
+              as={ReactLink}
+              to={card.link}
+              _hover={{ textDecoration: "none" }}
+            >
+              <Flex direction="column" gap={2}>
+                <Center>
+                  <AspectRatio ratio={16 / 9} width="100%">
+                    <Image src={card.image} borderRadius={10}></Image>
+                  </AspectRatio>
+                </Center>
+                <Heading size={"md"}>{card.name}</Heading>
+                <p> {card.description}</p>
+              </Flex>
+            </Link>
+          </GridItem>
+        ))}
+      </Grid>
+    </Container>
+  );
+}
+
+export default EmployeePage;

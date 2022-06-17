@@ -7,26 +7,28 @@ import AdminPage from "./pages/AdminPage";
 import InspectorPage from "./pages/InspectorPage";
 import { ROLES } from "./utils/roles";
 import NavBar from "./components/NavBar";
+import EmployeePage from "./pages/EmployeePage";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LayoutPage />}>
         {/* public routes */}
-        <Route path="/" element={<LoginPage />}></Route>
-        <Route path="register" element={<LoginPage />}></Route>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="register" element={<LoginPage />} />
 
         {/* protected routes */}
         <Route element={<RequireAuth allowedRoles={[ROLES.EMPLOYEE]} />}>
-          <Route path="home" element={<HomePage />}></Route>
+          <Route path="home" element={<EmployeePage />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.INSPECTOR]} />}>
-          <Route path="inspector" element={<InspectorPage />}></Route>
+          <Route path="inspector" element={<InspectorPage />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.ADMIN]} />}>
-          <Route path="admin" element={<AdminPage />}></Route>
+          <Route path="admin" element={<AdminPage />} />
         </Route>
       </Route>
     </Routes>

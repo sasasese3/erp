@@ -1,4 +1,8 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  extendTheme,
+  withDefaultColorScheme,
+} from "@chakra-ui/react";
 import axios from "axios";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -7,12 +11,22 @@ import App from "./App";
 import { AuthProvider } from "./contexts/AuthProvider";
 import "./index.css";
 
-const theme = extendTheme({
-  fonts: {
-    body: "Roboto, Kanit, sans-serif",
-    heading: "Roboto, Kanit, sans-serif",
+const theme = extendTheme(
+  {
+    fonts: {
+      body: "Roboto, Kanit, sans-serif",
+      heading: "Roboto, Kanit, sans-serif",
+    },
+    styles: {
+      global: {
+        body: {
+          bg: "gray.200",
+        },
+      },
+    },
   },
-});
+  withDefaultColorScheme({ colorScheme: "twitter" })
+);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

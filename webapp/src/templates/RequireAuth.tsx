@@ -1,4 +1,4 @@
-import { Skeleton } from "@chakra-ui/react";
+import { Flex, Skeleton } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -35,10 +35,10 @@ function RequireAuth({ allowedRoles }: Props) {
       <LoadingPage></LoadingPage>
     </>
   ) : auth?.role && allowedRoles.includes(auth?.role) ? (
-    <>
+    <Flex direction={"column"} flex={1}>
       <NavBar></NavBar>
       <Outlet />
-    </>
+    </Flex>
   ) : auth?.role ? (
     <Navigate
       to={

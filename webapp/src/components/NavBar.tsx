@@ -7,7 +7,7 @@ function NavBar() {
     <>
       <Flex
         background="telegram.400"
-        height="50px"
+        height="60px"
         justify="center"
         align="center"
       >

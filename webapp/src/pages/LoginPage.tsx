@@ -10,6 +10,9 @@ import {
   InputGroup,
   InputLeftElement,
   Link,
+  useDisclosure,
+  useToast,
+  UseToastOptions,
   VStack,
 } from "@chakra-ui/react";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
@@ -31,19 +34,34 @@ type LocationState = {
   };
 };
 
+const toastProps: UseToastOptions = {
+  status: "error",
+  duration: 2000,
+  position: "top-right",
+};
+
 function LoginPage() {
+  //for left icon in input
   const CFaUserAlt = chakra(FaUserAlt);
   const CFaLock = chakra(FaLock);
 
+  //for auth
   const { setAuth } = useAuth();
+
+  //for navigation
   const navigate = useNavigate();
   const location = useLocation();
 
+  //for login request
   const [loginPayload, setLoginPayload] = useState<LoginPayload>({
     email: "",
     password: "",
   });
 
+  //for login failed alert
+  const toast = useToast();
+
+  //for focus on email input
   const userRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -65,7 +83,17 @@ function LoginPage() {
       navigate(from, { replace: true });
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error(error.message);
+        if (error.response?.status == 401) {
+          toast({
+            title: "Email or Password is incorrect.",
+            ...toastProps,
+          });
+        } else {
+          toast({
+            title: "Something went wrong.",
+            ...toastProps,
+          });
+        }
       } else {
         console.log(error);
       }
@@ -92,12 +120,11 @@ function LoginPage() {
       width="100wh"
       height="100vh"
       justify="center"
-      background="gray.200"
       align="center"
     >
       <VStack spacing={4}>
-        <Avatar background="telegram.400"></Avatar>
-        <Heading color="telegram.400">ERP System</Heading>
+        <Avatar background="twitter.400"></Avatar>
+        <Heading color="twitter.400">ERP System</Heading>
         <Box minW={{ base: "90%", md: "468px" }} borderRadius="md">
           <form onSubmit={handleSummit}>
             <VStack
@@ -146,7 +173,6 @@ function LoginPage() {
                   disabled={!(loginPayload.email && loginPayload.password)}
                   type="submit"
                   variant="solid"
-                  colorScheme="telegram"
                   width="full"
                 >
                   Login
@@ -154,12 +180,6 @@ function LoginPage() {
               </FormControl>
             </VStack>
           </form>
-        </Box>
-        <Box>
-          New to us?{" "}
-          <Link color={"teal.500"} href="/register">
-            Sign Up
-          </Link>
         </Box>
       </VStack>
     </Flex>
