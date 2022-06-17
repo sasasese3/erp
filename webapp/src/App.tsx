@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import LayoutPage from "./templates/Layout";
 import LoginPage from "./pages/LoginPage";
 import RequireAuth from "./templates/RequireAuth";
@@ -8,6 +8,14 @@ import InspectorPage from "./pages/InspectorPage";
 import { ROLES } from "./utils/roles";
 import NavBar from "./components/NavBar";
 import EmployeePage from "./pages/EmployeePage";
+import LandingBuyPage from "./pages/LandingBuyPage";
+import POPage from "./pages/POPage";
+import RVPage from "./pages/RVPage";
+import LandingSellPage from "./pages/LandingSellPage";
+import PVPage from "./pages/PVPage";
+import AP3Page from "./pages/AP3Page";
+import IBPage from "./pages/IBPage";
+import HistoryPage from "./pages/HistoryPage";
 
 function App() {
   return (
@@ -21,6 +29,14 @@ function App() {
         {/* protected routes */}
         <Route element={<RequireAuth allowedRoles={[ROLES.EMPLOYEE]} />}>
           <Route path="home" element={<EmployeePage />} />
+          <Route path="buy" element={<LandingBuyPage />} />
+          <Route path="buy/po" element={<POPage />} />
+          <Route path="buy/rv" element={<RVPage />} />
+          <Route path="sell" element={<LandingSellPage />} />
+          <Route path="sell/pv" element={<PVPage />} />
+          <Route path="sell/ap3" element={<AP3Page />} />
+          <Route path="ib" element={<IBPage />} />
+          <Route path="history" element={<HistoryPage />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.INSPECTOR]} />}>
@@ -30,6 +46,7 @@ function App() {
         <Route element={<RequireAuth allowedRoles={[ROLES.ADMIN]} />}>
           <Route path="admin" element={<AdminPage />} />
         </Route>
+        <Route path="*" element={<Navigate to={"/"} />}></Route>
       </Route>
     </Routes>
   );

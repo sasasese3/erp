@@ -22,6 +22,7 @@ import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BasePathByRole } from "../utils/roles";
 import { UserResponse } from "../utils/responseType";
+import { Link as ReactLink } from "react-router-dom";
 
 type LoginPayload = {
   email: string;
@@ -180,6 +181,12 @@ function LoginPage() {
               </FormControl>
             </VStack>
           </form>
+        </Box>
+        <Box>
+          New to us?{" "}
+          <Link as={ReactLink} color={"teal.500"} to="/register">
+            Sign Up
+          </Link>
         </Box>
       </VStack>
     </Flex>
