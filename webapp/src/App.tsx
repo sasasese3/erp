@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
 import InspectorPage from "./pages/InspectorPage";
 import { ROLES } from "./utils/roles";
+import NavBar from "./components/NavBar";
 
 function App() {
   return (

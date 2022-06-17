@@ -20,13 +20,7 @@ type Props = {
 const AuthContext = createContext<AuthContextType>({});
 
 export const AuthProvider = ({ children }: Props) => {
-  const [auth, setAuth] = useState<Auth>({
-    id: 1,
-    email: "xxx",
-    firstname: "xxx",
-    lastname: "xxx",
-    role: ROLES.INSPECTOR,
-  });
+  const [auth, setAuth] = useState<Auth>({});
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

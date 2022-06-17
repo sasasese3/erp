@@ -18,6 +18,7 @@ import axios, { AxiosError } from "axios";
 import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BasePathByRole } from "../utils/roles";
+import { UserResponse } from "../utils/responseType";
 
 type LoginPayload = {
   email: string;
@@ -29,22 +30,12 @@ type LocationState = {
     pathname: string;
   };
 };
-type LoginResponse = {
-  msg: string;
-  data: {
-    id: number;
-    email: string;
-    firstname: string;
-    lastname: string;
-    role: string;
-  };
-};
 
 function LoginPage() {
   const CFaUserAlt = chakra(FaUserAlt);
   const CFaLock = chakra(FaLock);
 
-  const { auth, setAuth } = useAuth();
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -62,16 +53,15 @@ function LoginPage() {
   const handleSummit = async (event: FormEvent<HTMLFormElement>) => {
     try {
       event.preventDefault();
-      const response = await axios.post<LoginResponse>(
+      const response = await axios.post<UserResponse>(
         "/auth/login",
         loginPayload
       );
       const { data } = response.data;
-      const { id, email, firstname, lastname, role } = data;
-      setAuth?.({ id, email, firstname, lastname, role });
+      setAuth?.(data);
       const { from } =
         (location.state as LocationState) ||
-        BasePathByRole[role as keyof typeof BasePathByRole];
+        BasePathByRole[data.role as keyof typeof BasePathByRole];
       navigate(from, { replace: true });
     } catch (error) {
       if (error instanceof AxiosError) {
