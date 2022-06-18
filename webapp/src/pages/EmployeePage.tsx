@@ -49,7 +49,7 @@ function EmployeePage() {
         pt={5}
       >
         {cardData.map((card) => (
-          <CardComponent {...card}></CardComponent>
+          <CardComponent key={card.id} {...card}></CardComponent>
         ))}
       </Grid>
     </>

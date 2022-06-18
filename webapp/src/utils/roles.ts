@@ -6,6 +6,6 @@ export const ROLES = {
 
 export const BasePathByRole = {
   '444': { from: { pathname: '/home' } },
-  '666': { from: { pathname: '/inspector' } },
+  '666': { from: { pathname: '/history' } },
   "777": { from: { pathname: '/admin' } }
 };

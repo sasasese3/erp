@@ -15,6 +15,7 @@ import PVPage from "./pages/PVPage";
 import AP3Page from "./pages/AP3Page";
 import IBPage from "./pages/IBPage";
 import HistoryPage from "./pages/HistoryPage";
+import AccountPage from "./pages/AccountPage";
 
 function App() {
   return (
@@ -35,15 +36,28 @@ function App() {
           <Route path="sell/pv" element={<PVPage />} />
           <Route path="sell/ap3" element={<AP3Page />} />
           <Route path="ib" element={<IBPage />} />
-          <Route path="history" element={<HistoryPage />} />
         </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.INSPECTOR]} />}>
-          <Route path="inspector" element={<InspectorPage />} />
+        <Route
+          element={
+            <RequireAuth allowedRoles={[ROLES.EMPLOYEE, ROLES.INSPECTOR]} />
+          }
+        >
+          <Route path="history" element={<HistoryPage />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.ADMIN]} />}>
           <Route path="admin" element={<AdminPage />} />
+        </Route>
+
+        <Route
+          element={
+            <RequireAuth
+              allowedRoles={[ROLES.EMPLOYEE, ROLES.INSPECTOR, ROLES.ADMIN]}
+            />
+          }
+        >
+          <Route path="account" element={<AccountPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />}></Route>
       </Route>

@@ -26,7 +26,7 @@ function LandingBuyPage() {
   return (
     <Grid templateColumns="repeat(2,1fr)" gap={5} mt={5}>
       {cardData.map((card) => (
-        <CardComponent {...card}></CardComponent>
+        <CardComponent key={card.id} {...card}></CardComponent>
       ))}
     </Grid>
   );
