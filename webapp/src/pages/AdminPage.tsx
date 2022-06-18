@@ -1,4 +1,5 @@
 import {
+  Flex,
   Heading,
   Table,
   TableContainer,
@@ -26,7 +27,7 @@ function AdminPage() {
     setRefreshData(false);
   }, [refreshData]);
   return (
-    <div>
+    <Flex direction={"column"} bg="whiteAlpha.900" p={5} borderRadius={"md"}>
       <Heading> รายชื่อพนักงานทั้งหมด </Heading>
       <TableContainer background={"papayawhip"} my={5} width="150%">
         <Table variant="striped" colorScheme={"twitter"}>
@@ -53,7 +54,7 @@ function AdminPage() {
           </Tbody>
         </Table>
       </TableContainer>
-    </div>
+    </Flex>
   );
 }
 
