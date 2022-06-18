@@ -14,8 +14,8 @@ import "./index.css";
 const theme = extendTheme(
   {
     fonts: {
-      body: "Roboto,Kanit, sans-serif",
-      heading: "Roboto, Kanit, sans-serif",
+      body: "Kanit,Roboto, sans-serif",
+      heading: "Kanit,Roboto, sans-serif",
     },
     styles: {
       global: {

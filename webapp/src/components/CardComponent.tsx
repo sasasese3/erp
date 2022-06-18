@@ -8,6 +8,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
+import LinkwithReact from "./LinkwithReact";
 
 type CardProps = {
   id: number;
@@ -24,7 +25,7 @@ function CardComponent({ ...card }: CardProps) {
       borderRadius={10}
       _hover={{ boxShadow: "5px 5px 10px gray" }}
     >
-      <Link as={ReactLink} to={card.link} _hover={{ textDecoration: "none" }}>
+      <LinkwithReact to={card.link}>
         <Flex direction="column" gap={2}>
           <Center>
             <AspectRatio ratio={16 / 9} width="100%">
@@ -36,7 +37,7 @@ function CardComponent({ ...card }: CardProps) {
           </Heading>
           <p style={{ padding: "0px 8px" }}>{card.description}</p>
         </Flex>
-      </Link>
+      </LinkwithReact>
     </GridItem>
   );
 }

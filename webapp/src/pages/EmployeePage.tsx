@@ -28,14 +28,14 @@ const cardData = [
       "https://image.ezymar.com/article/20190901/12/2035d300-4877-42bb-abe5-e7ac32480409.jpg",
     link: "/ib",
   },
-  {
-    id: 4,
-    name: "เรียกดูใบสำคัญ",
-    description:
-      "เรียกดูใบสำคัญที่กำลังดำเนินการอยู่ และยังสามารถนำกลับมาแก้ไขได้หลังจากยื่นไปแล้วจนกว่าจะถึงระยะเวลาที่จะทำการเซ็นอนุมัติ",
-    image: "https://mpics.mgronline.com/pics/Images/559000013114301.JPEG",
-    link: "/history",
-  },
+  // {
+  //   id: 4,
+  //   name: "เรียกดูใบสำคัญ",
+  //   description:
+  //     "เรียกดูใบสำคัญที่กำลังดำเนินการอยู่ และยังสามารถนำกลับมาแก้ไขได้หลังจากยื่นไปแล้วจนกว่าจะถึงระยะเวลาที่จะทำการเซ็นอนุมัติ",
+  //   image: "https://mpics.mgronline.com/pics/Images/559000013114301.JPEG",
+  //   link: "/history",
+  // },
 ];
 
 function EmployeePage() {
@@ -43,8 +43,8 @@ function EmployeePage() {
     <>
       <Heading>ใบสำคัญ</Heading>
       <Grid
-        templateColumns="repeat(2,1fr)"
-        templateRows="repeat(2,1fr)"
+        templateColumns={{ sm: "repeat(1,1fr)", md: "repeat(3,1fr)" }}
+        // templateRows="repeat(2,1fr)"
         gap={5}
         pt={5}
       >

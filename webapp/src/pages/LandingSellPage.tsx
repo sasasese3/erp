@@ -24,7 +24,11 @@ const cardData = [
 
 function LandingSellPage() {
   return (
-    <Grid templateColumns="repeat(2,1fr)" gap={5} mt={5}>
+    <Grid
+      templateColumns={{ sm: "repeat(1,1fr)", md: "repeat(2,1fr)" }}
+      gap={5}
+      mt={5}
+    >
       {cardData.map((card) => (
         <CardComponent key={card.id} {...card}></CardComponent>
       ))}

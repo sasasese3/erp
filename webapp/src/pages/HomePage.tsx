@@ -6,9 +6,8 @@ import {
   Flex,
   Heading,
   Image,
-  Link,
 } from "@chakra-ui/react";
-import { Link as ReactLink } from "react-router-dom";
+import LinkwithReact from "../components/LinkwithReact";
 
 function HomePage() {
   return (
@@ -40,20 +39,12 @@ function HomePage() {
               เพื่อให้องค์กรนั้นมีการบริหารและการใช้ทรัพยากรร่วมกันอย่างมีประสิทธิภาพมากยิ่งขึ้น
             </p>
             <Flex justifyContent="space-around">
-              <Link
-                as={ReactLink}
-                to="/login"
-                _hover={{ textDecoration: "none" }}
-              >
+              <LinkwithReact to="/login">
                 <Button>เข้าสู่ระบบ</Button>
-              </Link>
-              <Link
-                as={ReactLink}
-                to="/register"
-                _hover={{ textDecoration: "none" }}
-              >
+              </LinkwithReact>
+              <LinkwithReact to="/register">
                 <Button colorScheme={"whatsapp"}>สมัครสมาชิก</Button>
-              </Link>
+              </LinkwithReact>
             </Flex>
           </Flex>
         </Flex>
