@@ -8,3 +8,13 @@ export type UserResponse = {
         role: string;
     };
 };
+
+export type Employee = {
+    id: number;
+    email: string;
+    username: string;
+    firstname: string;
+    lastname: string;
+    role: string;
+    verified: boolean;
+};
