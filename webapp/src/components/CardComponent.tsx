@@ -5,9 +5,7 @@ import {
   GridItem,
   Heading,
   Image,
-  Link,
 } from "@chakra-ui/react";
-import { Link as ReactLink } from "react-router-dom";
 import LinkwithReact from "./LinkwithReact";
 
 type CardProps = {

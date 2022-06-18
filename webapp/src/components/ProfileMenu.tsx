@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { ROLES } from "../utils/roles";
 
