@@ -1,15 +1,23 @@
 import {
   Button,
   chakra,
+  Flex,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaHistory,
+  FaSignOutAlt,
+  FaUserEdit,
+} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { ROLES } from "../utils/roles";
@@ -18,6 +26,10 @@ function ProfileMenu() {
   //for icon in top-right menu
   const CFaChevronDown = chakra(FaChevronDown);
   const CFAChevronUp = chakra(FaChevronUp);
+
+  const CFaHistory = chakra(FaHistory);
+  const CFaUserEdit = chakra(FaUserEdit);
+  const CFaSignOutAlt = chakra(FaSignOutAlt);
 
   //for hover open & close top-right menu
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,18 +83,27 @@ function ProfileMenu() {
         _focus={{ boxShadow: "none" }}
         onMouseEnter={onOpen}
         onMouseLeave={onClose}
-        height="100%"
+        height="full"
       >
         ชื่อ : {`${auth?.firstname} ${auth?.lastname}`}
       </MenuButton>
       <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
-        <MenuItem onClick={handleClickAccount}> ข้อมูลบัญชี</MenuItem>
+        <MenuItem onClick={handleClickAccount}>
+          <CFaUserEdit mr={5} />
+          ข้อมูลบัญชี
+        </MenuItem>
         {auth?.role === ROLES.EMPLOYEE ? (
-          <MenuItem onClick={handleClickHistory}> เรียกดูใบสำคัญ </MenuItem>
+          <MenuItem onClick={handleClickHistory}>
+            <CFaHistory mr={5} />
+            <Text>เรียกดูใบสำคัญ</Text>
+          </MenuItem>
         ) : (
           <></>
         )}
-        <MenuItem onClick={handleClickLogout}> ออกจากระบบ</MenuItem>
+        <MenuItem onClick={handleClickLogout}>
+          <CFaSignOutAlt mr={5} />
+          ออกจากระบบ
+        </MenuItem>
       </MenuList>
     </Menu>
   );

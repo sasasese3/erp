@@ -64,6 +64,7 @@ function AdminTableBody({
       });
       onClose();
       setUpdate(true);
+      setSelectedRole("")
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status == 422) {
