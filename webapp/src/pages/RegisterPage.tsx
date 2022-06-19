@@ -95,13 +95,13 @@ function RegisterPage() {
                 <Input id="address" type="text"></Input>
               </FormControl>
             </GridItem>
-            <GridItem>
+            <GridItem colSpan={{ base: 2, md: 1 }}>
               <FormControl isRequired>
                 <FormLabel htmlFor="department">แผนก</FormLabel>
                 <Input id="department" type="text"></Input>
               </FormControl>
             </GridItem>
-            <GridItem>
+            <GridItem colSpan={{ base: 2, md: 1 }}>
               <FormControl isRequired>
                 <FormLabel htmlFor="position">ตำแหน่ง</FormLabel>
                 <Input id="position" type="text"></Input>
