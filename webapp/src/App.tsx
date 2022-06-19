@@ -4,7 +4,6 @@ import LoginPage from "./pages/LoginPage";
 import RequireAuth from "./templates/RequireAuth";
 import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
-import InspectorPage from "./pages/InspectorPage";
 import { ROLES } from "./utils/roles";
 import EmployeePage from "./pages/EmployeePage";
 import LandingBuyPage from "./pages/LandingBuyPage";
@@ -16,6 +15,7 @@ import AP3Page from "./pages/AP3Page";
 import IBPage from "./pages/IBPage";
 import HistoryPage from "./pages/HistoryPage";
 import AccountPage from "./pages/AccountPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         {/* public routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
 
         {/* protected routes */}
         <Route element={<RequireAuth allowedRoles={[ROLES.EMPLOYEE]} />}>
