@@ -271,7 +271,16 @@ function RegisterPage() {
                 นโยบายความเป็นส่วนตัว
               </Checkbox>
             </GridItem>
-            <GridItem colSpan={2}>
+            <GridItem>
+              <Button
+                width="full"
+                colorScheme={"red"}
+                onClick={() => navigate("/login")}
+              >
+                ย้อนกลับ
+              </Button>
+            </GridItem>
+            <GridItem colSpan={1}>
               <Button disabled={isDisableButton()} type="submit" width="full">
                 {" "}
                 สมัครสมาชิก
