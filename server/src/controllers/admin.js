@@ -17,7 +17,7 @@ router.get('/employee', async function (req, res) {
 });
 
 router.patch('/employee', [
-    body('id').notEmpty().isInt().custom((value, { req }) => {
+    body('id').notEmpty().isString().custom((value, { req }) => {
         if (req.user.id === value) {
             throw new Error("Could not change yourself role");
         }
