@@ -14,11 +14,12 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import POTableBody from "../components/POTableBody";
+import { MenuData } from "../utils/products";
 import { POPayload, Product } from "../utils/responseType";
 
 function POPage() {
   const [poHeaderPayload, setPOHeaderPayload] = useState<POPayload>({
-    date: "",
+    date: new Date().toISOString().split("T")[0],
     create_name: "",
     seller_name: "",
     account_name: "",
@@ -29,10 +30,8 @@ function POPage() {
   const [products, setProduct] = useState<Product[]>([]);
 
   const templateAddProduct: Product = {
-    product_name: "โต๊ะ",
+    ...MenuData[0],
     amount: 0,
-    stock: 550,
-    per_amount: 200,
     price: 0,
   };
 
@@ -40,7 +39,31 @@ function POPage() {
     setProduct([...products, templateAddProduct]);
   };
 
-  const handleChangeProduct = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeProduct = (idx: number, value: string) => {
+    const newProducts = [...products];
+    const newProduct = MenuData.filter(
+      (data) => data.product_name === value
+    )[0];
+
+    newProducts[idx].per_amount = newProduct.per_amount;
+    newProducts[idx].stock = newProduct.stock;
+    newProducts[idx].product_name = newProduct.product_name;
+    newProducts[idx].amount = Math.min(
+      newProducts[idx].amount,
+      newProduct.stock
+    );
+    newProducts[idx].price = newProducts[idx].amount * newProduct.per_amount;
+    setProduct(newProducts);
+
+    const totalPrice = products.reduce((prev, curr) => {
+      return prev + curr.price;
+    }, 0);
+
+    poHeaderPayload.total_price = totalPrice;
+    setPOHeaderPayload({ ...poHeaderPayload });
+  };
+
+  const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const newProducts = [...products];
 
@@ -51,7 +74,6 @@ function POPage() {
     newProducts[idx].amount = value;
     newProducts[idx].price = value * newProducts[idx].per_amount;
 
-    console.log(newProducts[idx].amount);
     setProduct(newProducts);
 
     const totalPrice = products.reduce((prev, curr) => {
@@ -63,7 +85,7 @@ function POPage() {
   };
 
   const handleChangePOHeader = (event: ChangeEvent<HTMLInputElement>) => {
-    // event.preventDefault();
+    event.preventDefault();
     poHeaderPayload[event.target.id as keyof typeof poHeaderPayload] =
       event.target.value;
     setPOHeaderPayload({ ...poHeaderPayload });
@@ -71,7 +93,6 @@ function POPage() {
 
   const handleFormSummit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     console.log(poHeaderPayload);
     console.log(products);
   };
@@ -94,6 +115,7 @@ function POPage() {
                 value={poHeaderPayload.date}
                 onChange={handleChangePOHeader}
                 type="date"
+                max={new Date().toISOString().split("T")[0]}
               ></Input>
             </FormControl>
           </GridItem>
@@ -171,7 +193,8 @@ function POPage() {
                       key={idx}
                       idx={idx}
                       {...product}
-                      setProduct={handleChangeProduct}
+                      setProduct={handleChangeAmount}
+                      handleChangeProduct={handleChangeProduct}
                     ></POTableBody>
                   ))}
                 </Tbody>

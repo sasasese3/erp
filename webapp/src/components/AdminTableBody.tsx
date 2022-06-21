@@ -22,13 +22,13 @@ import { RevertRoles } from "../utils/roles";
 
 type AdminTableBodyProps = {
   setUpdate: Function;
-  id: number;
-  email: string;
-  username: string;
-  firstname: string;
-  lastname: string;
-  role: string;
-  verified: boolean;
+  id?: number;
+  email?: string;
+  username?: string;
+  firstname?: string;
+  lastname?: string;
+  role?: string;
+  verified?: boolean;
 };
 
 const toastProps: UseToastOptions = {
@@ -64,7 +64,7 @@ function AdminTableBody({
       });
       onClose();
       setUpdate(true);
-      setSelectedRole("")
+      setSelectedRole("");
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status == 422) {

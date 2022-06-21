@@ -16,7 +16,7 @@ export type Employee = {
     address?: string;
     phono_no?: string;
     role?: string;
-    verified?: string;
+    verified?: boolean;
 };
 
 export type RegisterPayload = {

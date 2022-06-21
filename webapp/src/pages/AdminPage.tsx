@@ -47,7 +47,13 @@ function AdminPage() {
             {employees.map((employee: Employee) => (
               <AdminTableBody
                 key={employee.id}
-                {...employee}
+                id={employee.id}
+                email={employee.email}
+                firstname={employee.firstname}
+                lastname={employee.lastname}
+                role={employee.role}
+                username={employee.username}
+                verified={employee.verified}
                 setUpdate={setRefreshData}
               />
             ))}
