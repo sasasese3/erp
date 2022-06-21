@@ -8,29 +8,13 @@ import {
   Input,
   Table,
   Tbody,
-  Td,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useState } from "react";
-
-type POPayload = {
-  date: string;
-  create_name: string;
-  seller_name: string;
-  account_name: string;
-  producer_name: string;
-  total_price: number;
-};
-
-type Product = {
-  product_name: string;
-  amount: number;
-  stock: number;
-  per_amount: number;
-  price: number;
-};
+import { ChangeEvent, FormEvent, useState } from "react";
+import POTableBody from "../components/POTableBody";
+import { POPayload, Product } from "../utils/responseType";
 
 function POPage() {
   const [poHeaderPayload, setPOHeaderPayload] = useState<POPayload>({
@@ -55,99 +39,159 @@ function POPage() {
   const handleClickAddProduct = () => {
     setProduct([...products, templateAddProduct]);
   };
+
+  const handleChangeProduct = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const newProducts = [...products];
+
+    const idx = parseInt(event.target.id);
+    let value = parseInt(event.target.value) || 0;
+    value = Math.min(newProducts[idx].stock, value);
+
+    newProducts[idx].amount = value;
+    newProducts[idx].price = value * newProducts[idx].per_amount;
+
+    console.log(newProducts[idx].amount);
+    setProduct(newProducts);
+
+    const totalPrice = products.reduce((prev, curr) => {
+      return prev + curr.price;
+    }, 0);
+
+    poHeaderPayload.total_price = totalPrice;
+    setPOHeaderPayload({ ...poHeaderPayload });
+  };
+
+  const handleChangePOHeader = (event: ChangeEvent<HTMLInputElement>) => {
+    // event.preventDefault();
+    poHeaderPayload[event.target.id as keyof typeof poHeaderPayload] =
+      event.target.value;
+    setPOHeaderPayload({ ...poHeaderPayload });
+  };
+
+  const handleFormSummit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    console.log(poHeaderPayload);
+    console.log(products);
+  };
   return (
     <>
       <Heading> ใบสำคัญสั่งซื้อ PO</Heading>
-      <Grid
-        templateColumns={"repeat(3,1fr)"}
-        my={5}
-        bg="whiteAlpha.900"
-        p={5}
-        gap={5}
-      >
-        <GridItem>
-          <FormControl isRequired>
-            <FormLabel>วันที่จัดทำ</FormLabel>
-            <Input type="date"></Input>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isRequired>
-            <FormLabel>ชื่อผู้จัดทำ</FormLabel>
-            <Input type="text"></Input>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isRequired>
-            <FormLabel>ชื่อพนักงานขาย</FormLabel>
-            <Input type="text"></Input>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isRequired>
-            <FormLabel>ชื่อบัญชี</FormLabel>
-            <Input type="text"></Input>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isRequired>
-            <FormLabel>ผู้ผลิต</FormLabel>
-            <Input type="text"></Input>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isRequired>
-            <FormLabel>จำนวนเงินทั้งหมด</FormLabel>
-            <Input
-              value={0}
-              disabled={true}
-              type="text"
-              variant="filled"
-            ></Input>
-          </FormControl>
-        </GridItem>
-        {products.length !== 0 && (
-          <GridItem colSpan={3}>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th> ลำดับ </Th>
-                  <Th> ชื่อสินค้า </Th>
-                  <Th> จำนวน </Th>
-                  <Th> คงเหลือ </Th>
-                  <Th> ราคาต่อหน่วย </Th>
-                  <Th> ราคารวม </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {products.map((product, idx) => (
-                  <Tr key={idx}>
-                    <Td>{idx + 1}</Td>
-                    <Td>{product.product_name}</Td>
-                    <Td>
-                      <Input
-                        id="amount"
-                        value={product.amount}
-                        max={product.stock}
-                        type="number"
-                      ></Input>
-                    </Td>
-                    <Td>{product.stock}</Td>
-                    <Td>{product.per_amount}</Td>
-                    <Td>{product.price}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+      <form onSubmit={handleFormSummit}>
+        <Grid
+          templateColumns={"repeat(3,1fr)"}
+          my={5}
+          bg="whiteAlpha.900"
+          p={5}
+          gap={5}
+        >
+          <GridItem>
+            <FormControl isRequired>
+              <FormLabel>วันที่จัดทำ</FormLabel>
+              <Input
+                id="date"
+                value={poHeaderPayload.date}
+                onChange={handleChangePOHeader}
+                type="date"
+              ></Input>
+            </FormControl>
           </GridItem>
-        )}
-        <GridItem colSpan={3}>
-          <Button variant="ghost" onClick={handleClickAddProduct}>
-            {" "}
-            CLICK TO ADD PRODUCT
-          </Button>
-        </GridItem>
-      </Grid>
+          <GridItem>
+            <FormControl isRequired>
+              <FormLabel>ชื่อผู้จัดทำ</FormLabel>
+              <Input
+                id="create_name"
+                value={poHeaderPayload.create_name}
+                onChange={handleChangePOHeader}
+                type="text"
+              ></Input>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isRequired>
+              <FormLabel>ชื่อพนักงานขาย</FormLabel>
+              <Input
+                id="seller_name"
+                value={poHeaderPayload.seller_name}
+                onChange={handleChangePOHeader}
+                type="text"
+              ></Input>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isRequired>
+              <FormLabel>ชื่อบัญชี</FormLabel>
+              <Input
+                id="account_name"
+                value={poHeaderPayload.account_name}
+                onChange={handleChangePOHeader}
+                type="text"
+              ></Input>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isRequired>
+              <FormLabel>ผู้ผลิต</FormLabel>
+              <Input
+                id="producer_name"
+                value={poHeaderPayload.producer_name}
+                onChange={handleChangePOHeader}
+                type="text"
+              ></Input>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isRequired>
+              <FormLabel>จำนวนเงินทั้งหมด</FormLabel>
+              <Input
+                value={poHeaderPayload.total_price.toLocaleString()}
+                disabled={true}
+                type="text"
+                variant="filled"
+              ></Input>
+            </FormControl>
+          </GridItem>
+          {products.length !== 0 && (
+            <GridItem colSpan={3}>
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th> ลำดับ </Th>
+                    <Th> ชื่อสินค้า </Th>
+                    <Th> จำนวน </Th>
+                    <Th> คงเหลือ </Th>
+                    <Th> ราคาต่อหน่วย </Th>
+                    <Th> ราคารวม </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {products.map((product, idx) => (
+                    <POTableBody
+                      key={idx}
+                      idx={idx}
+                      {...product}
+                      setProduct={handleChangeProduct}
+                    ></POTableBody>
+                  ))}
+                </Tbody>
+              </Table>
+            </GridItem>
+          )}
+          {products.length < 10 && (
+            <GridItem colSpan={3}>
+              <Button variant="ghost" onClick={handleClickAddProduct}>
+                CLICK TO ADD PRODUCT
+              </Button>
+            </GridItem>
+          )}
+          <GridItem colStart={3} colEnd={3}>
+            <Button type="submit" width="full">
+              บันทึกข้อมูล
+            </Button>
+          </GridItem>
+        </Grid>
+      </form>
     </>
   );
 }

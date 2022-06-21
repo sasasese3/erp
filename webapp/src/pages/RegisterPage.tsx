@@ -14,21 +14,6 @@ import {
 } from "@chakra-ui/react";
 import axios, { AxiosError } from "axios";
 
-type RegisterPayload = {
-  username: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  id: string;
-  phone_no: string;
-  ssn: string;
-  birthdate: string;
-  address: string;
-  department: string;
-  position: string;
-};
-
 const toastProps: UseToastOptions = {
   status: "error",
   duration: 2000,
@@ -37,6 +22,7 @@ const toastProps: UseToastOptions = {
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LinkwithReact from "../components/LinkwithReact";
+import { RegisterPayload } from "../utils/responseType";
 
 function RegisterPage() {
   const [checkbox, setCheckbox] = useState(false);
