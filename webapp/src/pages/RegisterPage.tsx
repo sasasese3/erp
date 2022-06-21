@@ -36,6 +36,7 @@ const toastProps: UseToastOptions = {
 };
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LinkwithReact from "../components/LinkwithReact";
 
 function RegisterPage() {
   const [checkbox, setCheckbox] = useState(false);
@@ -272,13 +273,11 @@ function RegisterPage() {
               </Checkbox>
             </GridItem>
             <GridItem>
-              <Button
-                width="full"
-                colorScheme={"red"}
-                onClick={() => navigate("/login")}
-              >
-                ย้อนกลับ
-              </Button>
+              <LinkwithReact to="/login">
+                <Button width="full" colorScheme={"red"}>
+                  ย้อนกลับ
+                </Button>
+              </LinkwithReact>
             </GridItem>
             <GridItem colSpan={1}>
               <Button disabled={isDisableButton()} type="submit" width="full">

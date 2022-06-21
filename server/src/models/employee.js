@@ -5,9 +5,8 @@ const saltRounds = 10;
 module.exports = (sequelize, DataTypes) => {
     const Employee = sequelize.define('Employee', {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(64),
             primaryKey: true,
-            autoIncrement: true
         },
         email: {
             type: DataTypes.STRING(128),
@@ -24,8 +23,13 @@ module.exports = (sequelize, DataTypes) => {
         username: {
             type: DataTypes.STRING(128),
             allowNull: false,
+            unique: true,
         },
-        ssn: DataTypes.STRING(13),
+        ssn: {
+            type: DataTypes.STRING(13),
+            allowNull: false,
+            unique: true
+        },
         firstname: DataTypes.STRING(128),
         lastname: DataTypes.STRING(128),
         position: DataTypes.STRING(64),

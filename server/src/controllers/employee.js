@@ -10,10 +10,11 @@ const { Employee } = require('../utils/sequelize');
 //Employee
 //สมัครสมาชิก
 router.post("/register", [
+    body('id').notEmpty().isString(),
     body('email').notEmpty().withMessage('Email not empty').isEmail(),
     body('password').notEmpty().isString(),
     body('username').notEmpty().isString(),
-    body('ssn').optional().isString().default(null),
+    body('ssn').notEmpty().isString().default(null),
     body('firstname').optional().isString().default(null),
     body('lastname').optional().isString().default(null),
     body('position').optional().isString().default(null),
@@ -35,7 +36,10 @@ router.post("/register", [
             return res.json({ msg: "Register Success", data: other });
         } catch (error) {
             if (error instanceof UniqueConstraintError) {
-                return res.status(409).json({ msg: "E-mail is already used" });
+                for (key in error.fields) {
+                    const responseKey = key === 'PRIMARY' ? 'Employee ID' : key;
+                    return res.status(409).json({ msg: `${responseKey} is already used`, value: error.fields[key] });
+                }
             }
 
             return res.status(400).json({ msg: "Something went wrong", error: error });

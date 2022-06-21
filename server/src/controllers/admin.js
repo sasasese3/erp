@@ -8,7 +8,7 @@ const { Employee } = require('../utils/sequelize');
 router.get('/employee', async function (req, res) {
     // Store hash in your password DB.
     try {
-        const employees = await Employee.findAll({ where: { id: { [Op.ne]: req.user.id } }, attributes: ['id', 'email', 'username', 'firstname', 'lastname', 'role', 'verified'] });
+        const employees = await Employee.findAll({ where: { id: { [Op.ne]: req.user.id }, role: { [Op.ne]: req.user.role } }, attributes: ['id', 'email', 'username', 'firstname', 'lastname', 'role', 'verified'] });
         return res.json({ msg: "Get all employee", data: employees });
 
     } catch (error) {
