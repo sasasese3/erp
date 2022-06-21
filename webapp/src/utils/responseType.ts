@@ -1,20 +1,20 @@
 export type UserResponse = {
     msg: string;
-    data: {
-        id: number;
-        email: string;
-        firstname: string;
-        lastname: string;
-        role: string;
-    };
+    data: Employee;
 };
 
 export type Employee = {
-    id: number;
-    email: string;
-    username: string;
-    firstname: string;
-    lastname: string;
-    role: string;
-    verified: boolean;
+    id?: number;
+    email?: string;
+    username?: string;
+    ssn?: string;
+    firstname?: string;
+    lastname?: string;
+    position?: string;
+    department?: string;
+    birthdate?: string;
+    address?: string;
+    phono_no?: string;
+    role?: string;
+    verified?: string;
 };

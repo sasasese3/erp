@@ -1,14 +1,8 @@
 import { createContext, useState } from "react";
+import { Employee } from "../utils/responseType";
 
-type Auth = {
-  id?: number;
-  email?: string;
-  firstname?: string;
-  lastname?: string;
-  role?: string;
-};
 type AuthContextType = {
-  auth?: Auth;
+  auth?: Employee;
   setAuth?: Function;
 };
 
@@ -19,7 +13,7 @@ type Props = {
 const AuthContext = createContext<AuthContextType>({});
 
 export const AuthProvider = ({ children }: Props) => {
-  const [auth, setAuth] = useState<Auth>({});
+  const [auth, setAuth] = useState<Employee>({});
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

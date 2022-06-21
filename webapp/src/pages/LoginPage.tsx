@@ -24,7 +24,7 @@ import { UserResponse } from "../utils/responseType";
 import { Link as ReactLink } from "react-router-dom";
 
 type LoginPayload = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -54,7 +54,7 @@ function LoginPage() {
 
   //for login request
   const [loginPayload, setLoginPayload] = useState<LoginPayload>({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -76,7 +76,7 @@ function LoginPage() {
         loginPayload
       );
       const { data } = response.data;
-      setAuth?.(data);
+      setAuth?.({ ...data });
       const { from } =
         (location.state as LocationState) ||
         BasePathByRole[data.role as keyof typeof BasePathByRole];
@@ -103,18 +103,10 @@ function LoginPage() {
     }
   };
 
-  const handleChange = (name: string, value: string) => {
-    const { email, password } = loginPayload;
-    switch (name) {
-      case "email":
-        const newEmail = value;
-        setLoginPayload({ email: newEmail, password });
-        break;
-      case "password":
-        const newPassword = value;
-        setLoginPayload({ email, password: newPassword });
-        break;
-    }
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    loginPayload[event.target.id as keyof typeof loginPayload] =
+      event.target.value;
+    setLoginPayload({ ...loginPayload });
   };
 
   return (
@@ -145,13 +137,12 @@ function LoginPage() {
                   />
 
                   <Input
-                    type="email"
+                    id="username"
+                    type="text"
                     ref={userRef}
-                    placeholder="Email address"
-                    value={loginPayload.email}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                      handleChange("email", event.target.value)
-                    }
+                    placeholder="Username"
+                    value={loginPayload.username}
+                    onChange={handleChange}
                   />
                 </InputGroup>
               </FormControl>
@@ -162,18 +153,17 @@ function LoginPage() {
                     children={<CFaLock color="gray.300" />}
                   />
                   <Input
+                    id="password"
                     type="password"
                     placeholder="Password"
                     value={loginPayload.password}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                      handleChange("password", event.target.value)
-                    }
+                    onChange={handleChange}
                   ></Input>
                 </InputGroup>
               </FormControl>
               <FormControl>
                 <Button
-                  disabled={!(loginPayload.email && loginPayload.password)}
+                  disabled={!(loginPayload.username && loginPayload.password)}
                   type="submit"
                   variant="solid"
                   width="full"

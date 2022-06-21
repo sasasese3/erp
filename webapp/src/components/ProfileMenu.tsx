@@ -85,7 +85,7 @@ function ProfileMenu() {
         onMouseLeave={onClose}
         height="full"
       >
-        ชื่อ : {`${auth?.firstname} ${auth?.lastname}`}
+        คุณ {`${auth?.firstname} ${auth?.lastname}`} รหัส : {`${auth?.id}`}
       </MenuButton>
       <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
         <MenuItem onClick={handleClickAccount}>

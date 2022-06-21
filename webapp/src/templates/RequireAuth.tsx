@@ -22,7 +22,7 @@ function RequireAuth({ allowedRoles }: Props) {
       try {
         const response = await axios.get("/employee");
         const { data } = response.data;
-        setAuth?.(data);
+        setAuth?.({ ...data });
         setTimeout(() => setShow(true), 0.5 * 1000);
       } catch (error) {
         setTimeout(() => setShow(true), 0.5 * 1000);

@@ -5,6 +5,7 @@ import LinkwithReact from "./LinkwithReact";
 
 function LogowithText() {
   const { auth } = useAuth();
+  console.log(auth);
   return (
     <LinkwithReact
       to={
