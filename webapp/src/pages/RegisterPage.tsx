@@ -72,7 +72,14 @@ function RegisterPage() {
     } catch (error) {
       if (error instanceof AxiosError) {
         const { msg } = error.response?.data;
-        if (error.response?.status == 409 || 422) {
+        if (error.response?.status === 409) {
+          const { value } = error.response?.data;
+          toast({
+            title: msg,
+            description: `value : ${value}`,
+            ...toastProps,
+          });
+        } else if (error.response?.status === 422) {
           toast({
             title: msg,
             ...toastProps,
