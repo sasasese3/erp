@@ -96,6 +96,17 @@ function POPage() {
     console.log(poHeaderPayload);
     console.log(products);
   };
+
+  const isDisableButton = () => {
+    let isEmpty = false;
+    for (const key in poHeaderPayload) {
+      if (poHeaderPayload[key as keyof typeof poHeaderPayload] === "") {
+        isEmpty = true;
+        break;
+      }
+    }
+    return isEmpty || products.length === 0;
+  };
   return (
     <>
       <Heading> ใบสำคัญสั่งซื้อ PO</Heading>
@@ -209,7 +220,7 @@ function POPage() {
             </GridItem>
           )}
           <GridItem colStart={3} colEnd={3}>
-            <Button type="submit" width="full">
+            <Button disabled={isDisableButton()} type="submit" width="full">
               บันทึกข้อมูล
             </Button>
           </GridItem>
