@@ -5,18 +5,17 @@ const { compare } = require('bcrypt');
 const { Employee } = require('../utils/sequelize');
 
 
-passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, cb) => {
+passport.use(new LocalStrategy(async (username, password, cb) => {
     const employee = await Employee.findOne({
-        where: { email: email },
-        attributes: ['id', 'email', 'username', 'firstname', 'lastname', 'password', 'role']
+        where: { username: username }
     });
 
     if (!employee) {
-        return cb(null, false, { message: 'Incorrect email or password' });
+        return cb(null, false, { message: 'Incorrect username or password' });
     }
 
     if (!(await compare(password, employee.password))) {
-        return cb(null, false, { message: 'Incorrect email or password' });
+        return cb(null, false, { message: 'Incorrect username or password' });
     }
     const result = employee.toJSON();
     delete result.password;
@@ -28,7 +27,7 @@ passport.serializeUser((user, cb) => {
 });
 
 passport.deserializeUser(async (id, cb) => {
-    const employee = await Employee.findByPk(id, { attributes: ['id', 'email', 'username', 'firstname', 'lastname', 'role'] });
+    const employee = await Employee.findByPk(id, { attributes: { exclude: ['password'] } });
     if (!employee) {
         cb(null, false);
     }
