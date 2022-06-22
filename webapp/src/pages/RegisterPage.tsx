@@ -22,6 +22,7 @@ const toastProps: UseToastOptions = {
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LinkwithReact from "../components/LinkwithReact";
+import { getLocaltime } from "../utils/getlocaltime";
 import { RegisterPayload } from "../utils/responseType";
 
 function RegisterPage() {
@@ -217,7 +218,7 @@ function RegisterPage() {
                   onChange={handleFormChange}
                   id="birthdate"
                   type="date"
-                  max={new Date().toISOString().split("T")[0]}
+                  max={getLocaltime().toISOString().split("T")[0]}
                 ></Input>
               </FormControl>
             </GridItem>

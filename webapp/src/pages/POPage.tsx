@@ -12,14 +12,15 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import POTableBody from "../components/POTableBody";
+import { getLocaltime } from "../utils/getlocaltime";
 import { MenuData } from "../utils/products";
 import { POPayload, Product } from "../utils/responseType";
 
 function POPage() {
   const [poHeaderPayload, setPOHeaderPayload] = useState<POPayload>({
-    date: new Date().toISOString().split("T")[0],
+    date: getLocaltime().toISOString().split("T")[0],
     create_name: "",
     seller_name: "",
     account_name: "",
@@ -28,6 +29,10 @@ function POPage() {
   });
 
   const [products, setProduct] = useState<Product[]>([]);
+
+  useEffect(() => {
+    console.log(poHeaderPayload);
+  }, []);
 
   const templateAddProduct: Product = {
     ...MenuData[0],
@@ -86,6 +91,7 @@ function POPage() {
 
   const handleChangePOHeader = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
+    console.log(event.target.value);
     poHeaderPayload[event.target.id as keyof typeof poHeaderPayload] =
       event.target.value;
     setPOHeaderPayload({ ...poHeaderPayload });
@@ -126,7 +132,7 @@ function POPage() {
                 value={poHeaderPayload.date}
                 onChange={handleChangePOHeader}
                 type="date"
-                max={new Date().toISOString().split("T")[0]}
+                max={getLocaltime().toISOString().split("T")[0]}
               ></Input>
             </FormControl>
           </GridItem>
