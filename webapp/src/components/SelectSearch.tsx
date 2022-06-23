@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   useToast,
 } from "@chakra-ui/react";
@@ -74,8 +75,12 @@ function CustomSelectSearch({
         }}
         defaultOptions={defaultOptions}
       ></AsyncSelect>
-      {searchResult.length == 0 && (
+      {searchResult.length == 0 ? (
         <FormErrorMessage>กรุณาเลือกผู้ผลิต</FormErrorMessage>
+      ) : (
+        <FormHelperText>
+          ถ้าเปลี่ยนผู้ผลิต ข้อมูลสินค้าจะหายไปทั้งหมด
+        </FormHelperText>
       )}
     </FormControl>
   );
