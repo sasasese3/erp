@@ -1,11 +1,11 @@
 const router = require('express').Router();
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, query } = require('express-validator');
 const { UniqueConstraintError } = require('sequelize');
 const nodemailer = require('nodemailer');
 
 const permit = require("../middlewares/authorization");
 const userRoles = require('../utils/userRoles');
-const { Employee, Supplier } = require('../utils/sequelize');
+const { Employee, Supplier, Product } = require('../utils/sequelize');
 const { Op } = require("sequelize");
 
 //Employee
@@ -75,6 +75,29 @@ router.get('/supplier', permit(userRoles.EMPLOYEE), async function (req, res) {
     }
 }
 );
+
+router.get('/product',
+    [query('supplier_id').notEmpty().isInt()],
+    permit(userRoles.EMPLOYEE + userRoles.ADMIN),
+    async function (req, res) {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
+            }
+            const { supplier_id } = req.query;
+
+            const supplier = await Supplier.findByPk(supplier_id, {
+                include: Product,
+            });
+            if (!supplier) {
+                return res.json({ msg: "Get products success", data: [] });
+            }
+            return res.json({ msg: "Get products success", data: supplier.Products });
+        } catch (error) {
+            return res.status(400).json({ msg: "Something went wrong", error: error });
+        }
+    });
 
 //แก้ไขโปรไฟล์Employee(update)
 // router.post("/updateEmployee", function (req, res) {

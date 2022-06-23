@@ -14,6 +14,8 @@ db.Employee = require('../models/employee')(sequelize, DataTypes);
 db.Supplier = require('../models/supplier')(sequelize, DataTypes);
 db.Product = require('../models/product')(sequelize, DataTypes);
 
-db.Supplier.hasMany(db.Product);
+db.Supplier.hasMany(db.Product, {
+    onDelete: 'CASCADE'
+});
 db.Product.belongsTo(db.Supplier);
 module.exports = db;
