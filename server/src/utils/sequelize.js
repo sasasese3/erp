@@ -11,5 +11,6 @@ db.sequelize = sequelize;
 db.DataTypes = DataTypes;
 
 db.Employee = require('../models/employee')(sequelize, DataTypes);
+db.Supplier = require('../models/supplier')(sequelize, DataTypes);
 
 module.exports = db;

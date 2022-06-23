@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const { Op } = require('sequelize');
+const { Op, UniqueConstraintError } = require('sequelize');
 const { body, validationResult } = require('express-validator');
 const userRoles = require('../utils/userRoles');
-const { Employee } = require('../utils/sequelize');
+const { Employee, Supplier } = require('../utils/sequelize');
 
 //Admin
 router.get('/employee', async function (req, res) {
@@ -44,6 +44,29 @@ router.patch('/employee', [
             return res.status(400).json({ msg: "Something went wrong", error: error });
         }
     });
+
+router.post('/supplier', [
+    body('name').notEmpty().isString(),
+    body('address').notEmpty().isString()
+], async function (req, res) {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
+        }
+        const { name, address } = req.body;
+        const supplier = await Supplier.create({ name, address });
+
+        return res.json({ msg: "Success", data: supplier });
+    } catch (error) {
+        if (error instanceof UniqueConstraintError) {
+            for (key in error.fields) {
+                return res.status(409).json({ msg: `${key} is already used`, value: error.fields[key] });
+            }
+        }
+        return res.status(400).json({ msg: "Something went wrong", error: error });
+    }
+});
 
 //ลบข้อมูลสมาชิก(Employee)
 // router.delete('/employee:/:EMPLOYEE_ID', function (req, res) {

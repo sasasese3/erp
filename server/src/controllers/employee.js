@@ -5,7 +5,8 @@ const nodemailer = require('nodemailer');
 
 const permit = require("../middlewares/authorization");
 const userRoles = require('../utils/userRoles');
-const { Employee } = require('../utils/sequelize');
+const { Employee, Supplier } = require('../utils/sequelize');
+const { Op } = require("sequelize");
 
 //Employee
 //สมัครสมาชิก
@@ -54,6 +55,26 @@ router.get("/", permit(userRoles.ALL), async function (req, res) {
 router.patch("/", permit(userRoles.ADMIN), async function (req, res) {
     return res.json("Hello");
 });
+
+
+router.get('/supplier', permit(userRoles.EMPLOYEE), async function (req, res) {
+    const q = req.query.q || "";
+    try {
+        const suppliers = await Supplier.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${q}%`
+                }
+            },
+            attributes: ['id', 'name']
+        });
+        return res.json({ msg: "Get suppliers success", data: suppliers });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ msg: "Something went wrong", error: error });
+    }
+}
+);
 
 //แก้ไขโปรไฟล์Employee(update)
 // router.post("/updateEmployee", function (req, res) {
