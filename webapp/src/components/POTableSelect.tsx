@@ -1,24 +1,29 @@
 import { Select } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
-import { MenuData } from "../utils/products";
+import { Product } from "../utils/responseType";
 
 type POTableSelectProps = {
+  options: Product[];
   handleChangeProduct: Function;
   idx: number;
 };
-function POTableSelect({ handleChangeProduct, idx }: POTableSelectProps) {
+function POTableSelect({
+  options,
+  handleChangeProduct,
+  idx,
+}: POTableSelectProps) {
   const [selectedChoice, setSelectedChoice] = useState("");
   return (
     <Select
       value={selectedChoice}
       onChange={(event: ChangeEvent<HTMLSelectElement>) => {
         setSelectedChoice(event.target.value);
-        handleChangeProduct(idx, event.target.value);
+        handleChangeProduct(idx, parseInt(event.target.value));
       }}
     >
-      {MenuData.map((choice) => (
-        <option key={choice.product_name} value={choice.product_name}>
-          {choice.product_name}
+      {options.map((choice) => (
+        <option key={choice.id} value={choice.id}>
+          {choice.name}
         </option>
       ))}
     </Select>

@@ -1,15 +1,22 @@
-import { useToast } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  useToast,
+} from "@chakra-ui/react";
 import axios from "axios";
-import { AsyncSelect, Select } from "chakra-react-select";
+import { AsyncSelect } from "chakra-react-select";
 import { useEffect } from "react";
-import { ChangeEventHandler } from "react";
 import { useState } from "react";
+import { Product } from "../utils/responseType";
 
 type CustomSelectSearchProps = {
   handleChangeSupplierID: Function;
+  setProduct: React.Dispatch<React.SetStateAction<Product[]>>;
 };
 function CustomSelectSearch({
   handleChangeSupplierID,
+  setProduct,
 }: CustomSelectSearchProps) {
   const [defaultOptions, setDefaultOptions] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
@@ -30,6 +37,12 @@ function CustomSelectSearch({
       return result;
     } catch (err) {
       console.log(err);
+      toast({
+        title: "Something went wrong.",
+        status: "error",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
 
@@ -41,20 +54,30 @@ function CustomSelectSearch({
     fetchDefaultOptions();
   }, []);
   return (
-    <AsyncSelect
-      isRequired
-      id="supplier"
-      placeholder="เลือกผู้ผลิตที่ต้องการ"
-      onChange={(value: any) => handleChangeSupplierID(value.value)}
-      loadOptions={(input, callback) => {
-        setTimeout(async () => {
-          const result = await fetchData(input);
+    <FormControl isRequired isInvalid={searchResult.length === 0}>
+      <FormLabel htmlFor="supplier">ผู้ผลิต</FormLabel>
+      <AsyncSelect
+        isRequired
+        id="supplier"
+        onChange={async (value: any) => {
+          handleChangeSupplierID(value.value);
+          const result = await fetchData(value.label);
           setSearchResult(result);
-          callback(result);
-        }, 500);
-      }}
-      defaultOptions={defaultOptions}
-    ></AsyncSelect>
+          setProduct([]);
+        }}
+        loadOptions={(input, callback) => {
+          setTimeout(async () => {
+            const result = await fetchData(input);
+            setSearchResult(result);
+            callback(result);
+          }, 500);
+        }}
+        defaultOptions={defaultOptions}
+      ></AsyncSelect>
+      {searchResult.length == 0 && (
+        <FormErrorMessage>กรุณาเลือกผู้ผลิต</FormErrorMessage>
+      )}
+    </FormControl>
   );
 }
 

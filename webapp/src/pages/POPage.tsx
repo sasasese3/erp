@@ -6,19 +6,12 @@ import {
   GridItem,
   Heading,
   Input,
-  Select,
-  Table,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
 } from "@chakra-ui/react";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import POTableBody from "../components/POTableBody";
+import { ChangeEvent, FormEvent, useState } from "react";
+import POTableWithAddButton from "../components/POTableWithAddButton";
 import CustomSelectSearch from "../components/SelectSearch";
 import useAuth from "../hooks/useAuth";
 import { getLocaltime } from "../utils/getlocaltime";
-import { MenuData } from "../utils/products";
 import { POPayload, Product } from "../utils/responseType";
 
 function POPage() {
@@ -33,44 +26,6 @@ function POPage() {
   });
 
   const [products, setProduct] = useState<Product[]>([]);
-
-  useEffect(() => {}, []);
-
-  const templateAddProduct: Product = {
-    ...MenuData[0],
-    amount: 0,
-    price: 0,
-  };
-
-  const handleClickDeleteProduct = (idx: number) => {};
-
-  const handleClickAddProduct = () => {
-    setProduct([...products, templateAddProduct]);
-  };
-
-  const handleChangeProduct = (idx: number, value: string) => {
-    const newProducts = [...products];
-    const newProduct = MenuData.filter(
-      (data) => data.product_name === value
-    )[0];
-
-    newProducts[idx].per_amount = newProduct.per_amount;
-    newProducts[idx].stock = newProduct.stock;
-    newProducts[idx].product_name = newProduct.product_name;
-    newProducts[idx].amount = Math.min(
-      newProducts[idx].amount,
-      newProduct.stock
-    );
-    newProducts[idx].price = newProducts[idx].amount * newProduct.per_amount;
-    setProduct(newProducts);
-
-    const totalPrice = products.reduce((prev, curr) => {
-      return prev + curr.price;
-    }, 0);
-
-    poHeaderPayload.total_price = totalPrice;
-    setPOHeaderPayload({ ...poHeaderPayload });
-  };
 
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -92,13 +47,6 @@ function POPage() {
     poHeaderPayload.total_price = totalPrice;
     setPOHeaderPayload({ ...poHeaderPayload });
   };
-
-  // const handleChangePOHeader = (event: ChangeEvent<HTMLInputElement>) => {
-  //   event.preventDefault();
-  //   poHeaderPayload[event.target.id as keyof typeof poHeaderPayload] =
-  //     event.target.value;
-  //   setPOHeaderPayload({ ...poHeaderPayload });
-  // };
 
   const handleChangeSupplierID = (value: number) => {
     poHeaderPayload.supplier_id = value;
@@ -131,6 +79,7 @@ function POPage() {
 
     return isEmpty || products.length === 0;
   };
+
   return (
     <>
       <Heading> ใบสำคัญสั่งซื้อ PO</Heading>
@@ -190,12 +139,10 @@ function POPage() {
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isRequired>
-              <FormLabel htmlFor="supplier">ผู้ผลิต</FormLabel>
-              <CustomSelectSearch
-                handleChangeSupplierID={handleChangeSupplierID}
-              ></CustomSelectSearch>
-            </FormControl>
+            <CustomSelectSearch
+              handleChangeSupplierID={handleChangeSupplierID}
+              setProduct={setProduct}
+            ></CustomSelectSearch>
           </GridItem>
           <GridItem>
             <FormControl isRequired>
@@ -208,40 +155,14 @@ function POPage() {
               ></Input>
             </FormControl>
           </GridItem>
-          {products.length !== 0 && (
-            <GridItem colSpan={3}>
-              <Table>
-                <Thead>
-                  <Tr>
-                    <Th> ลำดับ </Th>
-                    <Th> ชื่อสินค้า </Th>
-                    <Th> จำนวน </Th>
-                    <Th> คงเหลือ </Th>
-                    <Th> ราคาต่อหน่วย </Th>
-                    <Th> ราคารวม </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {products.map((product, idx) => (
-                    <POTableBody
-                      key={idx}
-                      idx={idx}
-                      {...product}
-                      setProduct={handleChangeAmount}
-                      handleChangeProduct={handleChangeProduct}
-                    ></POTableBody>
-                  ))}
-                </Tbody>
-              </Table>
-            </GridItem>
-          )}
-          {products.length < 10 && (
-            <GridItem colSpan={3}>
-              <Button variant="ghost" onClick={handleClickAddProduct}>
-                CLICK TO ADD PRODUCT
-              </Button>
-            </GridItem>
-          )}
+          <POTableWithAddButton
+            products={products}
+            setProduct={setProduct}
+            supplier_id={poHeaderPayload.supplier_id}
+            handleChangeAmount={handleChangeAmount}
+            poHeaderPayload={poHeaderPayload}
+            setPOHeaderPayload={setPOHeaderPayload}
+          ></POTableWithAddButton>
           <GridItem colStart={3} colEnd={3}>
             <Button disabled={isDisableButton()} type="submit" width="full">
               บันทึกข้อมูล

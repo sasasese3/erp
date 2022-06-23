@@ -44,7 +44,8 @@ export type POPayload = {
 };
 
 export type Product = {
-    product_name: string;
+    id: number;
+    name: number;
     amount: number;
     stock: number;
     per_amount: number;
