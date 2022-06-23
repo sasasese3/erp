@@ -35,6 +35,7 @@ function POTableBody({
           max={stock}
           onChange={setProduct}
           type="number"
+          width="full"
         ></Input>
       </Td>
       <Td>{stock.toLocaleString()}</Td>

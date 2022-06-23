@@ -6,6 +6,7 @@ import {
   GridItem,
   Heading,
   Input,
+  Select,
   Table,
   Tbody,
   Th,
@@ -14,31 +15,34 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import POTableBody from "../components/POTableBody";
+import CustomSelectSearch from "../components/SelectSearch";
+import useAuth from "../hooks/useAuth";
 import { getLocaltime } from "../utils/getlocaltime";
 import { MenuData } from "../utils/products";
 import { POPayload, Product } from "../utils/responseType";
 
 function POPage() {
+  const { auth } = useAuth();
   const [poHeaderPayload, setPOHeaderPayload] = useState<POPayload>({
     date: getLocaltime().toISOString().split("T")[0],
-    create_name: "",
-    seller_name: "",
-    account_name: "",
-    producer_name: "",
+    create_name: `${auth?.firstname!} ${auth?.lastname!}`,
+    employee_id: `${auth?.id!}`,
+    account_name: auth?.username!,
+    supplier_id: 0,
     total_price: 0,
   });
 
   const [products, setProduct] = useState<Product[]>([]);
 
-  useEffect(() => {
-    console.log(poHeaderPayload);
-  }, []);
+  useEffect(() => {}, []);
 
   const templateAddProduct: Product = {
     ...MenuData[0],
     amount: 0,
     price: 0,
   };
+
+  const handleClickDeleteProduct = (idx: number) => {};
 
   const handleClickAddProduct = () => {
     setProduct([...products, templateAddProduct]);
@@ -89,11 +93,20 @@ function POPage() {
     setPOHeaderPayload({ ...poHeaderPayload });
   };
 
-  const handleChangePOHeader = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    console.log(event.target.value);
-    poHeaderPayload[event.target.id as keyof typeof poHeaderPayload] =
-      event.target.value;
+  // const handleChangePOHeader = (event: ChangeEvent<HTMLInputElement>) => {
+  //   event.preventDefault();
+  //   poHeaderPayload[event.target.id as keyof typeof poHeaderPayload] =
+  //     event.target.value;
+  //   setPOHeaderPayload({ ...poHeaderPayload });
+  // };
+
+  const handleChangeSupplierID = (value: number) => {
+    poHeaderPayload.supplier_id = value;
+    setPOHeaderPayload({ ...poHeaderPayload });
+  };
+
+  const handleChangeDate = (event: ChangeEvent<HTMLInputElement>) => {
+    poHeaderPayload.date = event.target.value;
     setPOHeaderPayload({ ...poHeaderPayload });
   };
 
@@ -105,12 +118,17 @@ function POPage() {
 
   const isDisableButton = () => {
     let isEmpty = false;
+    if (poHeaderPayload.supplier_id === 0) {
+      isEmpty = true;
+    }
+
     for (const key in poHeaderPayload) {
       if (poHeaderPayload[key as keyof typeof poHeaderPayload] === "") {
         isEmpty = true;
         break;
       }
     }
+
     return isEmpty || products.length === 0;
   };
   return (
@@ -130,7 +148,7 @@ function POPage() {
               <Input
                 id="date"
                 value={poHeaderPayload.date}
-                onChange={handleChangePOHeader}
+                onChange={handleChangeDate}
                 type="date"
                 max={getLocaltime().toISOString().split("T")[0]}
               ></Input>
@@ -141,19 +159,20 @@ function POPage() {
               <FormLabel>ชื่อผู้จัดทำ</FormLabel>
               <Input
                 id="create_name"
+                disabled={true}
+                variant="filled"
                 value={poHeaderPayload.create_name}
-                onChange={handleChangePOHeader}
                 type="text"
               ></Input>
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl isRequired>
-              <FormLabel>ชื่อพนักงานขาย</FormLabel>
+              <FormLabel>รหัสพนักงานขาย</FormLabel>
               <Input
-                id="seller_name"
-                value={poHeaderPayload.seller_name}
-                onChange={handleChangePOHeader}
+                id="employee_id"
+                disabled={true}
+                value={poHeaderPayload.employee_id}
                 type="text"
               ></Input>
             </FormControl>
@@ -163,21 +182,19 @@ function POPage() {
               <FormLabel>ชื่อบัญชี</FormLabel>
               <Input
                 id="account_name"
+                disabled={true}
+                variant="filled"
                 value={poHeaderPayload.account_name}
-                onChange={handleChangePOHeader}
                 type="text"
               ></Input>
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl isRequired>
-              <FormLabel>ผู้ผลิต</FormLabel>
-              <Input
-                id="producer_name"
-                value={poHeaderPayload.producer_name}
-                onChange={handleChangePOHeader}
-                type="text"
-              ></Input>
+              <FormLabel htmlFor="supplier">ผู้ผลิต</FormLabel>
+              <CustomSelectSearch
+                handleChangeSupplierID={handleChangeSupplierID}
+              ></CustomSelectSearch>
             </FormControl>
           </GridItem>
           <GridItem>

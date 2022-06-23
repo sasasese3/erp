@@ -37,9 +37,9 @@ export type RegisterPayload = {
 export type POPayload = {
     date: string;
     create_name: string;
-    seller_name: string;
+    employee_id: string;
     account_name: string;
-    producer_name: string;
+    supplier_id: number;
     total_price: string | number;
 };
 
