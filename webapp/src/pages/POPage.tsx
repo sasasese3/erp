@@ -6,8 +6,11 @@ import {
   GridItem,
   Heading,
   Input,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import POTableWithAddButton from "../components/POTableWithAddButton";
 import CustomSelectSearch from "../components/SelectSearch";
 import useAuth from "../hooks/useAuth";
@@ -17,13 +20,13 @@ import { POPayload, Product } from "../utils/responseType";
 function POPage() {
   const { auth } = useAuth();
   const [poHeaderPayload, setPOHeaderPayload] = useState<POPayload>({
-    date: getLocaltime().toISOString().split("T")[0],
-    create_name: `${auth?.firstname!} ${auth?.lastname!}`,
-    employee_id: `${auth?.id!}`,
-    account_name: auth?.username!,
-    supplier_id: 0,
+    createdAt: getLocaltime().toISOString().split("T")[0],
+    SupplierId: 0,
     total_price: 0,
   });
+
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const [products, setProduct] = useState<Product[]>([]);
 
@@ -49,24 +52,49 @@ function POPage() {
   };
 
   const handleChangeSupplierID = (value: number) => {
-    poHeaderPayload.supplier_id = value;
+    poHeaderPayload.SupplierId = value;
     setPOHeaderPayload({ ...poHeaderPayload });
   };
 
   const handleChangeDate = (event: ChangeEvent<HTMLInputElement>) => {
-    poHeaderPayload.date = event.target.value;
+    poHeaderPayload.createdAt = event.target.value;
     setPOHeaderPayload({ ...poHeaderPayload });
   };
 
-  const handleFormSummit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSummit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(poHeaderPayload);
-    console.log(products);
+    const payload = {
+      ...poHeaderPayload,
+      products: products.map((product, idx) => ({
+        ProductId: product.id,
+        amount: product.amount,
+        price: product.price,
+        no: idx + 1,
+      })),
+    };
+    try {
+      const response = await axios.post("/erp/po", payload);
+      const { msg } = response.data;
+      navigate("/history");
+      toast({
+        title: msg,
+        status: "success",
+        position: "top-right",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        status: "error",
+        position: "top-right",
+        duration: 2000,
+      });
+    }
   };
 
   const isDisableButton = () => {
     let isEmpty = false;
-    if (poHeaderPayload.supplier_id === 0) {
+    if (poHeaderPayload.SupplierId === 0) {
       isEmpty = true;
     }
 
@@ -96,7 +124,7 @@ function POPage() {
               <FormLabel>วันที่จัดทำ</FormLabel>
               <Input
                 id="date"
-                value={poHeaderPayload.date}
+                value={poHeaderPayload.createdAt}
                 onChange={handleChangeDate}
                 type="date"
                 max={getLocaltime().toISOString().split("T")[0]}
@@ -110,7 +138,7 @@ function POPage() {
                 id="create_name"
                 disabled={true}
                 variant="filled"
-                value={poHeaderPayload.create_name}
+                value={`${auth?.firstname} ${auth?.lastname}`}
                 type="text"
               ></Input>
             </FormControl>
@@ -121,7 +149,7 @@ function POPage() {
               <Input
                 id="employee_id"
                 disabled={true}
-                value={poHeaderPayload.employee_id}
+                value={auth?.id}
                 type="text"
               ></Input>
             </FormControl>
@@ -133,7 +161,7 @@ function POPage() {
                 id="account_name"
                 disabled={true}
                 variant="filled"
-                value={poHeaderPayload.account_name}
+                value={auth?.username}
                 type="text"
               ></Input>
             </FormControl>
@@ -158,7 +186,7 @@ function POPage() {
           <POTableWithAddButton
             products={products}
             setProduct={setProduct}
-            supplier_id={poHeaderPayload.supplier_id}
+            supplier_id={poHeaderPayload.SupplierId}
             handleChangeAmount={handleChangeAmount}
             poHeaderPayload={poHeaderPayload}
             setPOHeaderPayload={setPOHeaderPayload}
