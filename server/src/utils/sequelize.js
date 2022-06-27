@@ -14,6 +14,9 @@ db.Employee = require('../models/employee')(sequelize, DataTypes);
 db.Supplier = require('../models/supplier')(sequelize, DataTypes);
 db.Product = require('../models/product')(sequelize, DataTypes);
 
+const { PO, PO_Product } = require('../models/po')(sequelize, DataTypes);
+db.PO = PO;
+db.PO_Product = PO_Product;
 
 //supplier 1 - M product
 db.Supplier.hasMany(db.Product, {
@@ -21,7 +24,21 @@ db.Supplier.hasMany(db.Product, {
 });
 db.Product.belongsTo(db.Supplier);
 
+//------------------------PO----------------------------------------
 //employee 1 - M po
+db.Employee.hasMany(db.PO, {
+    onDelete: 'CASCADE'
+});
+db.PO.belongsTo(db.Employee);
+
+//supplier 1 - M po
+db.Supplier.hasMany(db.PO, {
+    onDelete: 'CASCADE'
+});
+db.PO.belongsTo(db.Supplier);
 
 //po M - N product
+db.PO.belongsToMany(db.Product, { through: db.PO_Product });
+db.Product.belongsToMany(db.PO, { through: db.PO_Product });
+
 module.exports = db;
