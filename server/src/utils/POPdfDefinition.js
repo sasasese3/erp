@@ -12,13 +12,11 @@ const POPdfDeifinition = (data) => {
         ];
     });
 
-    body.sort((a, b) => {
-        return a[0] - b[0];
-    });
-
     const total_amount = products.reduce((prev, curr) => {
         return prev + curr.PO_Product.amount;
     }, 0);
+
+
     return {
 
         pageSize: 'A4',
@@ -34,15 +32,9 @@ const POPdfDeifinition = (data) => {
 
             { text: `วันที่ออก : ${createdAt.toLocaleDateString('en-GB')}`, fontSize: 10, margin: [350, 2, 5, 2], bold: true },
             { text: 'วันที่อนุมัติ :', fontSize: 10, margin: [350, 2, 5, 2], bold: true },
-
-
-
-
             {
                 layout: "lightHorizontalLines", // optional
                 table: {
-
-
                     // headers are automatically repeated if the table spans over multiple pages
                     // you can declare how many rows should be treated as headers
                     headerRows: 1,
@@ -55,18 +47,14 @@ const POPdfDeifinition = (data) => {
                         [{ text: "ยอดรวม", bold: true }, "", total_amount, { text: data.total_price.toFixed(2), fontSize: 16, alignment: 'right' }],
                     ],
                 },
-
             },
             { text: `ยอดรวม : \t\t${(data.total_price * 1.07).toFixed(2)}`, fontSize: 18, margin: [350, 2, 5, 2], bold: true },
             { text: 'VAT :                            7%', margin: [350, 2, 5, 2] },
             { text: 'ยอดรวมสุทธิ :                 7%', margin: [350, 2, 5, 2] },
-
-
         ],
         defaultStyle: {
             font: "THSarabun",
             fontSize: 14,
-
         },
         styles: {
             header: {
@@ -78,7 +66,6 @@ const POPdfDeifinition = (data) => {
                 alignment: 'right'
             }
         }
-
     };
 };
 

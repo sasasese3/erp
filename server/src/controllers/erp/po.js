@@ -43,13 +43,14 @@ router.post('/', [
             }))
         );
 
-        const data = await PO.findByPk(po.id, { include: [Product, Employee] });
+        const data = await PO.findByPk(po.id, { include: [Product, Employee], order: [[Product, PO_Product, 'no', 'ASC']] });
         const doc = printer.createPdfKitDocument(POPdfDeifinition(data.toJSON()));
         doc.pipe(fs.createWriteStream(filePath));
         doc.end();
         return res.json({ msg: 'Create PO Success' });
 
     } catch (error) {
+        console.log(error);
         return res.status(400).json({ msg: "Something went wrong", error: error });
     }
 });
