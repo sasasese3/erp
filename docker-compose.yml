@@ -17,6 +17,7 @@ services:
       - 3333:3333
     volumes:
       - ./server/src:/app/src
+      - ./server/pdf:/app/pdf
     restart: always
     env_file:
       - ./server/.env

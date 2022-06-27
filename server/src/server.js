@@ -14,6 +14,10 @@ redisClient.connect()
   .then(console.log('Connect to Redis server'))
   .catch(console.error);
 
+const { pdfFolder } = require('./utils/pdfPrinter');
+const path = require('path');
+const fs = require('fs');
+
 const app = express();
 
 
@@ -28,10 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //logger
 app.use(morgan('dev'));
-//use express static folder
-app.use(
-  express.static(__dirname + "./Signature")
-);
+
 //session
 app.use(
   session({
@@ -50,9 +51,15 @@ sequelize.sync({ alter: { drop: false } })
   .then(console.log('Connect to MySQL server, All models were synchronized successfully.'))
   .catch((error) => console.error('Unable to sync to the models:', error));
 
-// sequelize.define("sfd", "", {
+//create folder if not exist
+const folder = ['po', 'rv', 'pv', 'ap3', 'ib'];
 
-// });
+for (nested of folder) {
+  const dir = path.join(pdfFolder, nested);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+}
 
 app.use(router);
 //StartServer

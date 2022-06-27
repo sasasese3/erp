@@ -62,6 +62,7 @@ yarn-error.log*
 node_modules/
 data/
 jspm_packages/
+pdf/
 
 # Optional npm cache directory
 .npm
