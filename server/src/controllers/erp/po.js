@@ -2,20 +2,18 @@ const router = require('express').Router();
 const path = require('path');
 const { printer, pdfFolder } = require('../../utils/pdfPrinter');
 const { POPdfDeifinition } = require('../../utils/POPdfDefinition');
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, param } = require('express-validator');
 const fs = require('fs');
-const { PO, PO_Product, Product } = require('../../utils/sequelize');
+const { PO, PO_Product, Product, Employee, Supplier } = require('../../utils/sequelize');
 
 const { ConvertToArray, ConvertToDetailProductQuery } = require("../../utils/convert");
 const { uploadPO } = require("../../utils/fileUpload");
+const { Op } = require("sequelize");
 
-//pdf printer
-const doc = printer.createPdfKitDocument(POPdfDeifinition);
 //pdf file path
 const poPDFFolder = path.join(pdfFolder, 'po');
 
 router.post('/', [
-    body('EmployeeId').notEmpty().isString(),
     body('SupplierId').notEmpty().isInt(),
     body('createdAt').notEmpty().isDate(),
     body('total_price').notEmpty().isNumeric(),
@@ -29,13 +27,13 @@ router.post('/', [
         if (!errors.isEmpty()) {
             return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
         }
-        const { EmployeeId, SupplierId, createdAt, total_price, products } = req.body;
+        const { SupplierId, createdAt, total_price, products } = req.body;
 
         const date = new Date();
         const filePath = path.join(poPDFFolder, `${date.getTime()}.pdf`);
 
         const po = await PO.create({
-            total_price, file_path: filePath, createdAt, EmployeeId, SupplierId
+            total_price, file_path: filePath, createdAt, EmployeeId: req.user.id, SupplierId
         });
 
         await PO_Product.bulkCreate(
@@ -44,25 +42,46 @@ router.post('/', [
                 POId: po.id
             }))
         );
-        return res.json({ msg: 'Create PO Success', data: po });
+
+        const data = await PO.findByPk(po.id, { include: [Product, Employee] });
+        const doc = printer.createPdfKitDocument(POPdfDeifinition(data.toJSON()));
+        doc.pipe(fs.createWriteStream(filePath));
+        doc.end();
+        return res.json({ msg: 'Create PO Success' });
 
     } catch (error) {
-        console.log(error);
         return res.status(400).json({ msg: "Something went wrong", error: error });
     }
 });
 
 router.get('/', async (req, res) => {
     try {
-        // const filePath = path.join(poPDFFolder, '1656089172802.pdf');
-        // const data = fs.readFileSync(filePath);
-        // res.contentType("application/pdf");
-        // res.send(data);
-        const pos = await PO.findAll({ include: Product });
+        const pos = await PO.findAll({ include: [Product, Employee, Supplier] });
         return res.json({ msg: 'Get PO Success', data: pos });
 
     } catch (error) {
-        console.log(error);
+        return res.status(400).json({ msg: "Something went wrong", error: error });
+    }
+});
+
+router.get('/pdf/:id', [
+    param('id').notEmpty().isInt()
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
+        }
+        const id = parseInt(req.params.id);
+        const po = await PO.findOne({ where: { id: id, EmployeeId: req.user.id } });
+        if (!po) {
+            return res.status(403).json({ msg: 'Forbidden' });
+        }
+        const data = fs.readFileSync(po.toJSON().file_path);
+        res.contentType("application/pdf");
+        res.send(data);
+
+    } catch (error) {
         return res.status(400).json({ msg: "Something went wrong", error: error });
     }
 });
