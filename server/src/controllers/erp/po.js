@@ -57,7 +57,7 @@ router.post('/', [
 
 router.get('/', async (req, res) => {
     try {
-        const pos = await PO.findAll({ include: [Product, Employee, Supplier] });
+        const pos = await PO.findAll({ where: { EmployeeId: req.user.id }, include: [Product, Employee, Supplier] });
         return res.json({ msg: 'Get PO Success', data: pos });
 
     } catch (error) {
