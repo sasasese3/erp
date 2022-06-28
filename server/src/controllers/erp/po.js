@@ -5,10 +5,8 @@ const { POPdfDeifinition } = require('../../utils/POPdfDefinition');
 const { body, validationResult, param } = require('express-validator');
 const fs = require('fs');
 const { PO, PO_Product, Product, Employee, Supplier } = require('../../utils/sequelize');
-
-const { ConvertToArray, ConvertToDetailProductQuery } = require("../../utils/convert");
-const { uploadPO } = require("../../utils/fileUpload");
-const { Op } = require("sequelize");
+const { UniqueConstraintError } = require('sequelize');
+const userRoles = require("../../utils/userRoles");
 
 //pdf file path
 const poPDFFolder = path.join(pdfFolder, 'po');
@@ -50,17 +48,26 @@ router.post('/', [
         return res.json({ msg: 'Create PO Success' });
 
     } catch (error) {
-        console.log(error);
+        if (error instanceof UniqueConstraintError) {
+            return res.status(400).json({ msg: "กรุณาไม่เลือกสินค้าซ้ำ" });
+        }
         return res.status(400).json({ msg: "Something went wrong", error: error });
     }
 });
 
 router.get('/', async (req, res) => {
     try {
-        const pos = await PO.findAll({ where: { EmployeeId: req.user.id }, include: [Product, Supplier], attributes: { exclude: ['file_path'] } });
+        let pos;
+        if (req.user.role == userRoles.INSPECTOR[0]) {
+            pos = await PO.findAll({ include: [Supplier, { model: Employee, attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
+        } else {
+            pos = await PO.findAll({ where: { EmployeeId: req.user.id }, include: [Supplier, { model: Employee, as: 'inspector', attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
+        }
+        // const pos = await PO.findAll({ where: { EmployeeId: req.user.id }, include: [Product, Supplier], attributes: { exclude: ['file_path'] } });
         return res.json({ msg: 'Get PO Success', data: pos });
 
     } catch (error) {
+        console.log(error);
         return res.status(400).json({ msg: "Something went wrong", error: error });
     }
 });
@@ -74,7 +81,13 @@ router.get('/pdf/:id', [
             return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
         }
         const id = parseInt(req.params.id);
-        const po = await PO.findOne({ where: { id: id, EmployeeId: req.user.id } });
+        let po;
+        if (req.user.role === userRoles.EMPLOYEE[0]) {
+            po = await PO.findOne({ where: { id: id, EmployeeId: req.user.id } });
+        }
+        else {
+            po = await PO.findByPk(id);
+        }
         if (!po) {
             return res.status(403).json({ msg: 'Forbidden' });
         }

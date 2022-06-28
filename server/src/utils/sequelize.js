@@ -29,7 +29,13 @@ db.Product.belongsTo(db.Supplier);
 db.Employee.hasMany(db.PO, {
     onDelete: 'CASCADE'
 });
+
+
 db.PO.belongsTo(db.Employee);
+db.PO.belongsTo(db.Employee, {
+    as: 'inspector',
+    foreignKey: 'inspectorId'
+});
 
 //supplier 1 - M po
 db.Supplier.hasMany(db.PO, {

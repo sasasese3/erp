@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         timestamps: true,
-        updatedAt: false,
     });
 
     const PO_Product = sequelize.define('PO_Product', {

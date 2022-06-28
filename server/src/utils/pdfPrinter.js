@@ -12,4 +12,4 @@ const pdfFolder = path.join(__dirname, "..", "..", "pdf");
 
 const printer = new PdfPrinter(font);
 
-module.exports = { printer, pdfFolder };
+module.exports = { printer, pdfFolder, font };
