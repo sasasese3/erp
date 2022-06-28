@@ -8,7 +8,7 @@ import {
   Input,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import POTableWithAddButton from "../components/POTableWithAddButton";
@@ -25,7 +25,7 @@ function POPage() {
     total_price: 0,
   });
 
-  const toast = useToast();
+  const toast = useToast({ position: "top-right", duration: 2000 });
   const navigate = useNavigate();
 
   const [products, setProduct] = useState<Product[]>([]);
@@ -79,16 +79,20 @@ function POPage() {
       toast({
         title: msg,
         status: "success",
-        position: "top-right",
-        duration: 2000,
       });
     } catch (error) {
-      toast({
-        title: "Something went wrong.",
-        status: "error",
-        position: "top-right",
-        duration: 2000,
-      });
+      if (error instanceof AxiosError) {
+        const { msg } = error.response?.data;
+        toast({
+          title: msg,
+          status: "error",
+        });
+      } else {
+        toast({
+          title: "Something went wrong.",
+          status: "error",
+        });
+      }
     }
   };
 

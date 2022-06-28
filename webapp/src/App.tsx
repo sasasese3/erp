@@ -16,6 +16,7 @@ import IBPage from "./pages/IBPage";
 import HistoryPage from "./pages/HistoryPage";
 import AccountPage from "./pages/AccountPage";
 import RegisterPage from "./pages/RegisterPage";
+import ApprovePage from "./pages/ApprovePage";
 
 function App() {
   return (
@@ -44,6 +45,10 @@ function App() {
           }
         >
           <Route path="history" element={<HistoryPage />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.INSPECTOR]} />}>
+          <Route path="approve" element={<ApprovePage />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.ADMIN]} />}>
