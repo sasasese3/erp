@@ -4,8 +4,8 @@ const { printer, pdfFolder } = require('../../utils/pdfPrinter');
 const { POPdfDeifinition } = require('../../utils/POPdfDefinition');
 const { body, validationResult, param } = require('express-validator');
 const fs = require('fs');
-const { PO, PO_Product, Product, Employee, Supplier } = require('../../utils/sequelize');
-const { UniqueConstraintError } = require('sequelize');
+const { PO, PO_Product, Product, Employee, Supplier, sequelize } = require('../../utils/sequelize');
+const { UniqueConstraintError, } = require('sequelize');
 const userRoles = require("../../utils/userRoles");
 
 //pdf file path
@@ -20,6 +20,8 @@ router.post('/', [
     body('products.*.amount').notEmpty().isInt(),
 
 ], async (req, res) => {
+    const t = await sequelize.transaction();
+
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -32,22 +34,26 @@ router.post('/', [
 
         const po = await PO.create({
             total_price, file_path: filePath, createdAt, EmployeeId: req.user.id, SupplierId
-        });
+        }, { transaction: t });
 
         await PO_Product.bulkCreate(
             products.map((product) => ({
                 ...product,
                 POId: po.id
-            }))
+            })), { transaction: t }
         );
 
         const data = await PO.findByPk(po.id, { include: [Product, Employee], order: [[Product, PO_Product, 'no', 'ASC']] });
         const doc = printer.createPdfKitDocument(POPdfDeifinition(data.toJSON()));
         doc.pipe(fs.createWriteStream(filePath));
         doc.end();
+
+        await t.commit();
+
         return res.json({ msg: 'Create PO Success' });
 
     } catch (error) {
+        await t.rollback();
         if (error instanceof UniqueConstraintError) {
             return res.status(400).json({ msg: "กรุณาไม่เลือกสินค้าซ้ำ" });
         }
