@@ -84,11 +84,9 @@ router.get('/', async (req, res) => {
         } else {
             pos = await PO.findAll({ where: { EmployeeId: req.user.id }, include: [Supplier, { model: Employee, as: 'inspector', attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
         }
-        // const pos = await PO.findAll({ where: { EmployeeId: req.user.id }, include: [Product, Supplier], attributes: { exclude: ['file_path'] } });
         return res.json({ msg: 'Get PO Success', data: pos });
 
     } catch (error) {
-        console.log(error);
         return res.status(400).json({ msg: "Something went wrong", error: error });
     }
 });

@@ -80,49 +80,47 @@ router.post('/', [
     }
 });
 
-// router.get('/', async (req, res) => {
-//     try {
-//         let pos;
-//         if (req.user.role == userRoles.INSPECTOR[0]) {
-//             pos = await RV.findAll({ include: [Supplier, { model: Employee, attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
-//         } else {
-//             pos = await RV.findAll({ where: { EmployeeId: req.user.id }, include: [Supplier, { model: Employee, as: 'inspector', attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
-//         }
-//         // const pos = await PO.findAll({ where: { EmployeeId: req.user.id }, include: [Product, Supplier], attributes: { exclude: ['file_path'] } });
-//         return res.json({ msg: 'Get PO Success', data: pos });
+router.get('/', async (req, res) => {
+    try {
+        let rvs;
+        if (req.user.role == userRoles.INSPECTOR[0]) {
+            rvs = await RV.findAll({ include: [Supplier, { model: Employee, attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
+        } else {
+            rvs = await RV.findAll({ where: { EmployeeId: req.user.id }, include: [Supplier, { model: Employee, as: 'inspector', attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
+        }
+        return res.json({ msg: 'Get RV Success', data: rvs });
 
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(400).json({ msg: "Something went wrong", error: error });
-//     }
-// });
+    } catch (error) {
+        return res.status(400).json({ msg: "Something went wrong", error: error });
+    }
+});
 
-// router.get('/pdf/:id', [
-//     param('id').notEmpty().isInt()
-// ], async (req, res) => {
-//     try {
-//         const errors = validationResult(req);
-//         if (!errors.isEmpty()) {
-//             return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
-//         }
-//         const id = parseInt(req.params.id);
-//         let po;
-//         if (req.user.role === userRoles.EMPLOYEE[0]) {
-//             po = await RV.findOne({ where: { id: id, EmployeeId: req.user.id } });
-//         }
-//         else {
-//             po = await RV.findByPk(id);
-//         }
-//         if (!po) {
-//             return res.status(403).json({ msg: 'Forbidden' });
-//         }
-//         const data = readFileSync(po.toJSON().file_path);
-//         res.contentType("application/pdf");
-//         res.send(data);
+router.get('/pdf/:id', [
+    param('id').notEmpty().isInt()
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
+        }
+        const id = parseInt(req.params.id);
+        let rv;
+        if (req.user.role === userRoles.EMPLOYEE[0]) {
+            rv = await RV.findOne({ where: { rv_id: id, EmployeeId: req.user.id } });
+        }
+        else {
+            rv = await RV.findByPk(id);
+        }
+        if (!rv) {
+            return res.status(403).json({ msg: 'Forbidden' });
+        }
+        const data = readFileSync(rv.toJSON().file_path);
+        res.contentType("application/pdf");
+        res.send(data);
 
-//     } catch (error) {
-//         return res.status(400).json({ msg: "Something went wrong", error: error });
-//     }
-// });
+    } catch (error) {
+        return res.status(400).json({ msg: "Something went wrong", error: error });
+    }
+});
 
 module.exports = router;
