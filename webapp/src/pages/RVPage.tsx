@@ -198,9 +198,7 @@ function RVPage() {
               <FormLabel>จำนวนเงินทั้งหมด</FormLabel>
               <Input
                 value={rvHeaderPayload.total_price.toLocaleString()}
-                disabled={true}
                 type="text"
-                variant="filled"
               ></Input>
             </FormControl>
           </GridItem>

@@ -137,16 +137,10 @@ function POPage() {
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isRequired>
-              <FormLabel>ชื่อผู้จัดทำ</FormLabel>
-              <Input
-                id="create_name"
-                disabled={true}
-                variant="filled"
-                value={`${auth?.firstname} ${auth?.lastname}`}
-                type="text"
-              ></Input>
-            </FormControl>
+            <CustomSelectSearch
+              handleChangeSupplierID={handleChangeSupplierID}
+              setProduct={setProduct}
+            ></CustomSelectSearch>
           </GridItem>
           <GridItem>
             <FormControl isRequired>
@@ -172,19 +166,23 @@ function POPage() {
             </FormControl>
           </GridItem>
           <GridItem>
-            <CustomSelectSearch
-              handleChangeSupplierID={handleChangeSupplierID}
-              setProduct={setProduct}
-            ></CustomSelectSearch>
+            <FormControl isRequired>
+              <FormLabel>ชื่อผู้จัดทำ</FormLabel>
+              <Input
+                id="create_name"
+                disabled={true}
+                variant="filled"
+                value={`${auth?.firstname} ${auth?.lastname}`}
+                type="text"
+              ></Input>
+            </FormControl>
           </GridItem>
           <GridItem>
             <FormControl isRequired>
               <FormLabel>จำนวนเงินทั้งหมด</FormLabel>
               <Input
                 value={poHeaderPayload.total_price.toLocaleString()}
-                disabled={true}
                 type="text"
-                variant="filled"
               ></Input>
             </FormControl>
           </GridItem>
