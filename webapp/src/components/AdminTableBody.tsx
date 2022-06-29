@@ -12,12 +12,11 @@ import {
   Text,
   Tr,
   useDisclosure,
-  useToast,
   UseToastOptions,
 } from "@chakra-ui/react";
 import axios, { AxiosError } from "axios";
 import { ChangeEvent, useState } from "react";
-import { Employee } from "../utils/responseType";
+import useTLToast from "../hooks/useTLToast";
 import { RevertRoles } from "../utils/roles";
 
 type AdminTableBodyProps = {
@@ -33,8 +32,6 @@ type AdminTableBodyProps = {
 
 const toastProps: UseToastOptions = {
   status: "error",
-  duration: 2000,
-  position: "top-right",
 };
 function AdminTableBody({
   id,
@@ -48,7 +45,7 @@ function AdminTableBody({
 }: AdminTableBodyProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedRole, setSelectedRole] = useState("");
-  const toast = useToast();
+  const toast = useTLToast();
   const handleChangeRole = async () => {
     try {
       const response = await axios.patch("/admin/employee", {
@@ -59,8 +56,6 @@ function AdminTableBody({
       toast({
         title: msg,
         status: "success",
-        duration: 2000,
-        position: "top-right",
       });
       onClose();
       setUpdate(true);

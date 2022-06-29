@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import TableWithAddButton from "../components/erp/TableWithAddButton";
 import CustomSelectSearch from "../components/SelectSearch";
 import useAuth from "../hooks/useAuth";
+import useTLToast from "../hooks/useTLToast";
 import { getLocaltime } from "../utils/getlocaltime";
 import { Product, RVPayload } from "../utils/responseType";
 
@@ -28,7 +29,7 @@ function RVPage() {
     detail: "",
   });
 
-  const toast = useToast({ position: "top-right", duration: 2000 });
+  const toast = useTLToast();
   const navigate = useNavigate();
 
   const [products, setProduct] = useState<Product[]>([]);

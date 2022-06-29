@@ -22,6 +22,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BasePathByRole } from "../utils/roles";
 import { UserResponse } from "../utils/responseType";
 import { Link as ReactLink } from "react-router-dom";
+import useTLToast from "../hooks/useTLToast";
 
 type LoginPayload = {
   username: string;
@@ -36,8 +37,6 @@ type LocationState = {
 
 const toastProps: UseToastOptions = {
   status: "error",
-  duration: 2000,
-  position: "top-right",
 };
 
 function LoginPage() {
@@ -59,7 +58,7 @@ function LoginPage() {
   });
 
   //for login failed alert
-  const toast = useToast();
+  const toast = useTLToast();
 
   //for focus on email input
   const userRef = useRef<HTMLInputElement>(null);

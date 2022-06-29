@@ -9,6 +9,7 @@ import axios from "axios";
 import { AsyncSelect } from "chakra-react-select";
 import { useEffect } from "react";
 import { useState } from "react";
+import useTLToast from "../hooks/useTLToast";
 import { Product } from "../utils/responseType";
 
 type CustomSelectSearchProps = {
@@ -22,7 +23,7 @@ function CustomSelectSearch({
   const [defaultOptions, setDefaultOptions] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
 
-  const toast = useToast();
+  const toast = useTLToast();
 
   const fetchData = async (q: string) => {
     try {
@@ -41,8 +42,6 @@ function CustomSelectSearch({
       toast({
         title: "Something went wrong.",
         status: "error",
-        position: "top-right",
-        duration: 2000,
       });
     }
   };

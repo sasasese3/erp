@@ -8,13 +8,12 @@ import {
   Heading,
   Radio,
   RadioGroup,
-  Stack,
-  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import useTLToast from "../hooks/useTLToast";
 import { BasePathByRole } from "../utils/roles";
 
 type locationStateType = {
@@ -28,7 +27,7 @@ function ApprovePage() {
   const location = useLocation();
   const state = location.state as locationStateType;
   const { id, type } = state;
-  const toast = useToast({ position: "top-right", duration: 2000 });
+  const toast = useTLToast();
 
   const handleClickBack = () => {
     navigate(-1);

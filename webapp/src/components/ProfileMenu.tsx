@@ -1,14 +1,12 @@
 import {
   Button,
   chakra,
-  Flex,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import {
@@ -20,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import useTLToast from "../hooks/useTLToast";
 import { ROLES } from "../utils/roles";
 
 function ProfileMenu() {
@@ -41,7 +40,7 @@ function ProfileMenu() {
   const navigate = useNavigate();
 
   //for letting user know when have error request
-  const toast = useToast();
+  const toast = useTLToast();
 
   const handleClickAccount = () => {
     navigate("/account");
@@ -58,16 +57,12 @@ function ProfileMenu() {
       toast({
         title: msg,
         status: "success",
-        duration: 2000,
-        position: "top-right",
       });
       setAuth?.({});
     } catch (error) {
       toast({
         title: "Something went wrong.",
         status: "error",
-        duration: 2000,
-        position: "top-right",
       });
     }
   };

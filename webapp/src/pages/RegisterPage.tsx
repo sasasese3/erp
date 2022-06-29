@@ -8,7 +8,6 @@ import {
   GridItem,
   Heading,
   Input,
-  useToast,
   UseToastOptions,
   VStack,
 } from "@chakra-ui/react";
@@ -16,12 +15,11 @@ import axios, { AxiosError } from "axios";
 
 const toastProps: UseToastOptions = {
   status: "error",
-  duration: 2000,
-  position: "top-right",
 };
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LinkwithReact from "../components/LinkwithReact";
+import useTLToast from "../hooks/useTLToast";
 import { getLocaltime } from "../utils/getlocaltime";
 import { RegisterPayload } from "../utils/responseType";
 
@@ -42,7 +40,7 @@ function RegisterPage() {
     position: "",
   });
 
-  const toast = useToast();
+  const toast = useTLToast();
   const navigate = useNavigate();
   const handleSummit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,8 +50,6 @@ function RegisterPage() {
       toast({
         title: msg,
         status: "success",
-        duration: 2000,
-        position: "top-right",
       });
       navigate("/login");
     } catch (error) {
