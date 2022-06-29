@@ -1,17 +1,17 @@
 import { Select } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
-import { Product } from "../utils/responseType";
+import { Product } from "../../utils/responseType";
 
-type POTableSelectProps = {
+type ProductSelectProps = {
   options: Product[];
   handleChangeProduct: Function;
   idx: number;
 };
-function POTableSelect({
+function ProductSelect({
   options,
   handleChangeProduct,
   idx,
-}: POTableSelectProps) {
+}: ProductSelectProps) {
   const [selectedChoice, setSelectedChoice] = useState("");
   return (
     <Select
@@ -30,4 +30,4 @@ function POTableSelect({
   );
 }
 
-export default POTableSelect;
+export default ProductSelect;

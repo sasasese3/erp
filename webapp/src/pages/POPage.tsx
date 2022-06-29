@@ -11,7 +11,7 @@ import {
 import axios, { AxiosError } from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import POTableWithAddButton from "../components/POTableWithAddButton";
+import TableWithAddButton from "../components/erp/TableWithAddButton";
 import CustomSelectSearch from "../components/SelectSearch";
 import useAuth from "../hooks/useAuth";
 import { getLocaltime } from "../utils/getlocaltime";
@@ -187,14 +187,14 @@ function POPage() {
               ></Input>
             </FormControl>
           </GridItem>
-          <POTableWithAddButton
+          <TableWithAddButton
             products={products}
             setProduct={setProduct}
             supplier_id={poHeaderPayload.SupplierId}
             handleChangeAmount={handleChangeAmount}
-            poHeaderPayload={poHeaderPayload}
-            setPOHeaderPayload={setPOHeaderPayload}
-          ></POTableWithAddButton>
+            headerPayload={poHeaderPayload}
+            setHeaderPayload={setPOHeaderPayload}
+          ></TableWithAddButton>
           <GridItem colStart={3} colEnd={3}>
             <Button disabled={isDisableButton()} type="submit" width="full">
               บันทึกข้อมูล

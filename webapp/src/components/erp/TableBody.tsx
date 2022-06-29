@@ -1,15 +1,15 @@
 import { Input, Td, Tr } from "@chakra-ui/react";
 import { ChangeEventHandler } from "react";
-import { Product } from "../utils/responseType";
-import POTableSelect from "./POTableSelect";
+import { Product } from "../../utils/responseType";
+import TableSelect from "./ProductSelect";
 
-type POTableBodyProps = Product & {
+type TableBodyProps = Product & {
   idx: number;
   setProduct: ChangeEventHandler<HTMLInputElement>;
   handleChangeProduct: Function;
   options: Product[];
 };
-function POTableBody({
+function TableBody({
   idx,
   name,
   amount,
@@ -19,16 +19,16 @@ function POTableBody({
   setProduct,
   handleChangeProduct,
   options,
-}: POTableBodyProps) {
+}: TableBodyProps) {
   return (
     <Tr key={idx}>
       <Td>{idx + 1}</Td>
       <Td>
-        <POTableSelect
+        <TableSelect
           options={options}
           handleChangeProduct={handleChangeProduct}
           idx={idx}
-        ></POTableSelect>
+        ></TableSelect>
       </Td>
       <Td>
         <Input
@@ -47,4 +47,4 @@ function POTableBody({
   );
 }
 
-export default POTableBody;
+export default TableBody;

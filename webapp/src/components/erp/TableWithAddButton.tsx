@@ -9,26 +9,28 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEventHandler, useEffect, useState } from "react";
-import { POPayload, Product } from "../utils/responseType";
-import POTableBody from "./POTableBody";
+import { POPayload, Product, RVPayload } from "../../utils/responseType";
+import TableBody from "./TableBody";
 
-type POTableWithAddButtonProps = {
+type TableWithAddButtonProps = {
   products: Product[];
-  poHeaderPayload: POPayload;
+  headerPayload: POPayload | RVPayload;
   supplier_id: number;
   handleChangeAmount: ChangeEventHandler<HTMLInputElement>;
   setProduct: React.Dispatch<React.SetStateAction<Product[]>>;
-  setPOHeaderPayload: React.Dispatch<React.SetStateAction<POPayload>>;
+  setHeaderPayload:
+    | React.Dispatch<React.SetStateAction<POPayload>>
+    | React.Dispatch<React.SetStateAction<RVPayload>>;
 };
 
 function POTableWithAddButton({
   products,
-  poHeaderPayload,
+  headerPayload,
   supplier_id,
   handleChangeAmount,
   setProduct,
-  setPOHeaderPayload,
-}: POTableWithAddButtonProps) {
+  setHeaderPayload,
+}: TableWithAddButtonProps) {
   const [options, setOptions] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -71,8 +73,8 @@ function POTableWithAddButton({
       return prev + curr.price;
     }, 0);
 
-    poHeaderPayload.total_price = totalPrice;
-    setPOHeaderPayload({ ...poHeaderPayload });
+    headerPayload.total_price = totalPrice;
+    setHeaderPayload({ ...headerPayload } as POPayload & RVPayload);
   };
 
   const handleClickAddProduct = () => {
@@ -95,14 +97,14 @@ function POTableWithAddButton({
             </Thead>
             <Tbody>
               {products.map((product, idx) => (
-                <POTableBody
+                <TableBody
                   key={idx}
                   idx={idx}
                   {...product}
                   options={options}
                   setProduct={handleChangeAmount}
                   handleChangeProduct={handleChangeProduct}
-                ></POTableBody>
+                ></TableBody>
               ))}
             </Tbody>
           </Table>

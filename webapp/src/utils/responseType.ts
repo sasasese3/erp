@@ -40,6 +40,15 @@ export type POPayload = {
     total_price: string | number;
 };
 
+export type RVPayload = {
+    createdAt: string;
+    SupplierId: number;
+    total_price: string | number;
+    customerName: string,
+    id: string,
+    detail: string,
+};
+
 export type Product = {
     id: number;
     name: number;
