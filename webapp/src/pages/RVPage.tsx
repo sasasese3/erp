@@ -60,8 +60,9 @@ function RVPage() {
     setRVHeaderPayload({ ...rvHeaderPayload });
   };
 
-  const handleChangeDate = (event: ChangeEvent<HTMLInputElement>) => {
-    rvHeaderPayload.createdAt = event.target.value;
+  const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+    rvHeaderPayload[event.target.id as keyof typeof rvHeaderPayload] =
+      event.target.value;
     setRVHeaderPayload({ ...rvHeaderPayload });
   };
 
@@ -77,13 +78,14 @@ function RVPage() {
       })),
     };
     try {
-      const response = await axios.post("/erp/rv", payload);
-      const { msg } = response.data;
-      navigate("/history");
-      toast({
-        title: msg,
-        status: "success",
-      });
+      // const response = await axios.post("/erp/rv", payload);
+      // const { msg } = response.data;
+      // navigate("/history");
+      // toast({
+      //   title: msg,
+      //   status: "success",
+      // });
+      console.log(payload);
     } catch (error) {
       if (error instanceof AxiosError) {
         const { msg } = error.response?.data;
@@ -107,6 +109,9 @@ function RVPage() {
     }
 
     for (const key in rvHeaderPayload) {
+      if (key === "detail") {
+        continue;
+      }
       if (rvHeaderPayload[key as keyof typeof rvHeaderPayload] === "") {
         isEmpty = true;
         break;
@@ -131,19 +136,19 @@ function RVPage() {
             <FormControl isRequired>
               <FormLabel>วันที่จัดทำ</FormLabel>
               <Input
-                id="date"
+                id="createdAt"
                 value={rvHeaderPayload.createdAt}
-                onChange={handleChangeDate}
+                onChange={handleChangeInput}
                 type="date"
                 max={getLocaltime().toISOString().split("T")[0]}
               ></Input>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isRequired>
-              <FormLabel>ชื่อลูกค้า</FormLabel>
-              <Input id="customer_name" type="text"></Input>
-            </FormControl>
+            <CustomSelectSearch
+              handleChangeSupplierID={handleChangeSupplierID}
+              setProduct={setProduct}
+            ></CustomSelectSearch>
           </GridItem>
           <GridItem>
             <FormControl isRequired>
@@ -157,10 +162,37 @@ function RVPage() {
             </FormControl>
           </GridItem>
           <GridItem>
-            <CustomSelectSearch
-              handleChangeSupplierID={handleChangeSupplierID}
-              setProduct={setProduct}
-            ></CustomSelectSearch>
+            <FormControl isRequired>
+              <FormLabel>ชื่อลูกค้า</FormLabel>
+              <Input
+                id="customerName"
+                value={rvHeaderPayload.customerName}
+                onChange={handleChangeInput}
+                type="text"
+              ></Input>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isRequired>
+              <FormLabel>เลขที่ใบเสร็จรับเงิน RV</FormLabel>
+              <Input
+                id="id"
+                value={rvHeaderPayload.id}
+                onChange={handleChangeInput}
+                type="text"
+              ></Input>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel>รายละเอียด</FormLabel>
+              <Input
+                id="detail"
+                value={rvHeaderPayload.detail}
+                onChange={handleChangeInput}
+                type="text"
+              ></Input>
+            </FormControl>
           </GridItem>
           <GridItem>
             <FormControl isRequired>
@@ -176,7 +208,7 @@ function RVPage() {
           <TableWithAddButton
             products={products}
             setProduct={setProduct}
-            supplier_id={rvHeaderPayload.SupplierId}
+            supplier_id={rvHeaderPayload.SupplierId as number}
             handleChangeAmount={handleChangeAmount}
             headerPayload={rvHeaderPayload}
             setHeaderPayload={setRVHeaderPayload}

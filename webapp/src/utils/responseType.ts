@@ -42,7 +42,7 @@ export type POPayload = {
 
 export type RVPayload = {
     createdAt: string;
-    SupplierId: number;
+    SupplierId: string | number;
     total_price: string | number;
     customerName: string,
     id: string,
