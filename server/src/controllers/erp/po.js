@@ -19,6 +19,8 @@ router.post('/', [
     body('products').notEmpty().isArray(),
     body('products.*.ProductId').notEmpty().isInt(),
     body('products.*.amount').notEmpty().isInt(),
+    body('products.*.no').notEmpty().isInt(),
+    body('products.*.price').notEmpty().isInt()
 
 ], async (req, res) => {
     const t = await sequelize.transaction();
@@ -50,6 +52,8 @@ router.post('/', [
                 POId: po.id
             })), { transaction: t }
         );
+        //* commit transaction
+        await t.commit();
 
         //* get query
         const data = await PO.findByPk(po.id, { include: [Product, Employee], order: [[Product, PO_Product, 'no', 'ASC']] });
@@ -59,15 +63,13 @@ router.post('/', [
         doc.pipe(createWriteStream(filePath));
         doc.end();
 
-        //* commit transaction
-        await t.commit();
 
         return res.json({ msg: 'Create PO Success' });
 
     } catch (error) {
         //* revert transaction
-        await t.rollback();
         if (error instanceof UniqueConstraintError) {
+            await t.rollback();
             return res.status(400).json({ msg: "กรุณาไม่เลือกสินค้าซ้ำ" });
         }
         return res.status(400).json({ msg: "Something went wrong", error: error });

@@ -69,7 +69,7 @@ db.Supplier.hasMany(db.RV, {
 db.RV.belongsTo(db.Supplier);
 
 //* RV M - N product
-db.RV.belongsToMany(db.Product, { through: db.RV_Product });
+db.RV.belongsToMany(db.Product, { through: db.RV_Product, foreignKey: 'rvId' });
 db.Product.belongsToMany(db.RV, { through: db.RV_Product });
 
 //TODO PV

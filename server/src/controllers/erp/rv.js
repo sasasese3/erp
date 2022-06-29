@@ -1,203 +1,128 @@
 const router = require('express').Router();
-const connectDB = require('../../utils/connectDB');
-const { ConvertToArray, ConvertToDetailProductQuery } = require("../../utils/convert");
-const { uploadRV } = require("../../utils/fileUpload");
-//RV
-router.route('/')
-    //SelectRV
-    .get(function (req, res) {
-        // Store hash in your password DB.
-        connectDB.query("SELECT * FROM  rv", [], function (err, RVdata) {
-            if (err) {
-                res.json({ status: "error", message: err });
-                return;
-            }
-            res.json({ status: "ok", RVdata });
-        });
-    })
-    //CreateRV
-    .post(function (req, res) {
-        // Store hash in your password DB.
-        connectDB.query(
-            "INSERT INTO erp_systems.rv (RV_ID,CUSTOMER_ID,EMPLOYEE_ID_CREATOR,RV_CREATOR,EMPLOYEE_ID_APPROVER,RV_APPROVER,RV_DETAIL,RV_AMOUNTPRODUCT,RV_DATE,RV_STATUS) VALUES (?,?,?,?,?,?,?,?,?,?)",
-            [
-                req.body.RV_ID,
-                req.body.CUSTOMER_ID,
-                req.body.EMPLOYEE_ID_CREATOR,
-                req.body.RV_CREATOR,
-                req.body.EMPLOYEE_ID_APPROVER,
-                req.body.RV_APPROVER,
-                req.body.RV_DETAIL,
-                req.body.RV_AMOUNTPRODUCT,
-                req.body.RV_DATE,
-                req.body.RV_STATUS,
-            ],
+const { join } = require('path');
+const { body, validationResult, param } = require('express-validator');
+const { createWriteStream, readFileSync } = require('fs');
+const { UniqueConstraintError, } = require('sequelize');
 
-            function (err) {
-                if (err) {
-                    res.json({ status: "error", message: err });
-                    return;
-                }
-                connectDB.query(
-                    "SELECT * FROM product WHERE PRODUCT_ID =" +
-                    ConvertToDetailProductQuery(req.body.RV_DETAIL), //Detailของแต่ละใบ
-                    function (err, DataProduct) {
-                        if (err) {
-                            res.json({ status: "error", message: err });
-                        }
-                        //เอาราคาของแต่ละสินค้าออกมา
-                        let PriceOneArray = [];
-                        for (let i = 0; i < ConvertToArray(req.body.RV_DETAIL).length; i++) {
-                            //Detailของแต่ละใบ
-                            PriceOneArray.push(DataProduct[i].PRODUCT_PRICE);
-                        }
-                        //ราคารวมของแต่ละชิ้น
-                        let AmountArray = ConvertToArray(req.body.RV_AMOUNTPRODUCT); //AMOUNTPRODUCT ของแต่ละใบ
-                        let PriceArray = [];
-                        for (let i = 0; i < AmountArray.length; i++) {
-                            let Ans = PriceOneArray[i] * AmountArray[i];
-                            PriceArray.push(Ans);
-                        }
-                        //ราคารวมทั้งหมด
-                        let PriceTotal = 0;
-                        for (let i = 0; i < PriceArray.length; i++) {
-                            PriceTotal += PriceArray[i];
-                        }
-                        //เอาราคารวมเข้าไปเก็บ
-                        connectDB.query(
-                            "UPDATE erp_systems.rv SET RV_PRICETOTAL = ? where RV_ID = ? ",
-                            [PriceTotal, req.body.RV_ID], //ID ของใบนั้นๆ
-                            function (err) {
-                                if (err) {
-                                    res.json({
-                                        status: "error insert RV_PRICETOTAL ",
-                                        message: err,
-                                    });
-                                } else {
-                                    res.json({
-                                        status: "ok",
-                                        message: "INSERT RV success",
-                                    });
-                                }
-                            }
-                        );
-                    }
-                );
-            }
-        );
-    })
-    //UpdateRV
-    .patch(function (req, res) {
-        // Store hash in your password DB.
-        connectDB.query(
-            "UPDATE erp_systems.rv SET CUSTOMER_ID = ? ,EMPLOYEE_ID_CREATOR = ? ,RV_CREATOR = ? ,EMPLOYEE_ID_APPROVER = ? ,RV_APPROVER = ? ,RV_DETAIL = ? ,RV_AMOUNTPRODUCT = ? ,RV_DATE = ? ,RV_STATUS = ?  where RV_ID  = ? ",
-            [
-                req.body.CUSTOMER_ID,
-                req.body.EMPLOYEE_ID_CREATOR,
-                req.body.RV_CREATOR,
-                req.body.EMPLOYEE_ID_APPROVER,
-                req.body.RV_APPROVER,
-                req.body.RV_DETAIL,
-                req.body.RV_AMOUNTPRODUCT,
-                req.body.RV_DATE,
-                req.body.RV_STATUS,
-                req.body.RV_ID,
-            ],
+const { printer, pdfFolder } = require('../../utils/pdfPrinter');
+const userRoles = require("../../utils/userRoles");
+const { RV, RV_Product, Product, Employee, Supplier, sequelize } = require('../../utils/sequelize');
+const { RVPdfDeifinition } = require("../../utils/erp/RVPdfDefinition");
 
-            function (err) {
-                if (err) {
-                    res.json({ status: "error", message: err });
-                    return;
-                }
-                connectDB.query(
-                    "SELECT * FROM product WHERE PRODUCT_ID =" +
-                    ConvertToDetailProductQuery(req.body.RV_DETAIL), //Detailของแต่ละใบ
-                    function (err, DataProduct) {
-                        if (err) {
-                            res.json({ status: "error", message: err });
-                        }
-                        //เอาราคาของแต่ละสินค้าออกมา
-                        let PriceOneArray = [];
-                        for (let i = 0; i < ConvertToArray(req.body.RV_DETAIL).length; i++) {
-                            //Detailของแต่ละใบ
-                            PriceOneArray.push(DataProduct[i].PRODUCT_PRICE);
-                        }
-                        //ราคารวมของแต่ละชิ้น
-                        let AmountArray = ConvertToArray(req.body.RV_AMOUNTPRODUCT); //AMOUNTPRODUCT ของแต่ละใบ
-                        let PriceArray = [];
-                        for (let i = 0; i < AmountArray.length; i++) {
-                            let Ans = PriceOneArray[i] * AmountArray[i];
-                            PriceArray.push(Ans);
-                        }
-                        //ราคารวมทั้งหมด
-                        let PriceTotal = 0;
-                        for (let i = 0; i < PriceArray.length; i++) {
-                            PriceTotal += PriceArray[i];
-                        }
-                        //เอาราคารวมเข้าไปเก็บ
-                        connectDB.query(
-                            "UPDATE erp_systems.rv SET RV_PRICETOTAL = ? where RV_ID = ? ",
-                            [PriceTotal, req.body.RV_ID], //ID ของใบนั้นๆ
-                            function (err) {
-                                if (err) {
-                                    res.json({
-                                        status: "error insert RV_PRICETOTAL ",
-                                        message: err,
-                                    });
-                                } else {
-                                    res.json({
-                                        status: "ok",
-                                        message: "Update RV success",
-                                    });
-                                }
-                            }
-                        );
-                    }
-                );
-            }
-        );
-    });
+//pdf file path
+const rvPDFFolder = join(pdfFolder, 'rv');
 
+router.post('/', [
+    body('SupplierId').notEmpty().isInt(),
+    body('createdAt').notEmpty().isDate(),
+    body('customerName').notEmpty().isString(),
+    body('detail').optional().isString(),
+    body('id').notEmpty().isString(),
+    body('total_price').notEmpty().isNumeric(),
+    body('products').notEmpty().isArray(),
+    body('products.*.ProductId').notEmpty().isInt(),
+    body('products.*.amount').notEmpty().isInt(),
+    body('products.*.no').notEmpty().isInt(),
+    body('products.*.price').notEmpty().isInt()
 
-//DeleteRV
-router.delete("/:RV_ID", function (req, res) {
-    connectDB.execute(
-        "DELETE FROM erp_systems.rv WHERE RV_ID  = ?",
-        //ส่ง EMPLOYEE_ID มากับ Path
-        [req.params.RV_ID],
+], async (req, res) => {
+    const t = await sequelize.transaction();
 
-        function (err) {
-            if (err) {
-                res.json({ status: "error", message: err });
-                return;
-            } else {
-                res.json({ status: "ok", message: "Delete success" });
-            }
+    try {
+
+        //* error input validation
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
         }
-    );
-});
 
-//เรียกดูใบสำคัญที่ยังไม่ได้!!อนุมัติ
-router.get("/SelectNonApproveRV", function (req, res) {
-    // Store hash in your password DB.
-    connectDB.query("SELECT * FROM  rv Where RV_STATUS = 0 ", [], function (err, RVdata) {
-        if (err) {
-            res.json({ status: "error", message: err });
-            return;
+        //* get body data
+        const { SupplierId, createdAt, total_price, products, id, detail, customerName } = req.body;
+
+        //* create filepath
+        const date = new Date();
+        const filePath = join(rvPDFFolder, `${date.getTime()}.pdf`);
+
+        //* create rv
+        const rv = await RV.create({
+            total_price, file_path: filePath, createdAt, EmployeeId: req.user.id, SupplierId, id, detail, customerName
+        }, { transaction: t });
+
+        const rvId = rv.toJSON().rv_id;
+        //* create rv-product
+        await RV_Product.bulkCreate(
+            products.map((product) => ({
+                ...product,
+                rvId
+            })), { transaction: t }
+        );
+        //* commit transaction
+        await t.commit();
+
+        //* get query
+        const data = await RV.findByPk(rvId, { include: [Product, Employee], order: [[Product, RV_Product, 'no', 'ASC']] });
+
+        //* create pdf
+        const doc = printer.createPdfKitDocument(RVPdfDeifinition(data.toJSON()));
+        doc.pipe(createWriteStream(filePath));
+        doc.end();
+
+
+        return res.json({ msg: 'Create RV Success' });
+
+    } catch (error) {
+        if (error instanceof UniqueConstraintError) {
+            //* revert transaction
+            await t.rollback();
+            return res.status(400).json({ msg: "กรุณาไม่เลือกสินค้าซ้ำ" });
         }
-        res.json({ status: "ok", RVdata });
-    });
+        return res.status(400).json({ msg: "Something went wrong", error: error });
+    }
 });
 
-//อัพโหดไฟล์รูปลายเซ็นต์
-router.post("/uploadRV", uploadRV.single("fileupload"), (req, res) => {
-    let Filename = "file-" + "-" + req.file.originalname.split(".")[0] + new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate() + "-Time-" + new Date().getHours() + "-" + new Date().getMinutes() + "." + req.file.originalname.split(".")[req.file.originalname.split(".").length - 1];
-    var imgsrc = "D:/Project_จบ/Fullstack-Project/server/Signature/PV/" + Filename;
-    var insertData = "UPDATE rv SET RV_PATHSIGNATURE = ? WHERE RV_ID = ? ";
-    connectDB.query(insertData, [imgsrc, req.body.RV_ID], (err, result) => {
-        if (err) throw err;
-        console.log("file uploaded");
-    });
-});
+// router.get('/', async (req, res) => {
+//     try {
+//         let pos;
+//         if (req.user.role == userRoles.INSPECTOR[0]) {
+//             pos = await RV.findAll({ include: [Supplier, { model: Employee, attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
+//         } else {
+//             pos = await RV.findAll({ where: { EmployeeId: req.user.id }, include: [Supplier, { model: Employee, as: 'inspector', attributes: ['id', 'firstname', 'lastname'] }], attributes: { exclude: ['file_path'] } });
+//         }
+//         // const pos = await PO.findAll({ where: { EmployeeId: req.user.id }, include: [Product, Supplier], attributes: { exclude: ['file_path'] } });
+//         return res.json({ msg: 'Get PO Success', data: pos });
+
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(400).json({ msg: "Something went wrong", error: error });
+//     }
+// });
+
+// router.get('/pdf/:id', [
+//     param('id').notEmpty().isInt()
+// ], async (req, res) => {
+//     try {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
+//         }
+//         const id = parseInt(req.params.id);
+//         let po;
+//         if (req.user.role === userRoles.EMPLOYEE[0]) {
+//             po = await RV.findOne({ where: { id: id, EmployeeId: req.user.id } });
+//         }
+//         else {
+//             po = await RV.findByPk(id);
+//         }
+//         if (!po) {
+//             return res.status(403).json({ msg: 'Forbidden' });
+//         }
+//         const data = readFileSync(po.toJSON().file_path);
+//         res.contentType("application/pdf");
+//         res.send(data);
+
+//     } catch (error) {
+//         return res.status(400).json({ msg: "Something went wrong", error: error });
+//     }
+// });
 
 module.exports = router;
