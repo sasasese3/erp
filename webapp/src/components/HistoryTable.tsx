@@ -23,40 +23,54 @@ function HistoryTable({ type, datas }: any) {
         </Tr>
       </Thead>
       <Tbody>
-        {datas.map((data: any) => (
-          <Tr key={data.id}>
-            <Td>{data.id}</Td>
-            <Td>{new Date(data.createdAt).toLocaleDateString("en-GB")}</Td>
-            <Td>
-              {data.status !== "pending"
-                ? new Date(data.updatedAt).toLocaleDateString("en-GB")
-                : "รอการพิจารณา"}
-            </Td>
-            <Td>{data.Supplier.name}</Td>
-            <Td>
-              {auth?.role === ROLES.INSPECTOR
-                ? `${data.Employee?.id} ${data.Employee?.firstname}`
-                : data.inspector
-                ? `${data.inspector?.id} ${data.inspector?.firstname}`
-                : "รอการพิจารณา"}
-            </Td>
-            <Td>
-              {auth?.role === ROLES.INSPECTOR ? (
-                <InspectorHistoryStatus
-                  type={type}
-                  id={type === "rv" ? data.rv_id : data.id}
-                  status={data.status}
-                />
-              ) : (
-                <EmployeeHistoryStatus
-                  type={type}
-                  id={type === "rv" ? data.rv_id : data.id}
-                  status={data.status}
-                />
-              )}
-            </Td>
-          </Tr>
-        ))}
+        {datas.map((data: any) => {
+          let id;
+          switch (type) {
+            case "pv":
+              id = data.pv_id;
+              break;
+            case "rv":
+              id = data.rv_id;
+              break;
+            default:
+              id = data.id;
+              break;
+          }
+          return (
+            <Tr key={data.id}>
+              <Td>{data.id}</Td>
+              <Td>{new Date(data.createdAt).toLocaleDateString("en-GB")}</Td>
+              <Td>
+                {data.status !== "pending"
+                  ? new Date(data.updatedAt).toLocaleDateString("en-GB")
+                  : "รอการพิจารณา"}
+              </Td>
+              <Td>{data.Supplier.name}</Td>
+              <Td>
+                {auth?.role === ROLES.INSPECTOR
+                  ? `${data.Employee?.id} ${data.Employee?.firstname}`
+                  : data.inspector
+                  ? `${data.inspector?.id} ${data.inspector?.firstname}`
+                  : "รอการพิจารณา"}
+              </Td>
+              <Td>
+                {auth?.role === ROLES.INSPECTOR ? (
+                  <InspectorHistoryStatus
+                    type={type}
+                    id={id}
+                    status={data.status}
+                  />
+                ) : (
+                  <EmployeeHistoryStatus
+                    type={type}
+                    id={id}
+                    status={data.status}
+                  />
+                )}
+              </Td>
+            </Tr>
+          );
+        })}
       </Tbody>
     </Table>
   );

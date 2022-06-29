@@ -27,12 +27,14 @@ function HistoryPage() {
         }, 1000);
       }
     };
-    if (location.state && fromApprove) {
-      const { type } = location.state as { type: string };
-      setFetchType(type);
-      setFromApprove(false);
-    }
-    setTimeout(() => fetchData(), 500);
+
+    fetchData();
+    // if (location.state && fromApprove) {
+    //   const { type } = location.state as { type: string };
+    //   setFetchType(type);
+    //   setFromApprove(false);
+    // }
+    // setTimeout(() => fetchData(), 500);
   }, [fetchType]);
   return (
     <>
