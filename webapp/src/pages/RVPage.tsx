@@ -78,14 +78,13 @@ function RVPage() {
       })),
     };
     try {
-      // const response = await axios.post("/erp/rv", payload);
-      // const { msg } = response.data;
-      // navigate("/history");
-      // toast({
-      //   title: msg,
-      //   status: "success",
-      // });
-      console.log(payload);
+      const response = await axios.post("/erp/rv", payload);
+      const { msg } = response.data;
+      navigate("/history");
+      toast({
+        title: msg,
+        status: "success",
+      });
     } catch (error) {
       if (error instanceof AxiosError) {
         const { msg } = error.response?.data;
@@ -194,7 +193,7 @@ function RVPage() {
               ></Input>
             </FormControl>
           </GridItem>
-          <GridItem>
+          <GridItem colStart={3}>
             <FormControl isRequired>
               <FormLabel>จำนวนเงินทั้งหมด</FormLabel>
               <Input

@@ -30,7 +30,7 @@ function ApprovePage() {
   const toast = useTLToast();
 
   const handleClickBack = () => {
-    navigate(-1);
+    navigate("/history", { state: { type: type } });
   };
 
   const handleClickSave = async () => {
@@ -38,13 +38,13 @@ function ApprovePage() {
       const payload = {
         approved: value === "approved",
       };
-      const response = await axios.patch(`/inspector/po/${id}`, payload);
+      const response = await axios.patch(`/inspector/${type}/${id}`, payload);
       const { msg } = response.data;
       toast({
         title: msg,
         status: "success",
       });
-      navigate(-1);
+      navigate("/history", { state: { type: type } });
     } catch (error) {
       toast({
         title: "Something went wrong.",

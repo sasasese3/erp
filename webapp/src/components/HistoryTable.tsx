@@ -44,13 +44,13 @@ function HistoryTable({ type, datas }: any) {
               {auth?.role === ROLES.INSPECTOR ? (
                 <InspectorHistoryStatus
                   type={type}
-                  id={data.id}
+                  id={type === "rv" ? data.rv_id : data.id}
                   status={data.status}
                 />
               ) : (
                 <EmployeeHistoryStatus
                   type={type}
-                  id={data.id}
+                  id={type === "rv" ? data.rv_id : data.id}
                   status={data.status}
                 />
               )}

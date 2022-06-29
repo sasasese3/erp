@@ -1,25 +1,15 @@
-import {
-  AspectRatio,
-  Center,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  Select,
-  SelectField,
-  Skeleton,
-  SkeletonText,
-  Text,
-} from "@chakra-ui/react";
+import { Center, Flex, Heading, Select, Skeleton } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import HistoryTable from "../components/HistoryTable";
-import useAuth from "../hooks/useAuth";
 
 function HistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [fetchType, setFetchType] = useState("po");
   const [historyData, setHistoryData] = useState([]);
+  const location = useLocation();
+  const [fromApprove, setFromApprove] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +27,12 @@ function HistoryPage() {
         }, 1000);
       }
     };
-    fetchData();
+    if (location.state && fromApprove) {
+      const { type } = location.state as { type: string };
+      setFetchType(type);
+      setFromApprove(false);
+    }
+    setTimeout(() => fetchData(), 500);
   }, [fetchType]);
   return (
     <>
