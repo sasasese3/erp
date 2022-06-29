@@ -72,8 +72,33 @@ db.RV.belongsTo(db.Supplier);
 db.RV.belongsToMany(db.Product, { through: db.RV_Product, foreignKey: 'rvId' });
 db.Product.belongsToMany(db.RV, { through: db.RV_Product });
 
-//TODO PV
-//TODO AP3
+//! PV Relation 
+const { PV, PV_Product } = require('../models/pv')(sequelize, DataTypes);
+db.PV = PV;
+db.PV_Product = PV_Product;
+
+//* employee 1 - M po
+db.Employee.hasMany(db.PV, {
+    onDelete: 'CASCADE'
+});
+
+db.PV.belongsTo(db.Employee);
+db.PV.belongsTo(db.Employee, {
+    as: 'inspector',
+    foreignKey: 'inspectorId'
+});
+
+//* supplier 1 - M PV
+db.Supplier.hasMany(db.PV, {
+    onDelete: 'CASCADE'
+});
+db.PV.belongsTo(db.Supplier);
+
+//* PV M - N product
+db.PV.belongsToMany(db.Product, { through: db.PV_Product, foreignKey: 'pvId' });
+db.Product.belongsToMany(db.PV, { through: db.PV_Product });
+
+//TODO ap3
 //TODO IB
 
 module.exports = db;
