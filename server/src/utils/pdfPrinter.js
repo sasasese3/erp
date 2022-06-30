@@ -5,6 +5,7 @@ const { PVPdfDeifinition } = require("./erp/PVPdfDefinition");
 const { RVPdfDeifinition } = require("./erp/RVPdfDefinition");
 const { createWriteStream } = require('fs');
 const { AP3PdfDeifinition } = require("./erp/AP3PdfDefinition");
+const { IBPdfDeifinition } = require("./erp/IBPdfDefinition");
 
 const font = {
     THSarabun: {
@@ -32,6 +33,8 @@ const createPDF = (type, data, create, filePath) => {
             break;
         case 'ap3':
             doc = printer.createPdfKitDocument(AP3PdfDeifinition(data, create));
+        case 'ib':
+            doc = printer.createPdfKitDocument(IBPdfDeifinition(data, create));
         default:
             break;
     }

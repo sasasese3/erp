@@ -24,11 +24,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        customerName: {
+        companyName: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        detail: DataTypes.STRING,
     }, {
         timestamps: true,
     });

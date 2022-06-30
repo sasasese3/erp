@@ -10,7 +10,7 @@ const PVPdfDeifinition = (data, create) => {
             product.PV_Product.no,
             product.name,
             product.PV_Product.amount,
-            { text: product.PV_Product.price.toFixed(2), alignment: 'right' },
+            { text: product.PV_Product.price.toLocaleString(), alignment: 'right' },
         ];
     });
 
@@ -50,11 +50,11 @@ const PVPdfDeifinition = (data, create) => {
 
                         ["ลำดับ", "ชื่อสินค้า", "จำนวน", { text: "ราคา", alignment: 'right' }],
                         ...body,
-                        [{ text: "ยอดรวม", bold: true }, "", total_amount, { text: data.total_price.toFixed(2), fontSize: 16, alignment: 'right' }],
+                        [{ text: "ยอดรวม", bold: true }, "", total_amount, { text: data.total_price.toLocaleString(), fontSize: 16, alignment: 'right' }],
                     ],
                 },
             },
-            { text: `ยอดรวม : \t\t${(data.total_price * 1.07).toFixed(2)}`, fontSize: 18, margin: [350, 2, 5, 2], bold: true },
+            { text: `ยอดรวม : \t\t${(data.total_price * 1.07).toLocaleString()}`, fontSize: 18, margin: [350, 2, 5, 2], bold: true },
             { text: 'VAT :                            7%', margin: [350, 2, 5, 2] },
             { text: 'ยอดรวมสุทธิ :                 7%', margin: [350, 2, 5, 2] },
         ],

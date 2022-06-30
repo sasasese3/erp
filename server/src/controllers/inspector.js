@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { body, validationResult, param } = require('express-validator');
-const { PO, RV, PV, Supplier, Product, Employee, PO_Product, PV_Product, RV_Product, AP3 } = require('../utils/sequelize');
+const { PO, RV, PV, AP3, IB, Supplier, Product, Employee, PO_Product, PV_Product, RV_Product, IB_Product } = require('../utils/sequelize');
 const { createPDF } = require('../utils/pdfPrinter');
 const { unlinkSync } = require('fs');
 
@@ -198,6 +198,56 @@ router.patch('/ap3/:id', [
         await ap3.save();
 
         return res.json({ msg: 'Update PV Success' });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ msg: "Something went wrong", error: error });
+    }
+});
+
+router.patch('/ib/:id', [
+    param('id').notEmpty().isInt(),
+    body('approved').notEmpty().isBoolean(),
+], async (req, res) => {
+    try {
+        //* check error
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
+        }
+
+        //* get param and body data
+        const id = parseInt(req.params.id);
+        const { approved } = req.body;
+
+        //* get pv data
+        const ib = await IB.findByPk(id, { include: [Supplier, Product, Employee], order: [[Product, IB_Product, 'no', 'ASC']] });
+        if (!ib) {
+            return res.status(400).json({ msg: 'id is invalid' });
+        }
+
+        //* change it to js object
+        const ib_data = ib.toJSON();
+
+        if (!approved) {
+            //* update db
+            ib.status = 'rejected';
+            ib.file_path = "";
+        }
+        else {
+            //* edit existing pdf
+            const newFilePath = createPDF('ib', ib_data, false, null);
+            //* update db
+            ib.status = 'approved';
+            ib.file_path = newFilePath;
+        }
+
+        unlinkSync(ib_data.file_path);
+        ib.inspectorId = req.user.id;
+
+        //* save to db
+        await ib.save();
+
+        return res.json({ msg: 'Update IB Success' });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ msg: "Something went wrong", error: error });

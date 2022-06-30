@@ -1,5 +1,4 @@
-const POPdfDeifinition = (data, create) => {
-    console.log(data);
+const IBPdfDeifinition = (data, create) => {
     const employee = data.Employee;
     const products = data.Products;
     const supplier = data.Supplier;
@@ -8,15 +7,15 @@ const POPdfDeifinition = (data, create) => {
 
     const body = products.map((product) => {
         return [
-            product.PO_Product.no,
+            product.IB_Product.no,
             product.name,
-            product.PO_Product.amount,
-            { text: product.PO_Product.price.toLocaleString(), alignment: 'right' },
+            product.IB_Product.amount,
+            { text: product.IB_Product.price.toLocaleString(), alignment: 'right' },
         ];
     });
 
     const total_amount = products.reduce((prev, curr) => {
-        return prev + curr.PO_Product.amount;
+        return prev + curr.IB_Product.amount;
     }, 0);
 
 
@@ -28,10 +27,11 @@ const POPdfDeifinition = (data, create) => {
             { text: 'ที่อยู่ : สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง ถนนฉลองกรุง เขตลาดกระบัง กรุงเทพ 10520', fontSize: 12, margin: [350, 2, 5, 2] },
             { text: 'เบอร์โทร์ : 0 2329 8000', fontSize: 12, margin: [350, 2, 5, 2] }, ///1 ย่อหน้า
 
-            { text: 'ใบสำคัญสั่งซื้อ PO', fontSize: 18, margin: [20, 2], bold: true },
+            { text: 'ใบสำคัญรับสินค้า IB', fontSize: 18, margin: [20, 2], bold: true },
             { text: `เลขที่ : ${data.id}`, fontSize: 12 },
-            { text: `ผู้ผลิต : ${supplier.name}`, fontSize: 12 },
-            { text: `ชื่อ : ${employee.firstname} ${employee.lastname}`, fontSize: 12 },
+            { text: `โรงงาน : ${supplier.name}`, fontSize: 12 },
+            { text: `ชื่อพนักงาน : ${employee.firstname} ${employee.lastname}`, fontSize: 12 },
+            { text: `สถานที่รับสินค้า : ${data.companyName}`, fontSize: 12 },
             { text: `เบอร์ติดต่อ : ${employee.phone_no}`, fontSize: 12 },
             { text: `อีเมลล์ : ${employee.email}`, fontSize: 12 },
 
@@ -74,5 +74,5 @@ const POPdfDeifinition = (data, create) => {
     };
 };
 
-module.exports = { POPdfDeifinition };
+module.exports = { IBPdfDeifinition };
 
