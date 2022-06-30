@@ -1,13 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-    const PV = sequelize.define('PV', {
-        pv_id: {
+    const AP3 = sequelize.define('AP3', {
+        ap3_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
-        },
-        total_price: {
-            type: DataTypes.FLOAT,
-            allowNull: false
         },
         status: {
             type: DataTypes.ENUM,
@@ -28,26 +24,25 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        detail: DataTypes.STRING,
+        price: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        tax: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        priceWithTax: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
     }, {
         timestamps: true,
     });
 
-    const PV_Product = sequelize.define('PV_Product', {
-        amount: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        no: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        price: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-    }, {
-        timestamps: false,
-    });
-    return { PV, PV_Product };
+    return AP3;
 };

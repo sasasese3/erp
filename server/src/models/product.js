@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         per_amount: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: false
         },
         stock: {

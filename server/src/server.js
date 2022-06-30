@@ -47,7 +47,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-sequelize.sync({ alter: { drop: false } })
+sequelize.sync({ alter: { drop: true } })
   .then(console.log('Connect to MySQL server, All models were synchronized successfully.'))
   .catch((error) => console.error('Unable to sync to the models:', error));
 

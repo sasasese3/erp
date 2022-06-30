@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         total_price: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: false
         },
         status: {
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         price: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: false,
         },
     }, {
