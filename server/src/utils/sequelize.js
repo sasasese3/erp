@@ -99,6 +99,19 @@ db.PV.belongsToMany(db.Product, { through: db.PV_Product, foreignKey: 'pvId' });
 db.Product.belongsToMany(db.PV, { through: db.PV_Product });
 
 //TODO ap3
+db.AP3 = require('../models/ap3')(sequelize, DataTypes);
+
+//* employee 1 - M po
+db.Employee.hasMany(db.AP3, {
+    onDelete: 'CASCADE'
+});
+
+db.AP3.belongsTo(db.Employee);
+db.AP3.belongsTo(db.Employee, {
+    as: 'inspector',
+    foreignKey: 'inspectorId'
+});
+
 //TODO IB
 
 module.exports = db;
