@@ -25,6 +25,8 @@ function CustomSelectSearch({
   const [defaultOptions, setDefaultOptions] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
 
+  const name = change ? "โรงงาน" : "ผู้ผลิต";
+
   const toast = useTLToast();
 
   const fetchData = async (q: string) => {
@@ -57,7 +59,7 @@ function CustomSelectSearch({
   }, []);
   return (
     <FormControl isRequired isInvalid={searchResult.length === 0}>
-      <FormLabel htmlFor="supplier">{change ? "โรงงาน" : "ผู้ผลิต"}</FormLabel>
+      <FormLabel htmlFor="supplier">{name}</FormLabel>
       <AsyncSelect
         isRequired
         id="supplier"
@@ -77,10 +79,10 @@ function CustomSelectSearch({
         defaultOptions={defaultOptions}
       ></AsyncSelect>
       {searchResult.length == 0 ? (
-        <FormErrorMessage>กรุณาเลือกผู้ผลิต</FormErrorMessage>
+        <FormErrorMessage>{`กรุณาเลือก${name}`}</FormErrorMessage>
       ) : (
         <FormHelperText>
-          ถ้าเปลี่ยนผู้ผลิต ข้อมูลสินค้าจะหายไปทั้งหมด
+          {`ถ้าเปลี่ยน${name} ข้อมูลสินค้าจะหายไปทั้งหมด`}
         </FormHelperText>
       )}
     </FormControl>

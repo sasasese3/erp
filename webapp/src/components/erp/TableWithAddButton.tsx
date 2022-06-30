@@ -9,18 +9,24 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEventHandler, useEffect, useState } from "react";
-import { POPayload, Product, RVPayload } from "../../utils/responseType";
+import {
+  IBPayload,
+  POPayload,
+  Product,
+  RVPayload,
+} from "../../utils/responseType";
 import TableBody from "./TableBody";
 
 type TableWithAddButtonProps = {
   products: Product[];
-  headerPayload: POPayload | RVPayload;
+  headerPayload: POPayload | RVPayload | IBPayload;
   supplier_id: number;
   handleChangeAmount: ChangeEventHandler<HTMLInputElement>;
   setProduct: React.Dispatch<React.SetStateAction<Product[]>>;
   setHeaderPayload:
     | React.Dispatch<React.SetStateAction<POPayload>>
-    | React.Dispatch<React.SetStateAction<RVPayload>>;
+    | React.Dispatch<React.SetStateAction<RVPayload>>
+    | React.Dispatch<React.SetStateAction<IBPayload>>;
 };
 
 function POTableWithAddButton({
@@ -74,7 +80,7 @@ function POTableWithAddButton({
     }, 0);
 
     headerPayload.total_price = totalPrice;
-    setHeaderPayload({ ...headerPayload } as POPayload & RVPayload);
+    setHeaderPayload({ ...headerPayload } as POPayload & RVPayload & IBPayload);
   };
 
   const handleClickAddProduct = () => {

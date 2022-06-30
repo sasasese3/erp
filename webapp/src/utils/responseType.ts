@@ -59,6 +59,14 @@ export type RVPayload = {
     detail: string,
 };
 
+export type IBPayload = {
+    createdAt: string;
+    SupplierId: string | number;
+    total_price: string | number;
+    companyName: string,
+    id: string,
+};
+
 export type Product = {
     id: number;
     name: number;

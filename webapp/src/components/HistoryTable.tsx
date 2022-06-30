@@ -35,7 +35,9 @@ function HistoryTable({ type, datas }: any) {
             case "ap3":
               id = data.ap3_id;
               break;
-
+            case "ib":
+              id = data.ib_id;
+              break;
             default:
               id = data.id;
               break;
