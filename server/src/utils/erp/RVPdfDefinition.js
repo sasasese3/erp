@@ -1,7 +1,9 @@
-const RVPdfDeifinition = (data) => {
+const RVPdfDeifinition = (data, create) => {
     const employee = data.Employee;
     const products = data.Products;
+    const supplier = data.Supplier;
     const createdAt = new Date(data.createdAt);
+    const updatedAt = new Date(data.updatedAt);
 
     const body = products.map((product) => {
         return [
@@ -24,8 +26,10 @@ const RVPdfDeifinition = (data) => {
             { text: 'บริษัท ERP', fontSize: 20, margin: [400, 2, 5, 2] },
             { text: 'ที่อยู่ : สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง ถนนฉลองกรุง เขตลาดกระบัง กรุงเทพ 10520', fontSize: 12, margin: [350, 2, 5, 2] },
             { text: 'เบอร์โทร์ : 0 2329 8000', fontSize: 12, margin: [350, 2, 5, 2] }, ///1 ย่อหน้า
-            { text: 'ใบสำคัญรับเงิน RV', fontSize: 18, margin: [20, 2] },
+
+            { text: 'ใบสำคัญรับเงิน RV', fontSize: 18, margin: [20, 2], bold: true },
             { text: `เลขที่ : ${data.id}`, fontSize: 12 },
+            { text: `ผู้ผลิต : ${supplier.name}`, fontSize: 12 },
             { text: `ชื่อพนักงาน : ${employee.firstname} ${employee.lastname}`, fontSize: 12 },
             { text: `ชื่อลูกค้า : ${data.customerName}`, fontSize: 12 },
             { text: `รายละเอียด : ${data.detail === '' ? '-' : data.detail}`, fontSize: 12 },
@@ -33,7 +37,7 @@ const RVPdfDeifinition = (data) => {
             { text: `อีเมลล์ : ${employee.email}`, fontSize: 12 },
 
             { text: `วันที่ออก : ${createdAt.toLocaleDateString('en-GB')}`, fontSize: 10, margin: [350, 2, 5, 2], bold: true },
-            { text: 'วันที่อนุมัติ :', fontSize: 10, margin: [350, 2, 5, 2], bold: true },
+            { text: `วันที่อนุมัติ : ${!create ? updatedAt.toLocaleDateString('en-GB') : ''}`, fontSize: 10, margin: [350, 2, 5, 2], bold: true },
             {
                 layout: "lightHorizontalLines", // optional
                 table: {

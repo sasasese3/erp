@@ -1,16 +1,15 @@
 const router = require('express').Router();
 const { join } = require('path');
 const { body, validationResult, param } = require('express-validator');
-const { createWriteStream, readFileSync } = require('fs');
+const { readFileSync } = require('fs');
 const { UniqueConstraintError, } = require('sequelize');
 
-const { printer, pdfFolder } = require('../../utils/pdfPrinter');
-const { POPdfDeifinition } = require('../../utils/POPdfDefinition');
+const { createPDF, pdfFolder } = require('../../utils/pdfPrinter');
 const userRoles = require("../../utils/userRoles");
 const { PO, PO_Product, Product, Employee, Supplier, sequelize } = require('../../utils/sequelize');
 
-//pdf file path
-const poPDFFolder = join(pdfFolder, 'po');
+const type = 'po';
+const poPDFFolder = join(pdfFolder, type);
 
 router.post('/', [
     body('SupplierId').notEmpty().isInt(),
@@ -56,17 +55,15 @@ router.post('/', [
         await t.commit();
 
         //* get query
-        const data = await PO.findByPk(po.id, { include: [Product, Employee], order: [[Product, PO_Product, 'no', 'ASC']] });
+        const data = await PO.findByPk(po.id, { include: [Supplier, Product, Employee], order: [[Product, PO_Product, 'no', 'ASC']] });
 
         //* create pdf
-        const doc = printer.createPdfKitDocument(POPdfDeifinition(data.toJSON()));
-        doc.pipe(createWriteStream(filePath));
-        doc.end();
-
+        createPDF(type, data.toJSON(), true, filePath);
 
         return res.json({ msg: 'Create PO Success' });
 
     } catch (error) {
+        console.log(error);
         //* revert transaction
         if (error instanceof UniqueConstraintError) {
             await t.rollback();

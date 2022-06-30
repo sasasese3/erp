@@ -1,16 +1,15 @@
 const router = require('express').Router();
 const { join } = require('path');
 const { body, validationResult, param } = require('express-validator');
-const { createWriteStream, readFileSync } = require('fs');
+const { readFileSync } = require('fs');
 const { UniqueConstraintError, } = require('sequelize');
 
-const { printer, pdfFolder } = require('../../utils/pdfPrinter');
+const { createPDF, pdfFolder } = require('../../utils/pdfPrinter');
 const userRoles = require("../../utils/userRoles");
 const { PV, PV_Product, Product, Employee, Supplier, sequelize } = require('../../utils/sequelize');
-const { PVPdfDeifinition } = require("../../utils/erp/PVPdfDefinition");
 
-//pdf file path
-const pvPDFFolder = join(pdfFolder, 'pv');
+const type = 'pv';
+const pvPDFFolder = join(pdfFolder, type);
 
 router.post('/', [
     body('SupplierId').notEmpty().isInt(),
@@ -60,12 +59,10 @@ router.post('/', [
         await t.commit();
 
         //* get query
-        const data = await PV.findByPk(pvId, { include: [Product, Employee], order: [[Product, PV_Product, 'no', 'ASC']] });
+        const data = await PV.findByPk(pvId, { include: [Supplier, Product, Employee], order: [[Product, PV_Product, 'no', 'ASC']] });
 
         //* create pdf
-        const doc = printer.createPdfKitDocument(PVPdfDeifinition(data.toJSON()));
-        doc.pipe(createWriteStream(filePath));
-        doc.end();
+        createPDF(type, data.toJSON(), true, filePath);
 
 
         return res.json({ msg: 'Create PV Success' });

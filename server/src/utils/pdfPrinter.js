@@ -1,5 +1,10 @@
 const path = require('path');
 const PdfPrinter = require('pdfmake');
+const { POPdfDeifinition } = require("./erp/POPdfDefinition");
+const { PVPdfDeifinition } = require("./erp/PVPdfDefinition");
+const { RVPdfDeifinition } = require("./erp/RVPdfDefinition");
+const { createWriteStream } = require('fs');
+
 const font = {
     THSarabun: {
         normal: path.join(__dirname, "..", "..", 'font', 'THSarabunNew.ttf'),
@@ -12,4 +17,28 @@ const pdfFolder = path.join(__dirname, "..", "..", "pdf");
 
 const printer = new PdfPrinter(font);
 
-module.exports = { printer, pdfFolder, font };
+const createPDF = (type, data, create, filePath) => {
+    let doc;
+    switch (type) {
+        case 'po':
+            doc = printer.createPdfKitDocument(POPdfDeifinition(data, create));
+            break;
+        case 'rv':
+            doc = printer.createPdfKitDocument(RVPdfDeifinition(data, create));
+            break;
+        case 'pv':
+            doc = printer.createPdfKitDocument(PVPdfDeifinition(data, create));
+            break;
+        default:
+            break;
+    }
+    if (!filePath) {
+        filePath = path.join(pdfFolder, type, `${(new Date()).getTime()}.pdf`);
+    }
+    doc.pipe(createWriteStream(filePath));
+    doc.end();
+
+    return filePath;
+};
+
+module.exports = { createPDF, pdfFolder };
