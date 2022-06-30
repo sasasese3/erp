@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { body, validationResult, param } = require('express-validator');
-const { PO, RV, PV, Supplier, Product, Employee, PO_Product, PV_Product, RV_Product } = require('../utils/sequelize');
+const { PO, RV, PV, Supplier, Product, Employee, PO_Product, PV_Product, RV_Product, AP3 } = require('../utils/sequelize');
 const { createPDF } = require('../utils/pdfPrinter');
 const { unlinkSync } = require('fs');
 
@@ -146,6 +146,56 @@ router.patch('/pv/:id', [
 
         //* save to db
         await pv.save();
+
+        return res.json({ msg: 'Update PV Success' });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ msg: "Something went wrong", error: error });
+    }
+});
+
+router.patch('/ap3/:id', [
+    param('id').notEmpty().isInt(),
+    body('approved').notEmpty().isBoolean(),
+], async (req, res) => {
+    try {
+        //* check error
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ msg: "Invalid Body", error: errors.array() });
+        }
+
+        //* get param and body data
+        const id = parseInt(req.params.id);
+        const { approved } = req.body;
+
+        //* get pv data
+        const ap3 = await AP3.findByPk(id, { include: [Employee] });
+        if (!ap3) {
+            return res.status(400).json({ msg: 'id is invalid' });
+        }
+
+        //* change it to js object
+        const ap3_data = ap3.toJSON();
+
+        if (!approved) {
+            //* update db
+            ap3.status = 'rejected';
+            ap3.file_path = "";
+        }
+        else {
+            //* edit existing pdf
+            const newFilePath = createPDF('ap3', ap3_data, false, null);
+            //* update db
+            ap3.status = 'approved';
+            ap3.file_path = newFilePath;
+        }
+
+        unlinkSync(ap3_data.file_path);
+        ap3.inspectorId = req.user.id;
+
+        //* save to db
+        await ap3.save();
 
         return res.json({ msg: 'Update PV Success' });
     } catch (error) {
