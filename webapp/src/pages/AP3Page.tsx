@@ -18,7 +18,7 @@ import { AP3Payload } from "../utils/responseType";
 
 function AP3Page() {
   const { auth } = useAuth();
-  const [rvHeaderPayload, setRVHeaderPayload] = useState<AP3Payload>({
+  const [ap3HeaderPayload, setAP3HeaderPayload] = useState<AP3Payload>({
     createdAt: getLocaltime().toISOString().split("T")[0],
     customerName: "",
     id: "",
@@ -36,35 +36,35 @@ function AP3Page() {
   };
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-    rvHeaderPayload[event.target.id as keyof typeof rvHeaderPayload] =
+    ap3HeaderPayload[event.target.id as keyof typeof ap3HeaderPayload] =
       event.target.value;
-    setRVHeaderPayload({ ...rvHeaderPayload });
+    setAP3HeaderPayload({ ...ap3HeaderPayload });
   };
 
   const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(parseFloat(event.target.value).toFixed(2)) || 0;
 
-    rvHeaderPayload.price = value;
-    rvHeaderPayload.tax = parseFloat(
+    ap3HeaderPayload.price = value;
+    ap3HeaderPayload.tax = parseFloat(
       (
         value *
-        (taxType[rvHeaderPayload.type as keyof typeof taxType] / 100)
+        (taxType[ap3HeaderPayload.type as keyof typeof taxType] / 100)
       ).toFixed(2)
     );
-    rvHeaderPayload.priceWithTax = parseFloat(
+    ap3HeaderPayload.priceWithTax = parseFloat(
       (
         value *
-        (1 + taxType[rvHeaderPayload.type as keyof typeof taxType] / 100)
+        (1 + taxType[ap3HeaderPayload.type as keyof typeof taxType] / 100)
       ).toFixed(2)
     );
 
-    setRVHeaderPayload({ ...rvHeaderPayload });
+    setAP3HeaderPayload({ ...ap3HeaderPayload });
   };
 
   const handleFormSummit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axios.post("/erp/ap3", rvHeaderPayload);
+      const response = await axios.post("/erp/ap3", ap3HeaderPayload);
       const { msg } = response.data;
       navigate("/history");
       toast({
@@ -90,10 +90,10 @@ function AP3Page() {
   const isDisableButton = () => {
     let isEmpty = false;
 
-    for (const key in rvHeaderPayload) {
+    for (const key in ap3HeaderPayload) {
       if (
-        rvHeaderPayload[key as keyof typeof rvHeaderPayload] === "" ||
-        rvHeaderPayload[key as keyof typeof rvHeaderPayload] === 0
+        ap3HeaderPayload[key as keyof typeof ap3HeaderPayload] === "" ||
+        ap3HeaderPayload[key as keyof typeof ap3HeaderPayload] === 0
       ) {
         isEmpty = true;
         break;
@@ -119,7 +119,7 @@ function AP3Page() {
               <FormLabel>วันที่จัดทำ</FormLabel>
               <Input
                 id="createdAt"
-                value={rvHeaderPayload.createdAt}
+                value={ap3HeaderPayload.createdAt}
                 onChange={handleChangeInput}
                 type="date"
                 max={getLocaltime().toISOString().split("T")[0]}
@@ -143,7 +143,7 @@ function AP3Page() {
               <FormLabel>ประเภทภาษี</FormLabel>
               <Input
                 id="type"
-                value={rvHeaderPayload.type}
+                value={ap3HeaderPayload.type}
                 variant="filled"
                 type="text"
                 readOnly
@@ -155,7 +155,7 @@ function AP3Page() {
               <FormLabel>ชื่อลูกค้า</FormLabel>
               <Input
                 id="customerName"
-                value={rvHeaderPayload.customerName}
+                value={ap3HeaderPayload.customerName}
                 onChange={handleChangeInput}
                 type="text"
               ></Input>
@@ -166,7 +166,7 @@ function AP3Page() {
               <FormLabel>เลขที่ใบสำคัญบัญชี</FormLabel>
               <Input
                 id="id"
-                value={rvHeaderPayload.id}
+                value={ap3HeaderPayload.id}
                 onChange={handleChangeInput}
                 type="text"
               ></Input>
@@ -177,7 +177,7 @@ function AP3Page() {
               <FormLabel>จำนวนเงิน</FormLabel>
               <Input
                 id="price"
-                value={rvHeaderPayload.price}
+                value={ap3HeaderPayload.price}
                 onChange={handleChangePrice}
                 type="number"
               ></Input>
@@ -188,7 +188,7 @@ function AP3Page() {
               <FormLabel>ภาษี</FormLabel>
               <Input
                 id="tax"
-                value={rvHeaderPayload.tax.toLocaleString()}
+                value={ap3HeaderPayload.tax.toLocaleString()}
                 variant="filled"
                 type="text"
                 readOnly
@@ -203,7 +203,7 @@ function AP3Page() {
               <FormLabel>หัก ณ ที่จ่าย</FormLabel>
               <Input
                 id="price"
-                value={rvHeaderPayload.priceWithTax.toLocaleString()}
+                value={ap3HeaderPayload.priceWithTax.toLocaleString()}
                 variant="filled"
                 type="text"
                 readOnly
