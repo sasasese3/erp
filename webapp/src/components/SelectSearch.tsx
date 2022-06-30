@@ -13,10 +13,12 @@ import useTLToast from "../hooks/useTLToast";
 import { Product } from "../utils/responseType";
 
 type CustomSelectSearchProps = {
+  change?: boolean;
   handleChangeSupplierID: Function;
   setProduct: React.Dispatch<React.SetStateAction<Product[]>>;
 };
 function CustomSelectSearch({
+  change,
   handleChangeSupplierID,
   setProduct,
 }: CustomSelectSearchProps) {
@@ -55,7 +57,7 @@ function CustomSelectSearch({
   }, []);
   return (
     <FormControl isRequired isInvalid={searchResult.length === 0}>
-      <FormLabel htmlFor="supplier">ผู้ผลิต</FormLabel>
+      <FormLabel htmlFor="supplier">{change ? "โรงงาน" : "ผู้ผลิต"}</FormLabel>
       <AsyncSelect
         isRequired
         id="supplier"

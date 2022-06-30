@@ -132,6 +132,7 @@ function AP3Page() {
               <Input
                 id="employee_id"
                 value={`${auth?.firstname} ${auth?.lastname}`}
+                variant="filled"
                 type="text"
                 readOnly
               ></Input>
@@ -143,6 +144,7 @@ function AP3Page() {
               <Input
                 id="type"
                 value={rvHeaderPayload.type}
+                variant="filled"
                 type="text"
                 readOnly
               ></Input>
@@ -187,6 +189,7 @@ function AP3Page() {
               <Input
                 id="tax"
                 value={rvHeaderPayload.tax.toLocaleString()}
+                variant="filled"
                 type="text"
                 readOnly
               ></Input>
@@ -201,6 +204,7 @@ function AP3Page() {
               <Input
                 id="price"
                 value={rvHeaderPayload.priceWithTax.toLocaleString()}
+                variant="filled"
                 type="text"
                 readOnly
               ></Input>

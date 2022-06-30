@@ -147,9 +147,10 @@ function POPage() {
               <FormLabel>รหัสพนักงานขาย</FormLabel>
               <Input
                 id="employee_id"
-                disabled={true}
                 value={auth?.id}
+                variant="filled"
                 type="text"
+                readOnly
               ></Input>
             </FormControl>
           </GridItem>
@@ -158,10 +159,10 @@ function POPage() {
               <FormLabel>ชื่อบัญชี</FormLabel>
               <Input
                 id="account_name"
-                disabled={true}
-                variant="filled"
                 value={auth?.username}
+                variant="filled"
                 type="text"
+                readOnly
               ></Input>
             </FormControl>
           </GridItem>
@@ -170,10 +171,10 @@ function POPage() {
               <FormLabel>ชื่อผู้จัดทำ</FormLabel>
               <Input
                 id="create_name"
-                disabled={true}
-                variant="filled"
                 value={`${auth?.firstname} ${auth?.lastname}`}
+                variant="filled"
                 type="text"
+                readOnly
               ></Input>
             </FormControl>
           </GridItem>
@@ -182,7 +183,9 @@ function POPage() {
               <FormLabel>จำนวนเงินทั้งหมด</FormLabel>
               <Input
                 value={poHeaderPayload.total_price.toLocaleString()}
+                variant="filled"
                 type="text"
+                readOnly
               ></Input>
             </FormControl>
           </GridItem>

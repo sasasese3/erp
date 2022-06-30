@@ -153,9 +153,10 @@ function PVPage() {
               <FormLabel>รหัสพนักงานขาย</FormLabel>
               <Input
                 id="employee_id"
-                disabled={true}
                 value={auth?.id}
+                variant="filled"
                 type="text"
+                readOnly
               ></Input>
             </FormControl>
           </GridItem>
@@ -197,7 +198,9 @@ function PVPage() {
               <FormLabel>จำนวนเงินทั้งหมด</FormLabel>
               <Input
                 value={pvHeaderPayload.total_price.toLocaleString()}
+                variant="filled"
                 type="text"
+                readOnly
               ></Input>
             </FormControl>
           </GridItem>

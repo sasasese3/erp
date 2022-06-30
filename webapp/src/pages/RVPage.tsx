@@ -154,6 +154,7 @@ function RVPage() {
               <Input
                 id="employee_id"
                 value={auth?.id}
+                variant="filled"
                 type="text"
                 readOnly
               ></Input>
@@ -197,6 +198,7 @@ function RVPage() {
               <FormLabel>จำนวนเงินทั้งหมด</FormLabel>
               <Input
                 value={rvHeaderPayload.total_price.toLocaleString()}
+                variant="filled"
                 type="text"
                 readOnly
               ></Input>
