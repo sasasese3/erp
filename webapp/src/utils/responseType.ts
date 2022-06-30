@@ -14,7 +14,7 @@ export type Employee = {
     department?: string;
     birthdate?: string;
     address?: string;
-    phono_no?: string;
+    phone_no?: string;
     role?: string;
     verified?: boolean;
 };
