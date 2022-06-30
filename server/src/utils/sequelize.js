@@ -98,7 +98,7 @@ db.PV.belongsTo(db.Supplier);
 db.PV.belongsToMany(db.Product, { through: db.PV_Product, foreignKey: 'pvId' });
 db.Product.belongsToMany(db.PV, { through: db.PV_Product });
 
-//TODO ap3
+//! AP3 Relation
 db.AP3 = require('../models/ap3')(sequelize, DataTypes);
 
 //* employee 1 - M po
@@ -112,6 +112,30 @@ db.AP3.belongsTo(db.Employee, {
     foreignKey: 'inspectorId'
 });
 
-//TODO IB
+//! IB Relation
+const { IB, IB_Product } = require('../models/ib')(sequelize, DataTypes);
+db.IB = IB;
+db.IB_Product = IB_Product;
+
+//* employee 1 - M po
+db.Employee.hasMany(db.IB, {
+    onDelete: 'CASCADE'
+});
+
+db.IB.belongsTo(db.Employee);
+db.IB.belongsTo(db.Employee, {
+    as: 'inspector',
+    foreignKey: 'inspectorId'
+});
+
+//* supplier 1 - M IB
+db.Supplier.hasMany(db.IB, {
+    onDelete: 'CASCADE'
+});
+db.IB.belongsTo(db.Supplier);
+
+//* IB M - N product
+db.IB.belongsToMany(db.Product, { through: db.IB_Product, foreignKey: 'ibId' });
+db.Product.belongsToMany(db.IB, { through: db.IB_Product });
 
 module.exports = db;
