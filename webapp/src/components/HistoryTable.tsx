@@ -13,7 +13,7 @@ function HistoryTable({ type, datas }: any) {
           <Th> เลขที่ใบสำคัญ</Th>
           <Th> วันที่ออกใบสำคัญ</Th>
           <Th> วันที่อนุมัติใบสำคัญ</Th>
-          <Th> ชื่อผู้ผลิต </Th>
+          <Th> {type == "ap3" ? "ชื่อลูกค้า" : "ชื่อผู้ผลิต"}</Th>
           <Th>
             {auth?.role === ROLES.INSPECTOR
               ? "รหัสพนักงาน - ชื่อผู้ขอใบสำคัญ"
@@ -32,12 +32,16 @@ function HistoryTable({ type, datas }: any) {
             case "rv":
               id = data.rv_id;
               break;
+            case "ap3":
+              id = data.ap3_id;
+              break;
+
             default:
               id = data.id;
               break;
           }
           return (
-            <Tr key={data.id}>
+            <Tr key={id}>
               <Td>{data.id}</Td>
               <Td>{new Date(data.createdAt).toLocaleDateString("en-GB")}</Td>
               <Td>
@@ -45,7 +49,7 @@ function HistoryTable({ type, datas }: any) {
                   ? new Date(data.updatedAt).toLocaleDateString("en-GB")
                   : "รอการพิจารณา"}
               </Td>
-              <Td>{data.Supplier.name}</Td>
+              <Td>{type == "ap3" ? data.customerName : data.Supplier?.name}</Td>
               <Td>
                 {auth?.role === ROLES.INSPECTOR
                   ? `${data.Employee?.id} ${data.Employee?.firstname}`

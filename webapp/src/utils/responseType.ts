@@ -40,6 +40,16 @@ export type POPayload = {
     total_price: string | number;
 };
 
+export type AP3Payload = {
+    createdAt: string;
+    customerName: string,
+    id: string,
+    type: string,
+    price: string | number,
+    tax: string | number,
+    priceWithTax: string | number,
+};
+
 export type RVPayload = {
     createdAt: string;
     SupplierId: string | number;

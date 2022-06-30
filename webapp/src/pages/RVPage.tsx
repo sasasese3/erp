@@ -153,9 +153,9 @@ function RVPage() {
               <FormLabel>รหัสพนักงานขาย</FormLabel>
               <Input
                 id="employee_id"
-                disabled={true}
                 value={auth?.id}
                 type="text"
+                readOnly
               ></Input>
             </FormControl>
           </GridItem>
@@ -198,6 +198,7 @@ function RVPage() {
               <Input
                 value={rvHeaderPayload.total_price.toLocaleString()}
                 type="text"
+                readOnly
               ></Input>
             </FormControl>
           </GridItem>
