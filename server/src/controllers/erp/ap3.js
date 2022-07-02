@@ -46,6 +46,7 @@ router.post('/', [
         return res.json({ msg: 'Create AP3 Success' });
 
     } catch (error) {
+        console.log(error);
         return res.status(400).json({ msg: "Something went wrong", error: error });
     }
 });

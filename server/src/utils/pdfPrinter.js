@@ -33,8 +33,10 @@ const createPDF = (type, data, create, filePath) => {
             break;
         case 'ap3':
             doc = printer.createPdfKitDocument(AP3PdfDeifinition(data, create));
+            break;
         case 'ib':
             doc = printer.createPdfKitDocument(IBPdfDeifinition(data, create));
+            break;
         default:
             break;
     }
