@@ -76,14 +76,13 @@ function IBPage() {
       })),
     };
     try {
-      // const response = await axios.post("/erp/ib", payload);
-      // const { msg } = response.data;
-      // navigate("/history");
-      // toast({
-      //   title: msg,
-      //   status: "success",
-      // });
-      console.log(JSON.stringify(payload));
+      const response = await axios.post("/erp/ib", payload);
+      const { msg } = response.data;
+      navigate("/history");
+      toast({
+        title: msg,
+        status: "success",
+      });
     } catch (error) {
       if (error instanceof AxiosError) {
         const { msg } = error.response?.data;
