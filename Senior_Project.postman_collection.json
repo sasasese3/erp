@@ -1,0 +1,839 @@
+{
+	"info": {
+		"_postman_id": "bbf1ad98-c5ca-4ce9-ba0e-beed43274a48",
+		"name": "Senior Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14085021"
+	},
+	"item": [
+		{
+			"name": "employee",
+			"item": [
+				{
+					"name": "PO",
+					"item": [
+						{
+							"name": "Create PO",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"createdAt\": \"2022-06-27\",\r\n    \"SupplierId\": 10,\r\n    \"total_price\": 25100,\r\n    \"products\": [\r\n        {\r\n            \"ProductId\": 40,\r\n            \"amount\": 70,\r\n            \"price\": 10500,\r\n            \"no\": 1\r\n        },\r\n        {\r\n            \"ProductId\": 39,\r\n            \"amount\": 70,\r\n            \"price\": 3500,\r\n            \"no\": 2\r\n        },\r\n        {\r\n            \"ProductId\": 37,\r\n            \"amount\": 70,\r\n            \"price\": 6300,\r\n            \"no\": 3\r\n        },\r\n        {\r\n            \"ProductId\": 38,\r\n            \"amount\": 80,\r\n            \"price\": 4800,\r\n            \"no\": 4\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/erp/po",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"po"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All PO",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/po",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"po"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get PO Pdf by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/po/pdf/12",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"po",
+										"pdf",
+										"12"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "RV",
+					"item": [
+						{
+							"name": "Create RV",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"createdAt\": \"2022-06-25\",\r\n    \"SupplierId\": 10,\r\n    \"total_price\": 25100,\r\n    \"customerName\":\"นางสาวปิยะวิทย์ ตาบุดดา\",\r\n    \"id\":\"0001\",\r\n    \"detail\":\"ยาวมากๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ\",\r\n    \"products\": [\r\n        {\r\n            \"ProductId\": 40,\r\n            \"amount\": 70,\r\n            \"price\": 10500,\r\n            \"no\": 1\r\n        },\r\n        {\r\n            \"ProductId\": 39,\r\n            \"amount\": 70,\r\n            \"price\": 3500,\r\n            \"no\": 2\r\n        },\r\n        {\r\n            \"ProductId\": 37,\r\n            \"amount\": 70,\r\n            \"price\": 6300,\r\n            \"no\": 3\r\n        },\r\n        {\r\n            \"ProductId\": 38,\r\n            \"amount\": 80,\r\n            \"price\": 4800,\r\n            \"no\": 4\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/erp/rv",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"rv"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All RV",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/rv",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"rv"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get RV Pdf by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/rv/pdf/15",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"rv",
+										"pdf",
+										"15"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PV",
+					"item": [
+						{
+							"name": "Create PV",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"createdAt\": \"2022-06-26\",\r\n    \"SupplierId\": 10,\r\n    \"total_price\": 25100,\r\n    \"customerName\":\"นางสาวปิยะวิทย์ ตาบุดดา\",\r\n    \"id\":\"0002\",\r\n    \"detail\":\"ยาวมากๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆๆ\",\r\n    \"products\": [\r\n        {\r\n            \"ProductId\": 40,\r\n            \"amount\": 70,\r\n            \"price\": 10500,\r\n            \"no\": 1\r\n        },\r\n        {\r\n            \"ProductId\": 39,\r\n            \"amount\": 70,\r\n            \"price\": 3500,\r\n            \"no\": 2\r\n        },\r\n        {\r\n            \"ProductId\": 37,\r\n            \"amount\": 70,\r\n            \"price\": 6300,\r\n            \"no\": 3\r\n        },\r\n        {\r\n            \"ProductId\": 38,\r\n            \"amount\": 80,\r\n            \"price\": 4800,\r\n            \"no\": 4\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/erp/pv",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"pv"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All PV",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/pv",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"pv"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get PV Pdf by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/pv/pdf/15",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"pv",
+										"pdf",
+										"15"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AP3",
+					"item": [
+						{
+							"name": "Create AP3",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"createdAt\": \"2022-06-30\",\r\n    \"customerName\": \"XXXXXXXXXXXX XXXXXXXXXXX\",\r\n    \"id\": \"VAT000001\",\r\n    \"type\": \"VAT\",\r\n    \"price\": 1000000000,\r\n    \"tax\": 70000000,\r\n    \"priceWithTax\": 1070000000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/erp/ap3",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"ap3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All PV",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/ap3",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"ap3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get AP3 Pdf by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/ap3/pdf/1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"ap3",
+										"pdf",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "IB",
+					"item": [
+						{
+							"name": "Create IB",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"createdAt\": \"2022-06-18\",\r\n    \"SupplierId\": 10,\r\n    \"total_price\": 0,\r\n    \"companyName\": \"สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง\",\r\n    \"id\": \"IB00002\",\r\n    \"products\": [\r\n        {\r\n            \"ProductId\": 31,\r\n            \"amount\": 0,\r\n            \"price\": 0,\r\n            \"no\": 1\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/erp/ib",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"ib"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All IB",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/ib",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"ib"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get IB Pdf by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/erp/ib/pdf/2",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"erp",
+										"ib",
+										"pdf",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Supplier & Product",
+					"item": [
+						{
+							"name": "Get Supplier",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/employee/supplier?q=Supplier5",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"employee",
+										"supplier"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "Supplier5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product according to Supplier",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/employee/product?supplier_id=9",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"employee",
+										"product"
+									],
+									"query": [
+										{
+											"key": "supplier_id",
+											"value": "9"
+										},
+										{
+											"key": "dfdfdf",
+											"value": "sdsds",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"ERP-{{no}}\",\r\n    \"email\": \"keng{{no}}@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"username\": \"keng{{no}}\",\r\n    \"ssn\": \"123456789012{{no}}\",\r\n    \"firstname\": \"xxxxxx\",\r\n    \"lastname\": \"xxxxxx\",\r\n    \"position\": \"xxxxxx\",\r\n    \"department\": \"xxxxx\",\r\n    \"birthdate\": \"2022-06-15\",\r\n    \"address\": \"xxxxxx\",\r\n    \"phone_no\": \"0882222222\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/employee/register",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"employee",
+										"register"
+									]
+								},
+								"description": "```json\n{\n    \"email\": \"keng2127@gmail.com\",\n    \"password\": \"12345678\",\n    \"username\": \"kengacethylene\",\n    \"ssn\": \"1234567890123\",\n    \"fullname\": \"xxxxxx\",\n    \"lastname\": \"xxxxxx\",\n    \"position\": \"xxxxxx\",\n    \"birth_date\": \"2022-06-15T15:00:20.033Z\",\n    \"age\": 22,\n    \"address\": \"xxxxxx\",\n    \"phone_no\": \"0882222222\"\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "get current user",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/employee",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"employee"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"keng3\",\r\n    \"password\":\"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "Supplier & Product",
+					"item": [
+						{
+							"name": "Add Supplier",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"ไทยอิเล็คทริคเวิร์ค\",\r\n    \"address\":\"xxxx\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/supplier",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"supplier"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add product",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"supplier_id\":10,\r\n    \"product\":[\r\n        {\r\n            \"name\":\"สายไฟ/Wire-Cable\",\r\n            \"stock\":60,\r\n            \"per_amount\":50\r\n        },\r\n        {\r\n            \"name\":\"หลอดไฟ/LED/Light bulb\",\r\n            \"stock\":50,\r\n            \"per_amount\":50\r\n        },{\r\n            \"name\":\"ตู้ไซส์-บล็อก/Electric Box\",\r\n            \"stock\":40,\r\n            \"per_amount\":40\r\n        },{\r\n            \"name\":\"สวิทซ์แสงแดด/Photo switch\",\r\n            \"stock\":100,\r\n            \"per_amount\":70\r\n        },{\r\n            \"name\":\"อุปกรณ์วัดค่า\",\r\n            \"stock\":80,\r\n            \"per_amount\":80\r\n        },{\r\n            \"name\":\"อุปกรณ์เดินสายไฟ-ต่อสายไฟ,กิ๊บ\",\r\n            \"stock\":90,\r\n            \"per_amount\":70\r\n        },{\r\n            \"name\":\"ปลั๊ก-เต้ารับอุตสาหกรรม\",\r\n            \"stock\":70,\r\n            \"per_amount\":90\r\n        },{\r\n            \"name\":\"ฟิวส์/Fuse\",\r\n            \"stock\":80,\r\n            \"per_amount\":60\r\n        },{\r\n            \"name\":\"ผ้าเทปพันสายไฟ/Electrical tape\",\r\n            \"stock\":70,\r\n            \"per_amount\":50\r\n        },{\r\n            \"name\":\"ไฟประดับ/ LED , Decorative lighting\",\r\n            \"stock\":70,\r\n            \"per_amount\":150\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/product",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"product"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Employee",
+					"item": [
+						{
+							"name": "get all employee",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/admin/employee",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"employee"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit role",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"ERP-3\",\r\n    \"role\":\"666\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/employee",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"employee"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Inspector",
+			"item": [
+				{
+					"name": "PO",
+					"item": [
+						{
+							"name": "inspect po",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"approved\":true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/inspector/po/2",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"inspector",
+										"po",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "RV",
+					"item": [
+						{
+							"name": "inspect rv",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"approved\":true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/inspector/rv/2",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"inspector",
+										"rv",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PV",
+					"item": [
+						{
+							"name": "inspect rv",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"approved\":true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/inspector/pv/2",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"inspector",
+										"pv",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AP3",
+					"item": [
+						{
+							"name": "inspect ap3",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"approved\":true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/inspector/pv/2",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"inspector",
+										"pv",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "IB",
+					"item": [
+						{
+							"name": "inspect ib",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"approved\":true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/inspector/ib/2",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"inspector",
+										"ib",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:3333",
+			"type": "string"
+		},
+		{
+			"key": "no",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
