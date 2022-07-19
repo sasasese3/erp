@@ -1,8 +1,20 @@
-import { Button } from "@chakra-ui/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { FaBan, FaCheck } from "react-icons/fa";
 
-function EmployeeHistoryStatus({ id, type, status }: any) {
+function EmployeeHistoryStatus({ id, type, status, message }: any) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const handleDownloadFile = async () => {
     const response = await axios.get(`/erp/${type}/pdf/${id}`, {
       responseType: "blob",
@@ -24,10 +36,24 @@ function EmployeeHistoryStatus({ id, type, status }: any) {
 
     case "rejected":
       return (
-        <Button colorScheme="red" variant="outline" disabled>
-          <FaBan style={{ marginRight: "10px" }} />
-          ไม่อนุมัติ
-        </Button>
+        <>
+          <Button colorScheme="red" variant="outline" onClick={onOpen}>
+            <FaBan style={{ marginRight: "10px" }} />
+            ไม่อนุมัติ
+          </Button>
+          <Modal onClose={onClose} isOpen={isOpen} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader color='red.600'>เหตุผลในการไม่อนุมัติ
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>{message}</ModalBody>
+              <ModalFooter>
+                <Button colorScheme='red' variant='outline' onClick={onClose}>Close</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </>
       );
     case "approved":
       return (

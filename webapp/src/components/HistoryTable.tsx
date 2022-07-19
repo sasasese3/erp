@@ -71,6 +71,7 @@ function HistoryTable({ type, datas }: any) {
                     type={type}
                     id={id}
                     status={data.status}
+                    message={data.message}
                   />
                 )}
               </Td>

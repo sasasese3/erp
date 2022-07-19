@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 'pending'
         },
         file_path: DataTypes.STRING,
+        message:DataTypes.TEXT,
         createdAt: {
             type: "TIMESTAMP",
             defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
