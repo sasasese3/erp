@@ -8,6 +8,7 @@ const { unlinkSync } = require('fs');
 router.patch('/po/:id', [
     param('id').notEmpty().isInt(),
     body('approved').notEmpty().isBoolean(),
+    body('message').exists({checkNull:false}),
 ], async (req, res) => {
     try {
         //* check error
@@ -18,7 +19,7 @@ router.patch('/po/:id', [
 
         //* get param and body data
         const id = parseInt(req.params.id);
-        const { approved } = req.body;
+        const { approved,message } = req.body;
 
         //* get po data
         const po = await PO.findByPk(id, { include: [Supplier, Product, Employee], order: [[Product, PO_Product, 'no', 'ASC']] });
@@ -33,6 +34,7 @@ router.patch('/po/:id', [
             //* update db
             po.status = 'rejected';
             po.file_path = "";
+            po.message = message
         }
         else {
             //* create new pdf
@@ -57,6 +59,7 @@ router.patch('/po/:id', [
 router.patch('/rv/:id', [
     param('id').notEmpty().isInt(),
     body('approved').notEmpty().isBoolean(),
+    body('message').exists({checkNull:false}),
 ], async (req, res) => {
     try {
         //* check error
@@ -67,7 +70,7 @@ router.patch('/rv/:id', [
 
         //* get param and body data
         const id = parseInt(req.params.id);
-        const { approved } = req.body;
+        const { approved,message } = req.body;
 
         //* get rv data
         const rv = await RV.findByPk(id, { include: [Supplier, Product, Employee], order: [[Product, RV_Product, 'no', 'ASC']] });
@@ -82,6 +85,7 @@ router.patch('/rv/:id', [
             //* update db
             rv.status = 'rejected';
             rv.file_path = "";
+            rv.message = message
         }
         else {
             //* create new pdf 
@@ -107,6 +111,7 @@ router.patch('/rv/:id', [
 router.patch('/pv/:id', [
     param('id').notEmpty().isInt(),
     body('approved').notEmpty().isBoolean(),
+    body('message').exists({checkNull:false}),
 ], async (req, res) => {
     try {
         //* check error
@@ -117,7 +122,7 @@ router.patch('/pv/:id', [
 
         //* get param and body data
         const id = parseInt(req.params.id);
-        const { approved } = req.body;
+        const { approved,message } = req.body;
 
         //* get pv data
         const pv = await PV.findByPk(id, { include: [Supplier, Product, Employee], order: [[Product, PV_Product, 'no', 'ASC']] });
@@ -132,6 +137,7 @@ router.patch('/pv/:id', [
             //* update db
             pv.status = 'rejected';
             pv.file_path = "";
+            pv.message = message
         }
         else {
             //* edit existing pdf
@@ -157,6 +163,7 @@ router.patch('/pv/:id', [
 router.patch('/ap3/:id', [
     param('id').notEmpty().isInt(),
     body('approved').notEmpty().isBoolean(),
+    body('message').exists({checkNull:false}),
 ], async (req, res) => {
     try {
         //* check error
@@ -167,7 +174,7 @@ router.patch('/ap3/:id', [
 
         //* get param and body data
         const id = parseInt(req.params.id);
-        const { approved } = req.body;
+        const { approved,message } = req.body;
 
         //* get pv data
         const ap3 = await AP3.findByPk(id, { include: [Employee] });
@@ -182,6 +189,7 @@ router.patch('/ap3/:id', [
             //* update db
             ap3.status = 'rejected';
             ap3.file_path = "";
+            ap3.message = message
         }
         else {
             //* edit existing pdf
@@ -207,6 +215,7 @@ router.patch('/ap3/:id', [
 router.patch('/ib/:id', [
     param('id').notEmpty().isInt(),
     body('approved').notEmpty().isBoolean(),
+    body('message').exists({checkNull:false}),
 ], async (req, res) => {
     try {
         //* check error
@@ -217,7 +226,7 @@ router.patch('/ib/:id', [
 
         //* get param and body data
         const id = parseInt(req.params.id);
-        const { approved } = req.body;
+        const { approved,message } = req.body;
 
         //* get pv data
         const ib = await IB.findByPk(id, { include: [Supplier, Product, Employee], order: [[Product, IB_Product, 'no', 'ASC']] });
@@ -232,6 +241,7 @@ router.patch('/ib/:id', [
             //* update db
             ib.status = 'rejected';
             ib.file_path = "";
+            ib.message = message
         }
         else {
             //* edit existing pdf

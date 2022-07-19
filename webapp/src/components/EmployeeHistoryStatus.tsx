@@ -47,7 +47,7 @@ function EmployeeHistoryStatus({ id, type, status, message }: any) {
               <ModalHeader color='red.600'>เหตุผลในการไม่อนุมัติ
               </ModalHeader>
               <ModalCloseButton />
-              <ModalBody>{message}</ModalBody>
+              <ModalBody whiteSpace={'pre-wrap'}>{message?.trim()}</ModalBody>
               <ModalFooter>
                 <Button colorScheme='red' variant='outline' onClick={onClose}>Close</Button>
               </ModalFooter>

@@ -8,9 +8,11 @@ import {
   Heading,
   Radio,
   RadioGroup,
+  Text,
+  Textarea,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useTLToast from "../hooks/useTLToast";
@@ -22,6 +24,7 @@ type locationStateType = {
 };
 function ApprovePage() {
   const [value, setValue] = useState("");
+  const [message, setMessage] = useState("");
   const { auth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,6 +40,7 @@ function ApprovePage() {
     try {
       const payload = {
         approved: value === "approved",
+        message: value === "approved" ? null : message.trim(),
       };
       const response = await axios.patch(`/inspector/${type}/${id}`, payload);
       const { msg } = response.data;
@@ -92,13 +96,32 @@ function ApprovePage() {
                 อนุมัติ
               </Radio>
             </Flex>
-            <Flex mt={2} justify="space-evenly">
+            {value === "rejected" && (
+              <>
+                <Flex mt={4} direction="row">
+                  <Text color="red">*</Text>
+                  <Text pl={2} color="gray">
+                  หากไม่อนุมัติ กรุณาระบุหมายเหตุ
+                  </Text>
+                </Flex>
+                <Textarea
+                  mt={2}
+                  onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+                    setMessage(event.target.value)
+                  }
+                  value={message}
+                ></Textarea>
+              </>
+            )}
+            <Flex mt={4} justify="space-evenly">
               <Button onClick={handleClickBack} width="20%">
                 ย้อนกลับ
               </Button>
               <Button
                 onClick={handleClickSave}
-                disabled={value === ""}
+                disabled={
+                  value === "" || (value === "rejected" && message === "")
+                }
                 width="20%"
               >
                 บันทึก
